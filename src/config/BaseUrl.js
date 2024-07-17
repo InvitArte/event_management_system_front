@@ -33,3 +33,5 @@ export const API_ROUTES = {
   REMOVE_TAG: (guestId) => `${API_BASE_URL}/api/guests/${guestId}/remove-tag`,
   BULK_ASSIGN_TAG: `${API_BASE_URL}/api/tags/bulk-assign`,
 };
+
+export default API_ROUTES;
