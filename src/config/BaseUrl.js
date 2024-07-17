@@ -22,6 +22,7 @@ export const API_ROUTES = {
   ALLERGIES: `${API_BASE_URL}/api/allergies`,
   GUESTS: `${API_BASE_URL}/api/guests`,
   VALIDATE_GUEST: (guestId) => `${API_BASE_URL}/api/guests/${guestId}/validate`,
+  BULK_VALIDATE_GUESTS: `${API_BASE_URL}/api/guests/bulk-validate`,
   PLUS_ONES: `${API_BASE_URL}/api/plus-ones`,
   USERS: `${API_BASE_URL}/api/users`,
   UPDATE_USER_DATE: `${API_BASE_URL}/api/user/update-date`,
@@ -30,6 +31,5 @@ export const API_ROUTES = {
   TAGS: `${API_BASE_URL}/api/tags`,
   ASSIGN_TAG: (guestId) => `${API_BASE_URL}/api/guests/${guestId}/assign-tag`,
   REMOVE_TAG: (guestId) => `${API_BASE_URL}/api/guests/${guestId}/remove-tag`,
+  BULK_ASSIGN_TAG: `${API_BASE_URL}/api/tags/bulk-assign`,
 };
-
-export default API_ROUTES;

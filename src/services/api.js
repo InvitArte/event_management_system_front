@@ -50,6 +50,7 @@ export const guestService = {
   updateGuest: (guestId, guestData) => axiosInstance.put(`${API_ROUTES.GUESTS}/${guestId}`, guestData),
   deleteGuest: (guestId) => axiosInstance.delete(`${API_ROUTES.GUESTS}/${guestId}`),
   validateGuest: (guestId) => axiosInstance.put(`${API_ROUTES.GUESTS}/${guestId}/validate`),
+  bulkValidate: (guestIds) => axiosInstance.post(API_ROUTES.BULK_VALIDATE_GUESTS, { guest_ids: guestIds }),
 };
 
 // Servicios de Acompañantes (Plus Ones)
@@ -108,6 +109,7 @@ export const tagService = {
   deleteTag: (tagId) => axiosInstance.delete(`${API_ROUTES.TAGS}/${tagId}`),
   assignTag: (guestId, tagId) => axiosInstance.post(API_ROUTES.ASSIGN_TAG(guestId), { tag_id: tagId }),
   removeTag: (guestId, tagId) => axiosInstance.post(API_ROUTES.REMOVE_TAG(guestId), { tag_id: tagId }),
+  bulkAssign: (tagId, guestIds) => axiosInstance.post(API_ROUTES.BULK_ASSIGN_TAG, { tag_id: tagId, guest_ids: guestIds }),
 };
 
 export default {
