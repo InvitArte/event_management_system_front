@@ -1,6 +1,6 @@
 // src/config/api.js
 
-const API_BASE_URL = 'http://localhost:8000'; 
+const API_BASE_URL = "http://localhost:8000";
 
 export const API_ROUTES = {
   // Rutas públicas
@@ -34,4 +34,8 @@ export const API_ROUTES = {
   BULK_ASSIGN_TAG: `${API_BASE_URL}/api/tags/bulk-assign`,
 };
 
+<<<<<<< HEAD
 export default API_ROUTES;
+=======
+export default API_ROUTES;
+>>>>>>> ef952874017a95af7487244c1be47a045d721e2f
