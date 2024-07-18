@@ -1,14 +1,20 @@
-import FrontPage from "./components/PublicView/FrontPage.jsx";
-import Countdown from "./components/PublicView/Countdown.jsx";
-import EventDetails from "./components/PublicView/EventDetails.jsx";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './components/Utils/ProtectedRoute';
+import PublicView from './views/PublicView';
+import LoginView from './views/LoginView';
 
 const App = () => {
   return (
-    <>
-      <FrontPage />
-      <Countdown />
-      <EventDetails />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<PublicView />} />
+        <Route path="/login" element={<LoginView />} />
+        {/* Aquí dentro iran las rutas protegidas */}
+        <Route element={<ProtectedRoute />}>
+        </Route>
+      </Routes>
+    </Router>
   );
 };
 
