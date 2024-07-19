@@ -11,11 +11,11 @@ const LoginView = () => {
   const handleLogin = async (email, password) => {
     try {
       const response = await authService.login(email, password);
-      console.log('Login successful:', response);
       
-      if (response.data && response.data.access_token) {
-        localStorage.setItem('token', response.data.access_token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.access_token) {
+        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        navigate('/guests');
       } else {
         setError('Login correcto pero no hubo login.');
       }
@@ -26,7 +26,13 @@ const LoginView = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{
+      display: 'flex', 
+      flexDirection: 'column', 
+      minHeight: '100vh', 
+      justifyContent: 'center',
+      alignItems: 'center', 
+    }}>
       <Paper elevation={3} sx={{ marginTop: 8, padding: 4 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Typography component="h1" variant="h5">
