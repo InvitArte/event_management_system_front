@@ -25,6 +25,7 @@ const GuestView = () => {
   const [menus, setMenus] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [tags, setTags] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState({});
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -100,7 +101,7 @@ const GuestView = () => {
               guest.accommodation_plan || "No ha especificado",
             isMainGuest: false,
             parentId: guest.id,
-            tags: [], // Plus ones don't have their own tags
+            tags: [], // PlusOnes no tienen etiquetas
           };
         }) || [];
 
@@ -196,24 +197,57 @@ const GuestView = () => {
     }
   };
 
+  const handleVisibleColumnsChange = (newVisibleColumns) => {
+    setVisibleColumns(newVisibleColumns);
+  };
+  const columns = [
+    { field: "id", headerName: "ID" },
+    { field: "fullName", headerName: "Nombre Completo" },
+    { field: "email", headerName: "Email" },
+    { field: "phone", headerName: "Teléfono" },
+    { field: "validated", headerName: "Validado" },
+    { field: "menu", headerName: "Menú" },
+    { field: "allergy", headerName: "Alergia" },
+    { field: "needs_hotel", headerName: "Necesita Hotel" },
+    { field: "needs_transport", headerName: "Necesita Transporte" },
+    { field: "disability", headerName: "Discapacidad" },
+    { field: "observations", headerName: "Observaciones" },
+    { field: "accommodation_plan", headerName: "Plan de Alojamiento" },
+    { field: "isMainGuest", headerName: "Tipo" },
+    { field: "tags", headerName: "Etiquetas" },
+  ];
+
   const excelData = useMemo(() => {
-    return filteredGuests.map((guest) => ({
-      ID: guest.id,
-      "Nombre Completo": guest.fullName,
-      Email: guest.email,
-      Teléfono: guest.phone,
-      Validado: guest.validated ? "Sí" : "No",
-      Menú: guest.menu,
-      Alergia: guest.allergy,
-      "Necesita Hotel": guest.needs_hotel ? "Sí" : "No",
-      "Necesita Transporte": guest.needs_transport ? "Sí" : "No",
-      Discapacidad: guest.disability ? "Sí" : "No",
-      Observaciones: guest.observations,
-      "Plan de Alojamiento": guest.accommodation_plan,
-      Tipo: guest.isMainGuest ? "Invitado Principal" : "Acompañante",
-      Etiquetas: guest.tags.map((tag) => tag.name).join(", "),
-    }));
-  }, [filteredGuests]);
+    return filteredGuests.map((guest) => {
+      const rowData = {
+        ID: guest.id,
+        "Nombre Completo": guest.fullName,
+        Email: guest.email,
+        Teléfono: guest.phone,
+        Validado: guest.validated ? "Sí" : "No",
+        Menú: guest.menu,
+        Alergia: guest.allergy,
+        "Necesita Hotel": guest.needs_hotel ? "Sí" : "No",
+        "Necesita Transporte": guest.needs_transport ? "Sí" : "No",
+        Discapacidad: guest.disability ? "Sí" : "No",
+        Observaciones: guest.observations,
+        "Plan de Alojamiento": guest.accommodation_plan,
+        Tipo: guest.isMainGuest ? "Invitado Principal" : "Acompañante",
+        Etiquetas: guest.tags.map((tag) => tag.name).join(", "),
+      };
+
+      // Solo incluir las columnas visibles
+      return Object.keys(rowData).reduce((acc, key) => {
+        const columnField = columns.find(
+          (col) => col.headerName === key
+        )?.field;
+        if (columnField && visibleColumns[columnField]) {
+          acc[key] = rowData[key];
+        }
+        return acc;
+      }, {});
+    });
+  }, [filteredGuests, visibleColumns]);
 
   if (error) {
     return (
@@ -266,6 +300,7 @@ const GuestView = () => {
             guests={filteredGuests}
             onRowClick={handleEditGuest}
             onBulkActionComplete={handleBulkActionComplete}
+            onVisibleColumnsChange={handleVisibleColumnsChange}
           />
         )}
         <GuestModal

@@ -7,10 +7,17 @@ import {
   adjustColor,
   getContrastColor,
 } from "../Utils/tagColors";
+import { dataGridLocaleText } from "../Ui/dataGridLocaleText";
 import "../../styles/GuestView/Datatable.css";
 
-const GuestTable = ({ guests, onRowClick, onBulkActionComplete }) => {
+const GuestTable = ({
+  guests,
+  onRowClick,
+  onBulkActionComplete,
+  onVisibleColumnsChange,
+}) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
+  const [visibleColumns, setVisibleColumns] = useState({});
 
   const columns = [
     {
@@ -85,6 +92,20 @@ const GuestTable = ({ guests, onRowClick, onBulkActionComplete }) => {
     },
   ];
 
+  useEffect(() => {
+    // Inicializar todas las columnas como visibles
+    const initialVisibleColumns = {};
+    columns.forEach((col) => {
+      initialVisibleColumns[col.field] = true;
+    });
+    setVisibleColumns(initialVisibleColumns);
+    onVisibleColumnsChange(initialVisibleColumns);
+  }, []);
+
+  const handleColumnVisibilityChange = (newModel) => {
+    setVisibleColumns(newModel);
+    onVisibleColumnsChange(newModel);
+  };
   const handleSelectGuest = useCallback((guest) => {
     console.log("Attempting to select/deselect guest:", guest);
     setSelectedGuests((prev) => {
@@ -123,7 +144,6 @@ const GuestTable = ({ guests, onRowClick, onBulkActionComplete }) => {
     }
   };
 
-  // Función para determinar el índice del grupo basado en el ID del invitado principal
   const getGroupIndex = (mainGuestId) => {
     const mainGuestIds = guests.filter((g) => g.isMainGuest).map((g) => g.id);
     return mainGuestIds.indexOf(mainGuestId);
@@ -145,6 +165,9 @@ const GuestTable = ({ guests, onRowClick, onBulkActionComplete }) => {
           onCellClick={handleRowClick}
           getRowClassName={getRowClassName}
           getRowId={(row) => row.id}
+          onColumnVisibilityModelChange={handleColumnVisibilityChange}
+          columnVisibilityModel={visibleColumns}
+          localeText={dataGridLocaleText}
         />
       </div>
     </Box>

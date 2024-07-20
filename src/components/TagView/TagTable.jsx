@@ -1,6 +1,7 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
+import { dataGridLocaleText } from "../Ui/dataGridLocaleText";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
@@ -34,6 +35,7 @@ const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
         rowsPerPageOptions={[5, 10, 20]}
         onRowClick={(params) => onEditTag(params.row)}
         disableSelectionOnClick
+        localeText={dataGridLocaleText}
       />
     </div>
   );
