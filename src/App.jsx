@@ -6,6 +6,7 @@ import PublicView from "./views/PublicView";
 import LoginView from "./views/LoginView";
 import GuestView from "./views/GuestView";
 import TagView from "./views/TagView";
+import ProfileView from "./views/ProfileView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import ProtectedLayout from "./components/Utils/ProtectedLayout";
 
@@ -24,6 +25,7 @@ const App = () => {
           <Route element={<ProtectedLayout />}>
             <Route path="/guests" element={<GuestView />} />
             <Route path="/tags" element={<TagView />} />
+            <Route path="/profile" element={<ProfileView />} />
           </Route>
         </Route>
       </Routes>

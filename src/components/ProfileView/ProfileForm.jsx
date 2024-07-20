@@ -20,6 +20,7 @@ const ProfileForm = () => {
     bank_account: "",
     gift_list_url: "",
   });
+  const [displayDate, setDisplayDate] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -28,6 +29,7 @@ const ProfileForm = () => {
       try {
         const data = await userService.getCurrentUser();
         setUserData(data);
+        setDisplayDate(formatDateForDisplay(data.date));
         setLoading(false);
       } catch (err) {
         console.error("Error fetching user data:", err);
@@ -39,24 +41,57 @@ const ProfileForm = () => {
     fetchUserData();
   }, []);
 
+  const formatDateForDisplay = (dateString) => {
+    if (!dateString) return "";
+    const [year, month, day, hour, minute] = dateString.split(/[- :]/);
+    return `${day}-${month}-${year} ${hour}:${minute}`;
+  };
+
+  const formatDateForAPI = (dateString) => {
+    if (!dateString) return "";
+    const [date, time] = dateString.split(" ");
+    const [day, month, year] = date.split("-");
+    const [hour, minute] = time.split(":");
+    return `${year} ${month} ${day} ${hour} ${minute}`;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    if (name === "date") {
+      setDisplayDate(value);
+    } else {
+      setUserData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await userService.updateUser(userData.id, userData);
-      // Puedes añadir un mensaje de éxito aquí si lo deseas
+      const updatedUserData = {
+        ...userData,
+        date: formatDateForAPI(displayDate),
+      };
+
+      // Update user data
+      await userService.updateUser(updatedUserData.id, updatedUserData);
+
+      // Update date separately
+      await userService.updateDate(updatedUserData.date);
+
+      // Update gift info
+      await userService.updateGiftInfo({
+        bank_account: updatedUserData.bank_account,
+        gift_list_url: updatedUserData.gift_list_url,
+      });
+
+      setLoading(false);
     } catch (err) {
       console.error("Error updating user data:", err);
       setError("Failed to update user data. Please try again.");
-    } finally {
       setLoading(false);
     }
   };
@@ -96,8 +131,11 @@ const ProfileForm = () => {
             fullWidth
             label="Fecha"
             name="date"
-            value={userData.date}
+            value={displayDate}
             onChange={handleChange}
+            InputProps={{
+              readOnly: false,
+            }}
           />
         </Grid>
         <Grid item xs={12}>

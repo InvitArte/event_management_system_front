@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Typography, Button, Container } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Container,
+  Menu,
+  MenuItem,
+  IconButton,
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import styled from "@emotion/styled";
 import { keyframes } from "@emotion/react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { authService } from "../../services/api";
 
 const bounceIn = keyframes`
   0% { transform: translateY(-100%); }
@@ -40,6 +51,7 @@ const StyledNavLink = styled(NavLink)`
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,11 +66,31 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrolled]);
 
-  const handleLogout = () => {
-    // Implement logout logic here
-    // For example:
-    // logout();
-    navigate("/login");
+  const handleUserMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleProfile = () => {
+    handleUserMenuClose();
+    navigate("/profile");
+  };
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      handleUserMenuClose();
+      // Limpia el token del localStorage
+      localStorage.removeItem("token");
+      // Redirige al usuario a la página de inicio de sesión
+      navigate("/login");
+    } catch (error) {
+      console.error("Error during logout:", error);
+      // Puedes manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
+    }
   };
 
   return (
@@ -110,9 +142,17 @@ const Navbar = () => {
             <Button color="inherit" component={StyledNavLink} to="/tags">
               Etiquetas
             </Button>
-            <Button color="inherit" onClick={handleLogout}>
-              Desconectarse
-            </Button>
+            <IconButton color="inherit" onClick={handleUserMenuOpen}>
+              <AccountCircleIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleUserMenuClose}
+            >
+              <MenuItem onClick={handleProfile}>Perfil</MenuItem>
+              <MenuItem onClick={handleLogout}>Desconectarse</MenuItem>
+            </Menu>
           </>
         </Toolbar>
       </Container>

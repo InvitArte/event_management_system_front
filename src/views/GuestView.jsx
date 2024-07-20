@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   Container,
   Typography,
-  CircularProgress,
   Box,
   useMediaQuery,
   useTheme,
@@ -25,6 +24,7 @@ const GuestView = () => {
   const [selectedGuest, setSelectedGuest] = useState(null);
   const [menus, setMenus] = useState([]);
   const [allergies, setAllergies] = useState([]);
+  const [tags, setTags] = useState([]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -36,6 +36,7 @@ const GuestView = () => {
 
     const uniqueMenus = new Set();
     const uniqueAllergies = new Set();
+    const uniqueTags = new Set();
 
     const processedGuests = guestsData.flatMap((guest) => {
       if (guest.menu) {
@@ -44,6 +45,9 @@ const GuestView = () => {
       if (guest.allergy) {
         uniqueAllergies.add(JSON.stringify(guest.allergy));
       }
+      guest.tags?.forEach((tag) => {
+        uniqueTags.add(JSON.stringify(tag));
+      });
 
       const mainGuest = {
         id: guest.id,
@@ -64,6 +68,7 @@ const GuestView = () => {
         accommodation_plan: guest.accommodation_plan || "No ha especificado",
         isMainGuest: true,
         plus_ones: guest.plus_ones || [],
+        tags: guest.tags || [],
       };
 
       const plusOnes =
@@ -95,6 +100,7 @@ const GuestView = () => {
               guest.accommodation_plan || "No ha especificado",
             isMainGuest: false,
             parentId: guest.id,
+            tags: [], // Plus ones don't have their own tags
           };
         }) || [];
 
@@ -105,6 +111,7 @@ const GuestView = () => {
     setAllergies(
       Array.from(uniqueAllergies).map((allergy) => JSON.parse(allergy))
     );
+    setTags(Array.from(uniqueTags).map((tag) => JSON.parse(tag)));
 
     return processedGuests;
   };
@@ -134,13 +141,25 @@ const GuestView = () => {
     return guests.filter((guest) => {
       return Object.entries(filters).every(([key, value]) => {
         if (value === null || value === undefined || value === "") return true;
-        if (typeof guest[key] === "boolean") {
-          return guest[key] === (value === "Sí");
+
+        switch (key) {
+          case "needs_hotel":
+          case "needs_transport":
+          case "validated":
+            return guest[key] === (value === "Sí");
+          case "allergy":
+            return guest[key]?.toLowerCase().includes(value.toLowerCase());
+          case "tags":
+            return value.every((tag) =>
+              guest.tags?.some(
+                (guestTag) => guestTag.name.toLowerCase() === tag.toLowerCase()
+              )
+            );
+          case "accommodation_plan":
+            return guest[key]?.toLowerCase() === value.toLowerCase();
+          default:
+            return guest[key]?.toLowerCase().includes(value.toLowerCase());
         }
-        if (typeof value === "string") {
-          return guest[key]?.toLowerCase().includes(value.toLowerCase());
-        }
-        return guest[key] === value;
       });
     });
   }, [guests, filters]);
@@ -192,6 +211,7 @@ const GuestView = () => {
       Observaciones: guest.observations,
       "Plan de Alojamiento": guest.accommodation_plan,
       Tipo: guest.isMainGuest ? "Invitado Principal" : "Acompañante",
+      Etiquetas: guest.tags.map((tag) => tag.name).join(", "),
     }));
   }, [filteredGuests]);
 
@@ -226,7 +246,11 @@ const GuestView = () => {
         </Box>
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-        <GuestFilters guests={guests} onFilterChange={handleFilterChange} />
+        <GuestFilters
+          guests={guests}
+          onFilterChange={handleFilterChange}
+          tags={tags}
+        />
         <Box
           display="flex"
           justifyContent="space-between"

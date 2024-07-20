@@ -27,7 +27,13 @@ const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
   }, [tag, guests]);
 
   const handleSubmit = async (tagData) => {
-    await onSubmit(tagData, selectedGuests);
+    if (tag) {
+      // Modo de edición: incluir los invitados seleccionados
+      await onSubmit(tagData, selectedGuests);
+    } else {
+      // Modo de creación: solo enviar los datos de la etiqueta, sin invitados
+      await onSubmit(tagData);
+    }
     onClose();
   };
 
@@ -38,15 +44,19 @@ const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
         <Box mb={2}>
           <TagForm tag={tag} onSubmit={handleSubmit} />
         </Box>
-        <Typography variant="h6" gutterBottom>
-          Asignar a invitados
-        </Typography>
-        <GuestTransferList
-          guests={guests}
-          selectedGuests={selectedGuests}
-          onSelectionChange={setSelectedGuests}
-          tagId={tag?.id}
-        />
+        {tag && (
+          <>
+            <Typography variant="h6" gutterBottom>
+              Asignar a invitados
+            </Typography>
+            <GuestTransferList
+              guests={guests}
+              selectedGuests={selectedGuests}
+              onSelectionChange={setSelectedGuests}
+              tagId={tag.id}
+            />
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>

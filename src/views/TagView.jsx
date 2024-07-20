@@ -24,28 +24,23 @@ const TagView = () => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    fetchTags();
-    fetchGuests();
+    fetchData();
   }, []);
 
-  const fetchTags = async () => {
+  const fetchData = async () => {
+    setLoading(true);
     try {
-      const tagsResponse = await tagService.getAllTags();
+      const [tagsResponse, guestsResponse] = await Promise.all([
+        tagService.getAllTags(),
+        guestService.getAllGuests(),
+      ]);
       setTags(tagsResponse);
-      setLoading(false);
-    } catch (err) {
-      console.error("Error fetching tags:", err);
-      setError("Failed to fetch tags. Please try again later.");
-      setLoading(false);
-    }
-  };
-
-  const fetchGuests = async () => {
-    try {
-      const guestsResponse = await guestService.getAllGuests();
       setGuests(guestsResponse);
+      setLoading(false);
     } catch (err) {
-      console.error("Error fetching guests:", err);
+      console.error("Error fetching data:", err);
+      setError("Failed to fetch data. Please try again later.");
+      setLoading(false);
     }
   };
 
@@ -62,10 +57,10 @@ const TagView = () => {
   const handleDeleteTag = async (tagId) => {
     try {
       await tagService.deleteTag(tagId);
-      await fetchTags();
-      await fetchGuests(); // Actualizamos los invitados para reflejar los cambios en las etiquetas
+      await fetchData();
     } catch (err) {
       console.error("Error deleting tag:", err);
+      setError("Failed to delete tag. Please try again.");
     }
   };
 
@@ -80,19 +75,13 @@ const TagView = () => {
         );
       } else {
         response = await tagService.createTag(tagData);
-        if (response.id) {
-          await tagService.bulkAssign(
-            response.id,
-            selectedGuests.map((g) => g.id)
-          );
-        }
       }
-      await fetchTags();
-      await fetchGuests(); // Actualizamos los invitados para reflejar los cambios en las etiquetas
+      await fetchData();
       setModalOpen(false);
       return response;
     } catch (err) {
       console.error("Error submitting tag:", err);
+      setError("Failed to submit tag. Please try again.");
     }
   };
 
