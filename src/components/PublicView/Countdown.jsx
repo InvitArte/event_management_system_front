@@ -10,23 +10,22 @@ const Countdown = () => {
     const fetchEventDate = async (userId) => {
       try {
         const response = await publicService.getUserDate(userId);
-        setEventDate(new Date(response.data.date));
+        console.log("Respuesta de la API:", response);
 
-        if (response.data.date) {
-          const dateString = response.data.date;
-          const parts = dateString.split(" ");
+        if (response && response.date) {
+          const dateString = response.date;
+          const [year, month, day, hour, minute] = dateString
+            .split(" ")
+            .map(Number);
 
-          // Crear un objeto Date en formato "año, mes , día, hora, minuto"
-          const eventDateFromAPI = new Date(
-            parts[0], // año
-            parseInt(parts[1]) - 1, // mes (se resta uno a la fecha recibida de la Api porque en el objeto 'Date' Enero es el mes 0 ...)
-            parts[2], // día
-            parts[3], // hora
-            parts[4] // minuto
-          );
+          // Crear un objeto Date en formato "año, mes, día, hora, minuto"
+          const eventDateFromAPI = new Date(year, month - 1, day, hour, minute);
 
-          setEventDate(eventDateFromAPI);
-          console.log("Fecha del evento:", eventDateFromAPI);
+          if (!isNaN(eventDateFromAPI.getTime())) {
+            setEventDate(eventDateFromAPI);
+          } else {
+            console.error("Fecha del evento no válida:", dateString);
+          }
         } else {
           console.error(
             "No se recibió una fecha válida del evento:",
@@ -34,11 +33,11 @@ const Countdown = () => {
           );
         }
       } catch (error) {
-        console.error("Error fetching event date:", error);
+        console.error("Error fetching event date:", error.message || error);
       }
     };
 
-    fetchEventDate(2); // TODO: Pasar el ID del usuario autenticado--------------------------------------------------------------------------------
+    fetchEventDate(2); // TODO: Pasar el ID del usuario autenticado
   }, []);
 
   useEffect(() => {
@@ -53,20 +52,19 @@ const Countdown = () => {
           días: Math.floor(difference / (1000 * 60 * 60 * 24)),
           horas: Math.floor((difference / (1000 * 60 * 60)) % 24),
           minutos: Math.floor((difference / 1000 / 60) % 60),
-          segundos: Math.floor((difference / 1000) % 60),
         };
       }
 
       return timeLeft;
     };
 
-    const timer = setInterval(() => {
-      if (eventDate) {
+    if (eventDate) {
+      const timer = setInterval(() => {
         setTimeLeft(calculateTimeLeft());
-      }
-    }, 1000);
+      }, 1000);
 
-    return () => clearInterval(timer);
+      return () => clearInterval(timer);
+    }
   }, [eventDate]);
 
   const timerComponents = Object.keys(timeLeft).map((interval) => (
@@ -75,18 +73,22 @@ const Countdown = () => {
     </span>
   ));
 
+  const showCountdown = Object.keys(timeLeft).length > 0;
+
   return (
     <div className="countdown">
       <div className="countdown-overlay">
-        <h1 className="title">Quedan</h1>
         <div className="timer">
-          {timerComponents.length ? (
-            <>{timerComponents}</>
+          {showCountdown ? (
+            <>
+              <h1 className="title">Quedan</h1>
+              <p className="timer-components">{timerComponents}</p>
+            </>
           ) : (
-            <span>¡Hoy es el día!</span>
+            <span className="message">¡Hoy es el día!</span>
           )}
+          <div className="circle"></div>
         </div>
-        <div className="circle"></div>
       </div>
     </div>
   );

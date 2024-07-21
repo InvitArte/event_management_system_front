@@ -4,8 +4,7 @@ const PublicView = () => {
   return (
     <div className="front-page">
       <div className="frontPage-overlay">
-        <h2>Nueva colección</h2>
-        <h1>-nombre-</h1>
+        <h1>PRESENTACIÓN NUEVA COLECCIÓN</h1>
         <img src={logo} alt="Logo" className="logo" />
       </div>
     </div>
