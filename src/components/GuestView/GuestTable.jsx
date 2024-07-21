@@ -15,6 +15,8 @@ const GuestTable = ({
   onRowClick,
   onBulkActionComplete,
   onVisibleColumnsChange,
+  sortModel,
+  onSortModelChange,
 }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState({});
@@ -167,6 +169,8 @@ const GuestTable = ({
           getRowId={(row) => row.id}
           onColumnVisibilityModelChange={handleColumnVisibilityChange}
           columnVisibilityModel={visibleColumns}
+          sortModel={sortModel}
+          onSortModelChange={onSortModelChange}
           localeText={dataGridLocaleText}
         />
       </div>

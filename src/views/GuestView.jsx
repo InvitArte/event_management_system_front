@@ -26,6 +26,7 @@ const GuestView = () => {
   const [allergies, setAllergies] = useState([]);
   const [tags, setTags] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState({});
+  const [sortModel, setSortModel] = useState([]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -121,7 +122,6 @@ const GuestView = () => {
     const fetchData = async () => {
       try {
         const guestsResponse = await guestService.getAllGuests();
-        console.log("Guests fetched:", guestsResponse);
         setGuests(processGuests(guestsResponse));
         setLoading(false);
       } catch (err) {
@@ -218,7 +218,17 @@ const GuestView = () => {
   ];
 
   const excelData = useMemo(() => {
-    return filteredGuests.map((guest) => {
+    let sortedGuests = [...filteredGuests];
+    if (sortModel.length > 0) {
+      const { field, sort } = sortModel[0];
+      sortedGuests.sort((a, b) => {
+        if (a[field] < b[field]) return sort === "asc" ? -1 : 1;
+        if (a[field] > b[field]) return sort === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return sortedGuests.map((guest) => {
       const rowData = {
         ID: guest.id,
         "Nombre Completo": guest.fullName,
@@ -247,7 +257,7 @@ const GuestView = () => {
         return acc;
       }, {});
     });
-  }, [filteredGuests, visibleColumns]);
+  }, [filteredGuests, visibleColumns, sortModel]);
 
   if (error) {
     return (
@@ -301,6 +311,8 @@ const GuestView = () => {
             onRowClick={handleEditGuest}
             onBulkActionComplete={handleBulkActionComplete}
             onVisibleColumnsChange={handleVisibleColumnsChange}
+            sortModel={sortModel}
+            onSortModelChange={setSortModel}
           />
         )}
         <GuestModal
