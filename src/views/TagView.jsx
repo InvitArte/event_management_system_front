@@ -57,28 +57,46 @@ const TagView = () => {
   const handleDeleteTag = async (tagId) => {
     try {
       await tagService.deleteTag(tagId);
-      await fetchData();
+      setTags(tags.filter((tag) => tag.id !== tagId));
     } catch (err) {
       console.error("Error deleting tag:", err);
       setError("Failed to delete tag. Please try again.");
     }
   };
 
-  const handleSubmitTag = async (tagData, selectedGuests) => {
+  const handleSubmitTag = async (
+    tagId,
+    tagData,
+    selectedGuestIds,
+    nameChanged,
+    assignmentsChanged
+  ) => {
     try {
-      let response;
-      if (selectedTag) {
-        response = await tagService.updateTag(selectedTag.id, tagData);
-        await tagService.bulkAssign(
-          selectedTag.id,
-          selectedGuests.map((g) => g.id)
-        );
+      let updatedTag;
+      if (tagId) {
+        // Modo de edición
+        if (nameChanged) {
+          updatedTag = await tagService.updateTag(tagId, tagData);
+        }
+        if (assignmentsChanged) {
+          await tagService.bulkAssign(tagId, selectedGuestIds);
+        }
+        if (nameChanged || assignmentsChanged) {
+          setTags(
+            tags.map((tag) =>
+              tag.id === tagId
+                ? { ...tag, ...(updatedTag || {}), guests: selectedGuestIds }
+                : tag
+            )
+          );
+        }
       } else {
-        response = await tagService.createTag(tagData);
+        // Modo de creación
+        updatedTag = await tagService.createTag(tagData);
+        setTags([...tags, { ...updatedTag, guests: [] }]);
       }
-      await fetchData();
       setModalOpen(false);
-      return response;
+      return updatedTag;
     } catch (err) {
       console.error("Error submitting tag:", err);
       setError("Failed to submit tag. Please try again.");

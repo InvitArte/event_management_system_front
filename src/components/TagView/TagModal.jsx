@@ -13,28 +13,58 @@ import GuestTransferList from "./GuestTransferList";
 
 const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
+  const [tagName, setTagName] = useState("");
 
   useEffect(() => {
     if (tag) {
-      // Filtramos los invitados que ya tienen esta etiqueta
       const initialSelectedGuests = guests.filter((guest) =>
         guest.tags.some((guestTag) => guestTag.id === tag.id)
       );
       setSelectedGuests(initialSelectedGuests);
+      setTagName(tag.name);
     } else {
       setSelectedGuests([]);
+      setTagName("");
     }
   }, [tag, guests]);
 
-  const handleSubmit = async (tagData) => {
+  const handleSubmit = async () => {
+    const tagData = { name: tagName };
+    const updatedSelectedGuests = selectedGuests.map((guest) => guest.id);
+
     if (tag) {
-      // Modo de edición: incluir los invitados seleccionados
-      await onSubmit(tagData, selectedGuests);
+      // Modo de edición
+      const nameChanged = tagName !== tag.name;
+      const assignmentsChanged = !areGuestAssignmentsSame(
+        tag.id,
+        updatedSelectedGuests
+      );
+
+      if (nameChanged || assignmentsChanged) {
+        await onSubmit(
+          tag.id,
+          tagData,
+          updatedSelectedGuests,
+          nameChanged,
+          assignmentsChanged
+        );
+      }
     } else {
-      // Modo de creación: solo enviar los datos de la etiqueta, sin invitados
-      await onSubmit(tagData);
+      // Modo de creación
+      await onSubmit(null, tagData, updatedSelectedGuests, true, false);
     }
     onClose();
+  };
+
+  const areGuestAssignmentsSame = (tagId, newAssignments) => {
+    const currentAssignments = guests
+      .filter((guest) => guest.tags.some((tag) => tag.id === tagId))
+      .map((guest) => guest.id);
+
+    return (
+      currentAssignments.length === newAssignments.length &&
+      currentAssignments.every((id) => newAssignments.includes(id))
+    );
   };
 
   return (
@@ -42,7 +72,10 @@ const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
       <DialogTitle>{tag ? "Editar Etiqueta" : "Crear Etiqueta"}</DialogTitle>
       <DialogContent>
         <Box mb={2}>
-          <TagForm tag={tag} onSubmit={handleSubmit} />
+          <TagForm
+            tag={{ name: tagName }}
+            onSubmit={({ name }) => setTagName(name)}
+          />
         </Box>
         {tag && (
           <>
@@ -60,7 +93,7 @@ const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
-        <Button onClick={() => handleSubmit(tag || {})} color="primary">
+        <Button onClick={handleSubmit} color="primary">
           {tag ? "Actualizar" : "Crear"}
         </Button>
       </DialogActions>
