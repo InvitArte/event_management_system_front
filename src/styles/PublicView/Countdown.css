@@ -76,6 +76,13 @@
 }
 
 .message {
+  position: absolute;
+  top: 200px; /* Ajusta esta posición según sea necesario */
+  font-size: 6rem;
+  white-space: nowrap; /* Evita que el texto se ajuste */
+  overflow: visible; /* Permite que el texto se salga del contenedor */
+  text-overflow: clip; /* No agrega puntos suspensivos */
+  z-index: 1;
 }
 
 /* 
