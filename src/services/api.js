@@ -1,6 +1,6 @@
 import axios from "axios";
 import API_ROUTES from "../config/BaseUrl";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
   baseURL: API_ROUTES.BASE_URL,
@@ -24,16 +24,16 @@ axiosInstance.interceptors.request.use(
 const handleApiError = (error, serviceName) => {
   console.error(`Error in ${serviceName}:`, error);
   if (error.response) {
-    console.error('Response data:', error.response.data);
-    console.error('Response status:', error.response.status);
-    console.error('Response headers:', error.response.headers);
-    toast.error(`Error: ${error.response.data.message || 'Algo salió mal'}`);
+    console.error("Response data:", error.response.data);
+    console.error("Response status:", error.response.status);
+    console.error("Response headers:", error.response.headers);
+    toast.error(`Error: ${error.response.data.message || "Algo salió mal"}`);
   } else if (error.request) {
-    console.error('No se recibió respuesta:', error.request);
-    toast.error('No hubo respuesta del servidor');
+    console.error("No se recibió respuesta:", error.request);
+    toast.error("No hubo respuesta del servidor");
   } else {
-    console.error('Error setting up request:', error.message);
-    toast.error('Error al realizar la petición');
+    console.error("Error setting up request:", error.message);
+    toast.error("Error al realizar la petición");
   }
   throw error;
 };
@@ -42,28 +42,31 @@ export const authService = {
   register: async (userData) => {
     try {
       const response = await axiosInstance.post(API_ROUTES.REGISTER, userData);
-      toast.success('Registro exitoso');
+      toast.success("Registro exitoso");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'register');
+      return handleApiError(error, "register");
     }
   },
   login: async (email, password) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.LOGIN, { email, password });
-      toast.success('Login correcto');
+      const response = await axiosInstance.post(API_ROUTES.LOGIN, {
+        email,
+        password,
+      });
+      toast.success("Login correcto");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'login');
+      return handleApiError(error, "login");
     }
   },
   logout: async () => {
     try {
       const response = await axiosInstance.post(API_ROUTES.LOGOUT);
-      toast.success('Logout correcto');
+      toast.success("Logout correcto");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'logout');
+      return handleApiError(error, "logout");
     }
   },
 };
@@ -74,7 +77,7 @@ export const userService = {
       const response = await axiosInstance.get(API_ROUTES.USER);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getCurrentUser');
+      return handleApiError(error, "getCurrentUser");
     }
   },
   getAllUsers: async () => {
@@ -82,7 +85,7 @@ export const userService = {
       const response = await axiosInstance.get(API_ROUTES.USERS);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllUsers');
+      return handleApiError(error, "getAllUsers");
     }
   },
   getUser: async (userId) => {
@@ -90,34 +93,41 @@ export const userService = {
       const response = await axiosInstance.get(`${API_ROUTES.USERS}/${userId}`);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getUser');
+      return handleApiError(error, "getUser");
     }
   },
   updateUser: async (userId, userData) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.USERS}/${userId}`, userData);
-      toast.success('Usuario actualizado correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.USERS}/${userId}`,
+        userData
+      );
+      toast.success("Usuario actualizado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateUser');
+      return handleApiError(error, "updateUser");
     }
   },
   deleteUser: async (userId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ROUTES.USERS}/${userId}`);
-      toast.success('Usario eliminado correctamente');
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.USERS}/${userId}`
+      );
+      toast.success("Usario eliminado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'deleteUser');
+      return handleApiError(error, "deleteUser");
     }
   },
   updateDate: async (date) => {
     try {
-      const response = await axiosInstance.put(API_ROUTES.UPDATE_USER_DATE, { date });
-      toast.success('Fecha actualizada correctamente');
+      const response = await axiosInstance.put(API_ROUTES.UPDATE_USER_DATE, {
+        date,
+      });
+      toast.success("Fecha actualizada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateDate');
+      return handleApiError(error, "updateDate");
     }
   },
   changePassword: async (currentPassword, newPassword) => {
@@ -127,19 +137,22 @@ export const userService = {
         new_password: newPassword,
         new_password_confirmation: newPassword,
       });
-      toast.success('Contrasena actualizada correctamente');
+      toast.success("Contrasena actualizada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'changePassword');
+      return handleApiError(error, "changePassword");
     }
   },
   updateGiftInfo: async (giftInfo) => {
     try {
-      const response = await axiosInstance.put(API_ROUTES.UPDATE_GIFT_INFO, giftInfo);
-      toast.success('Información de regalos actualizada correctamente');
+      const response = await axiosInstance.put(
+        API_ROUTES.UPDATE_GIFT_INFO,
+        giftInfo
+      );
+      toast.success("Información de regalos actualizada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateGiftInfo');
+      return handleApiError(error, "updateGiftInfo");
     }
   },
 };
@@ -150,62 +163,74 @@ export const guestService = {
       const response = await axiosInstance.get(API_ROUTES.GUESTS);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllGuests');
+      return handleApiError(error, "getAllGuests");
     }
   },
   getGuest: async (guestId) => {
     try {
-      const response = await axiosInstance.get(`${API_ROUTES.GUESTS}/${guestId}`);
+      const response = await axiosInstance.get(
+        `${API_ROUTES.GUESTS}/${guestId}`
+      );
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getGuest');
+      return handleApiError(error, "getGuest");
     }
   },
   createGuest: async (guestData) => {
     try {
       const response = await axiosInstance.post(API_ROUTES.GUESTS, guestData);
-      toast.success('Invitado creado correctamente');
+      toast.success("Invitado creado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'createGuest');
+      return handleApiError(error, "createGuest");
     }
   },
   updateGuest: async (guestId, guestData) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.GUESTS}/${guestId}`, guestData);
-      toast.success('Invitado actualizado correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.GUESTS}/${guestId}`,
+        guestData
+      );
+      toast.success("Invitado actualizado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateGuest');
+      return handleApiError(error, "updateGuest");
     }
   },
   deleteGuest: async (guestId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ROUTES.GUESTS}/${guestId}`);
-      toast.success('Invitado eliminado correctamente');
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.GUESTS}/${guestId}`
+      );
+      toast.success("Invitado eliminado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'deleteGuest');
+      return handleApiError(error, "deleteGuest");
     }
   },
   validateGuest: async (guestId) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.GUESTS}/${guestId}/validate`);
-      toast.success('Invitado validado correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.GUESTS}/${guestId}/validate`
+      );
+      toast.success("Invitado validado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'validateGuest');
+      return handleApiError(error, "validateGuest");
     }
   },
   bulkValidate: async (guestIds) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.BULK_VALIDATE_GUESTS, {
-        guest_ids: guestIds,
-      });
-      toast.success('Invitados validados correctamente');
+      const response = await axiosInstance.post(
+        API_ROUTES.BULK_VALIDATE_GUESTS,
+        {
+          guest_ids: guestIds,
+        }
+      );
+      toast.success("Invitados validados correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'bulkValidate');
+      return handleApiError(error, "bulkValidate");
     }
   },
 };
@@ -216,42 +241,52 @@ export const plusOneService = {
       const response = await axiosInstance.get(API_ROUTES.PLUS_ONES);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllPlusOnes');
+      return handleApiError(error, "getAllPlusOnes");
     }
   },
   getPlusOne: async (plusOneId) => {
     try {
-      const response = await axiosInstance.get(`${API_ROUTES.PLUS_ONES}/${plusOneId}`);
+      const response = await axiosInstance.get(
+        `${API_ROUTES.PLUS_ONES}/${plusOneId}`
+      );
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getPlusOne');
+      return handleApiError(error, "getPlusOne");
     }
   },
   createPlusOne: async (plusOneData) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.PLUS_ONES, plusOneData);
-      toast.success('Más uno creado correctamente');
+      const response = await axiosInstance.post(
+        API_ROUTES.PLUS_ONES,
+        plusOneData
+      );
+      toast.success("Más uno creado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'createPlusOne');
+      return handleApiError(error, "createPlusOne");
     }
   },
   updatePlusOne: async (plusOneId, plusOneData) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.PLUS_ONES}/${plusOneId}`, plusOneData);
-      toast.success('Más uno actualizado correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.PLUS_ONES}/${plusOneId}`,
+        plusOneData
+      );
+      toast.success("Más uno actualizado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updatePlusOne');
+      return handleApiError(error, "updatePlusOne");
     }
   },
   deletePlusOne: async (plusOneId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ROUTES.PLUS_ONES}/${plusOneId}`);
-      toast.success('Mas uno actualizado correctamente');
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.PLUS_ONES}/${plusOneId}`
+      );
+      toast.success("Mas uno actualizado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'deletePlusOne');
+      return handleApiError(error, "deletePlusOne");
     }
   },
 };
@@ -262,42 +297,52 @@ export const allergyService = {
       const response = await axiosInstance.get(API_ROUTES.ALLERGIES);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllAllergies');
+      return handleApiError(error, "getAllAllergies");
     }
   },
   getAllergy: async (allergyId) => {
     try {
-      const response = await axiosInstance.get(`${API_ROUTES.ALLERGIES}/${allergyId}`);
+      const response = await axiosInstance.get(
+        `${API_ROUTES.ALLERGIES}/${allergyId}`
+      );
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllergy');
+      return handleApiError(error, "getAllergy");
     }
   },
   createAllergy: async (allergyData) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.ALLERGIES, allergyData);
-      toast.success('Alergia creada correctamente');
+      const response = await axiosInstance.post(
+        API_ROUTES.ALLERGIES,
+        allergyData
+      );
+      toast.success("Alergia creada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'createAllergy');
+      return handleApiError(error, "createAllergy");
     }
   },
   updateAllergy: async (allergyId, allergyData) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.ALLERGIES}/${allergyId}`, allergyData);
-      toast.success('Alergia actualizada correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.ALLERGIES}/${allergyId}`,
+        allergyData
+      );
+      toast.success("Alergia actualizada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateAllergy');
+      return handleApiError(error, "updateAllergy");
     }
   },
   deleteAllergy: async (allergyId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ROUTES.ALLERGIES}/${allergyId}`);
-      toast.success('Alergia eliminada correctamente');
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.ALLERGIES}/${allergyId}`
+      );
+      toast.success("Alergia eliminada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'deleteAllergy');
+      return handleApiError(error, "deleteAllergy");
     }
   },
 };
@@ -308,42 +353,52 @@ export const locationService = {
       const response = await axiosInstance.get(API_ROUTES.LOCATIONS);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllLocations');
+      return handleApiError(error, "getAllLocations");
     }
   },
   getLocation: async (locationId) => {
     try {
-      const response = await axiosInstance.get(`${API_ROUTES.LOCATIONS}/${locationId}`);
+      const response = await axiosInstance.get(
+        `${API_ROUTES.LOCATIONS}/${locationId}`
+      );
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getLocation');
+      return handleApiError(error, "getLocation");
     }
   },
   createLocation: async (locationData) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.LOCATIONS, locationData);
-      toast.success('Ubicación creada correctamente');
+      const response = await axiosInstance.post(
+        API_ROUTES.LOCATIONS,
+        locationData
+      );
+      toast.success("Ubicación creada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'createLocation');
+      return handleApiError(error, "createLocation");
     }
   },
   updateLocation: async (locationId, locationData) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.LOCATIONS}/${locationId}`, locationData);
-      toast.success('Ubicación actualizada correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.LOCATIONS}/${locationId}`,
+        locationData
+      );
+      toast.success("Ubicación actualizada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateLocation');
+      return handleApiError(error, "updateLocation");
     }
   },
   deleteLocation: async (locationId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ROUTES.LOCATIONS}/${locationId}`);
-      toast.success('Ubicación eliminada correctamente');
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.LOCATIONS}/${locationId}`
+      );
+      toast.success("Ubicación eliminada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'deleteLocation');
+      return handleApiError(error, "deleteLocation");
     }
   },
 };
@@ -354,7 +409,7 @@ export const menuService = {
       const response = await axiosInstance.get(API_ROUTES.MENUS);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllMenus');
+      return handleApiError(error, "getAllMenus");
     }
   },
   getMenu: async (menuId) => {
@@ -362,34 +417,39 @@ export const menuService = {
       const response = await axiosInstance.get(`${API_ROUTES.MENUS}/${menuId}`);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getMenu');
+      return handleApiError(error, "getMenu");
     }
   },
   createMenu: async (menuData) => {
     try {
       const response = await axiosInstance.post(API_ROUTES.MENUS, menuData);
-      toast.success('Menú creado correctamente');
+      toast.success("Menú creado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'createMenu');
+      return handleApiError(error, "createMenu");
     }
   },
   updateMenu: async (menuId, menuData) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.MENUS}/${menuId}`, menuData);
-      toast.success('Menú actualizado correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.MENUS}/${menuId}`,
+        menuData
+      );
+      toast.success("Menú actualizado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateMenu');
+      return handleApiError(error, "updateMenu");
     }
   },
   deleteMenu: async (menuId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ROUTES.MENUS}/${menuId}`);
-      toast.success('Menú eliminado correctamente');
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.MENUS}/${menuId}`
+      );
+      toast.success("Menú eliminado correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'deleteMenu');
+      return handleApiError(error, "deleteMenu");
     }
   },
 };
@@ -400,7 +460,7 @@ export const publicService = {
       const response = await axiosInstance.get(API_ROUTES.MENUS_PUBLIC);
       return response.data;
     } catch (error) {
-      console.error('Error in getPublicMenus:', error);
+      console.error("Error in getPublicMenus:", error);
       throw error;
     }
   },
@@ -409,7 +469,7 @@ export const publicService = {
       const response = await axiosInstance.get(API_ROUTES.ALLERGIES_PUBLIC);
       return response.data;
     } catch (error) {
-      console.error('Error in getPublicAllergies:', error);
+      console.error("Error in getPublicAllergies:", error);
       throw error;
     }
   },
@@ -420,7 +480,7 @@ export const publicService = {
       });
       return response.data;
     } catch (error) {
-      console.error('Error in getPublicLocations:', error);
+      console.error("Error in getPublicLocations:", error);
       throw error;
     }
   },
@@ -431,7 +491,7 @@ export const publicService = {
       });
       return response.data;
     } catch (error) {
-      console.error('Error in getUserDate:', error);
+      console.error("Error in getUserDate:", error);
       throw error;
     }
   },
@@ -442,30 +502,36 @@ export const publicService = {
       });
       return response.data;
     } catch (error) {
-      console.error('Error in getUserBankAccount:', error);
+      console.error("Error in getUserBankAccount:", error);
       throw error;
     }
   },
   getUserGiftListUrl: async (userId) => {
     try {
-      const response = await axiosInstance.get(API_ROUTES.GIFT_LIST_URL_PUBLIC, {
-        params: { user_id: userId },
-      });
+      const response = await axiosInstance.get(
+        API_ROUTES.GIFT_LIST_URL_PUBLIC,
+        {
+          params: { user_id: userId },
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error('Error in getUserGiftListUrl:', error);
+      console.error("Error in getUserGiftListUrl:", error);
       throw error;
     }
   },
   createGuestWithPlusOne: async (guestData, plusOneData) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.CREATE_GUEST_WITH_PLUS_ONE, {
-        guest: guestData,
-        plus_one: plusOneData,
-      });
+      const response = await axiosInstance.post(
+        API_ROUTES.CREATE_GUEST_WITH_PLUS_ONE,
+        {
+          guest: guestData,
+          plus_one: plusOneData,
+        }
+      );
       return response.data;
     } catch (error) {
-      console.error('Error in createGuestWithPlusOne:', error);
+      console.error("Error in createGuestWithPlusOne:", error);
       throw error;
     }
   },
@@ -477,7 +543,7 @@ export const tagService = {
       const response = await axiosInstance.get(API_ROUTES.TAGS);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getAllTags');
+      return handleApiError(error, "getAllTags");
     }
   },
   getTag: async (tagId) => {
@@ -485,52 +551,63 @@ export const tagService = {
       const response = await axiosInstance.get(`${API_ROUTES.TAGS}/${tagId}`);
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'getTag');
+      return handleApiError(error, "getTag");
     }
   },
   createTag: async (tagData) => {
     try {
       const response = await axiosInstance.post(API_ROUTES.TAGS, tagData);
-      toast.success('Etiqueta creada correctamente');
+      toast.success("Etiqueta creada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'createTag');
+      return handleApiError(error, "createTag");
     }
   },
   updateTag: async (tagId, tagData) => {
     try {
-      const response = await axiosInstance.put(`${API_ROUTES.TAGS}/${tagId}`, tagData);
-      toast.success('Etiqueta actualizada correctamente');
+      const response = await axiosInstance.put(
+        `${API_ROUTES.TAGS}/${tagId}`,
+        tagData
+      );
+      toast.success("Etiqueta actualizada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'updateTag');
+      return handleApiError(error, "updateTag");
     }
   },
   deleteTag: async (tagId) => {
     try {
-      const response = await axiosInstance.delete(`${API_ROUTES.TAGS}/${tagId}`);
-      toast.success('Etiqueta eliminada correctamente');
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.TAGS}/${tagId}`
+      );
+      toast.success("Etiqueta eliminada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'deleteTag');
+      return handleApiError(error, "deleteTag");
     }
   },
   assignTag: async (guestId, tagId) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.ASSIGN_TAG(guestId), { tag_id: tagId });
-      toast.success('Etiqueta asignada correctamente');
+      const response = await axiosInstance.post(
+        API_ROUTES.ASSIGN_TAG(guestId),
+        { tag_id: tagId }
+      );
+      toast.success("Etiqueta asignada correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'assignTag');
+      return handleApiError(error, "assignTag");
     }
   },
   removeTag: async (guestId, tagId) => {
     try {
-      const response = await axiosInstance.post(API_ROUTES.REMOVE_TAG(guestId), { tag_id: tagId });
-      toast.success('Etiqueta removida correctamente');
+      const response = await axiosInstance.post(
+        API_ROUTES.REMOVE_TAG(guestId),
+        { tag_id: tagId }
+      );
+      toast.success("Etiqueta removida correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'removeTag');
+      return handleApiError(error, "removeTag");
     }
   },
   bulkAssign: async (tagId, guestIds) => {
@@ -539,10 +616,10 @@ export const tagService = {
         tag_id: tagId,
         guest_ids: guestIds,
       });
-      toast.success('Etiquetas asignadas correctamente');
+      toast.success("Etiquetas asignadas correctamente");
       return response.data;
     } catch (error) {
-      return handleApiError(error, 'bulkAssign');
+      return handleApiError(error, "bulkAssign");
     }
   },
 };

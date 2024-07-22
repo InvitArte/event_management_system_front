@@ -1,21 +1,22 @@
 .countdown {
   position: relative;
   width: 100%;
-  height: 250vh;
-  background: url("../../assets/imgs/countdown.png") no-repeat center top;
+  height: 150vh;
+  background: url("../../assets/imgs/countdown.jpg") no-repeat center -340px;
   background-size: cover;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  margin-bottom: 50px;
 }
 
 .countdown-overlay {
   display: flex;
   flex-direction: column;
   align-items: center;
-
+  justify-content: center;
   top: 0;
   left: 0;
   width: 100%;
@@ -27,81 +28,51 @@
     rgba(0, 0, 0, 0) 70%,
     rgb(0, 0, 0) 100%
   );
-
+  background-color: rgba(12, 12, 12, 0.637);
   z-index: 1;
+}
+
+.timer {
+  position: relative; /* Para asegurar que los elementos dentro se posicionen relativamente */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Centra verticalmente el contenido */
+  text-align: center;
+  color: white;
+  z-index: 1;
+  text-shadow: 4px 4px 5px rgb(0, 0, 0);
+}
+
+.title,
+.timer-components,
+.message {
+  white-space: nowrap; /* Evita el salto de línea dentro de las componentes de tiempo y el mensaje */
+}
+
+.title {
+  font-size: 4rem;
+  overflow: visible; /* Permite que el texto se desborde del círculo */
+}
+
+.timer-components {
+  font-size: 5rem;
+  overflow: visible; /* Permite que el texto se desborde del círculo */
+}
+
+.message {
+  font-size: 6rem;
+  overflow: visible; /* Permite que el texto se desborde del círculo */
 }
 
 .circle {
   position: absolute;
-  width: 550px;
-  height: 550px;
-
+  width: 400px;
+  height: 400px;
+  border-color: rgb(0, 0, 0);
+  border-style: solid;
+  border-width: 4px;
   border-radius: 50%;
-  background-color: rgba(88, 88, 88, 0.397);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 0;
+  background: transparent;
+  z-index: 0; /* Asegura que el círculo esté detrás del texto */
 }
-.timer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-  position: absolute;
-  z-index: 1;
-  text-align: center;
-  color: rgb(255, 255, 255);
-  text-shadow: 4px 4px 5px rgb(0, 0, 0);
-  top: 400px;
-}
-
-.title {
-  position: absolute;
-  top: 120px;
-  font-size: 6rem;
-  overflow: visible;
-  z-index: 1;
-}
-
-.timer-components {
-  position: absolute;
-  top: 260px; /* Ajusta esta posición según sea necesario */
-  font-size: 6rem;
-  white-space: nowrap; /* Evita que el texto se ajuste */
-  overflow: visible; /* Permite que el texto se salga del contenedor */
-  text-overflow: clip; /* No agrega puntos suspensivos */
-  z-index: 1;
-}
-
-.message {
-  position: absolute;
-  top: 200px; /* Ajusta esta posición según sea necesario */
-  font-size: 6rem;
-  white-space: nowrap; /* Evita que el texto se ajuste */
-  overflow: visible; /* Permite que el texto se salga del contenedor */
-  text-overflow: clip; /* No agrega puntos suspensivos */
-  z-index: 1;
-}
-
-/* 
-.title {
-  position: absolute;
-  top: 650px;
-  font-size: 6rem;
-  z-index: 1;
-  margin-bottom: 20px;
-  text-align: center;
-  color: rgb(255, 255, 255);
-}
-
-.timer {
-  position: absolute;
-  top: 740px;
-  font-size: 6.5rem;
-  z-index: 1;
-  text-align: center;
-  color: rgb(255, 255, 255);
-  text-shadow: 4px 4px 5px rgb(0, 0, 0);
-} */

@@ -37,7 +37,7 @@ const Countdown = () => {
       }
     };
 
-    fetchEventDate(1); // TODO: Pasar el ID del usuario autenticado
+    fetchEventDate(2); // TODO: Pasar el ID del usuario autenticado
   }, []);
 
   useEffect(() => {
