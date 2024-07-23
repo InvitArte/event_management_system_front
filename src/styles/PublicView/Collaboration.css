@@ -1,15 +1,16 @@
-/* src/components/Collaboration.css */
+/* src/styles/PublicView/Collaboration.css */
 .collaboration {
   position: relative;
   width: 100%;
-  height: 120vh;
-  background: url("../../assets/imgs/collaboration.jpg") no-repeat center -450px;
+  min-height: 100vh;
+  background: url("../../assets/imgs/collaboration.jpg") no-repeat center center;
   background-size: cover;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 50px;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
 .collaboration-overlay {
@@ -30,20 +31,106 @@
     rgb(0, 0, 0) 100%
   );
   background-color: rgba(0, 0, 0, 0.3);
+  padding: 2rem 1rem;
+  box-sizing: border-box;
 }
 
 .collaboration-logo {
-  width: 50rem;
-  filter: drop-shadow(6px 6px 3px rgb(0, 0, 0));
+  width: 90%;
+  max-width: 20rem;
+  height: auto;
+  filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
+  margin-top: 1rem;
 }
 
 .collaboration h3 {
   color: white;
-  font-size: 4rem;
-  margin-top: 0;
-  padding-top: 0;
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  padding: 0;
   text-align: center;
-  letter-spacing: 7px;
-  word-spacing: 12px;
-  /* text-shadow: 6px 6px 3px rgb(0, 0, 0); */
+  letter-spacing: 2px;
+  word-spacing: 4px;
+}
+
+.collaboration-sello {
+  position: absolute;
+  bottom: 15%;
+  right: 10%;
+  width: 25%; /* Aumentado del 20% al 25% */
+  max-width: 120px; /* Aumentado de 100px a 120px */
+  height: auto;
+  filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
+  transform: rotate(15deg); /* Rotación de 15 grados a la derecha */
+  transform-origin: center center; 
+
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media screen and (min-width: 480px) {
+  .collaboration h3 {
+    font-size: 2rem;
+    letter-spacing: 3px;
+    word-spacing: 6px;
+  }
+
+  .collaboration-logo {
+    max-width: 25rem;
+  }
+
+  .collaboration-sello {
+    max-width: 140px; /* Aumentado de 120px a 140px */
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .collaboration {
+    min-height: 120vh;
+  }
+
+  .collaboration h3 {
+    font-size: 2.5rem;
+    letter-spacing: 4px;
+    word-spacing: 8px;
+  }
+
+  .collaboration-logo {
+    max-width: 30rem;
+  }
+
+  .collaboration-sello {
+    max-width: 170px; /* Aumentado de 150px a 170px */
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .collaboration h3 {
+    font-size: 3rem;
+    letter-spacing: 5px;
+    word-spacing: 10px;
+  }
+
+  .collaboration-logo {
+    max-width: 40rem;
+  }
+
+  .collaboration-sello {
+    max-width: 200px; /* Aumentado de 180px a 200px */
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .collaboration h3 {
+    font-size: 4rem;
+    letter-spacing: 7px;
+    word-spacing: 12px;
+  }
+
+  .collaboration-logo {
+    max-width: 50rem;
+  }
+
+  .collaboration-sello {
+    max-width: 230px; /* Aumentado de 200px a 230px */
+  }
 }
