@@ -149,7 +149,7 @@ const LocationModal = ({ open, handleClose }) => {
                     <Typography variant="body2">
                       Dirección: {location.direccion}
                     </Typography>
-                    <Typography variant="body2">URL: {location.url}</Typography>
+                    {/* <Typography variant="body2">URL: {location.url}</Typography> */}
                   </Box>
                 </Collapse>
               </React.Fragment>
@@ -248,7 +248,7 @@ const LocationModal = ({ open, handleClose }) => {
                 size="small"
                 sx={{ mb: 1 }}
               />
-              <TextField
+              {/* <TextField
                 value={newLocation.url}
                 onChange={(e) =>
                   setNewLocation({ ...newLocation, url: e.target.value })
@@ -257,7 +257,7 @@ const LocationModal = ({ open, handleClose }) => {
                 fullWidth
                 size="small"
                 sx={{ mb: 1 }}
-              />
+              /> */}
               <Button
                 onClick={handleAddLocation}
                 fullWidth

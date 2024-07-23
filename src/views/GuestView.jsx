@@ -15,7 +15,10 @@ import ExcelDownloader from "../components/GuestView/ExcelDownloader";
 import GuestModal from "../components/GuestView/GuestModal";
 import SkeletonTable from "../components/Ui/SkeletonTable";
 
-const GuestView = ({ visibleColumns: initialVisibleColumns }) => {
+const GuestView = ({
+  visibleColumns: initialVisibleColumns,
+  visibleFilters,
+}) => {
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -295,6 +298,7 @@ const GuestView = ({ visibleColumns: initialVisibleColumns }) => {
           guests={guests}
           onFilterChange={handleFilterChange}
           tags={tags}
+          visibleFilters={visibleFilters}
         />
         <Box
           display="flex"
@@ -305,7 +309,13 @@ const GuestView = ({ visibleColumns: initialVisibleColumns }) => {
           <ExcelDownloader data={excelData} fileName="Invitados" />
         </Box>
         {loading ? (
-          <SkeletonTable rowsNum={10} columnsNum={8} />
+          <SkeletonTable
+            rowsNum={10}
+            columnsNum={12}
+            height={600}
+            showCheckbox={true}
+            showActions={true}
+          />
         ) : (
           <GuestTable
             guests={filteredGuests}

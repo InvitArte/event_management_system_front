@@ -9,27 +9,9 @@ import TagView from "./views/TagView";
 import ProfileView from "./views/ProfileView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import ProtectedLayout from "./components/Utils/ProtectedLayout";
+import { userId, guestViewColumns, guestViewFilters } from "./config/config";
 
 const App = () => {
-  const guestViewColumns = {
-    id: true,
-    fullName: true,
-    email: true,
-    phone: true,
-    validated: true,
-    menu: true,
-    allergy: true,
-    needs_hotel: true,
-    needs_transport: true,
-    disability: true,
-    observations: true,
-    accommodation_plan: true,
-    isMainGuest: true,
-    tags: true,
-  };
-
-  const userId = 4;
-
   return (
     <Router>
       <ToastContainer
@@ -44,7 +26,12 @@ const App = () => {
           <Route element={<ProtectedLayout />}>
             <Route
               path="/guests"
-              element={<GuestView visibleColumns={guestViewColumns} />}
+              element={
+                <GuestView
+                  visibleColumns={guestViewColumns}
+                  visibleFilters={guestViewFilters}
+                />
+              }
             />
             <Route path="/tags" element={<TagView />} />
             <Route path="/profile" element={<ProfileView />} />
