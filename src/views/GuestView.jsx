@@ -15,7 +15,7 @@ import ExcelDownloader from "../components/GuestView/ExcelDownloader";
 import GuestModal from "../components/GuestView/GuestModal";
 import SkeletonTable from "../components/Ui/SkeletonTable";
 
-const GuestView = () => {
+const GuestView = ({ visibleColumns: initialVisibleColumns }) => {
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -25,7 +25,7 @@ const GuestView = () => {
   const [menus, setMenus] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [tags, setTags] = useState([]);
-  const [visibleColumns, setVisibleColumns] = useState({});
+  const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
   const [sortModel, setSortModel] = useState([]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -200,6 +200,7 @@ const GuestView = () => {
   const handleVisibleColumnsChange = (newVisibleColumns) => {
     setVisibleColumns(newVisibleColumns);
   };
+
   const columns = [
     { field: "id", headerName: "ID" },
     { field: "fullName", headerName: "Nombre Completo" },
@@ -313,6 +314,7 @@ const GuestView = () => {
             onVisibleColumnsChange={handleVisibleColumnsChange}
             sortModel={sortModel}
             onSortModelChange={setSortModel}
+            visibleColumns={visibleColumns}
           />
         )}
         <GuestModal

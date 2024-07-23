@@ -17,9 +17,9 @@ const GuestTable = ({
   onVisibleColumnsChange,
   sortModel,
   onSortModelChange,
+  visibleColumns,
 }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
-  const [visibleColumns, setVisibleColumns] = useState({});
 
   const columns = [
     {
@@ -94,28 +94,16 @@ const GuestTable = ({
     },
   ];
 
-  useEffect(() => {
-    // Inicializar todas las columnas como visibles
-    const initialVisibleColumns = {};
-    columns.forEach((col) => {
-      initialVisibleColumns[col.field] = true;
-    });
-    setVisibleColumns(initialVisibleColumns);
-    onVisibleColumnsChange(initialVisibleColumns);
-  }, []);
-
   const handleColumnVisibilityChange = (newModel) => {
-    setVisibleColumns(newModel);
     onVisibleColumnsChange(newModel);
   };
+
   const handleSelectGuest = useCallback((guest) => {
-    console.log("Attempting to select/deselect guest:", guest);
     setSelectedGuests((prev) => {
       const isSelected = prev.some((g) => g.id === guest.id);
       const newSelection = isSelected
         ? prev.filter((g) => g.id !== guest.id)
         : [...prev, guest];
-      console.log("New selection:", newSelection);
       return newSelection;
     });
   }, []);
@@ -128,10 +116,6 @@ const GuestTable = ({
     },
     [onRowClick]
   );
-
-  useEffect(() => {
-    console.log("Selected Guests Updated:", selectedGuests);
-  }, [selectedGuests]);
 
   const getRowClassName = (params) => {
     const groupIndex = getGroupIndex(

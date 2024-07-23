@@ -11,6 +11,25 @@ import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import ProtectedLayout from "./components/Utils/ProtectedLayout";
 
 const App = () => {
+  const guestViewColumns = {
+    id: true,
+    fullName: true,
+    email: true,
+    phone: true,
+    validated: true,
+    menu: true,
+    allergy: true,
+    needs_hotel: true,
+    needs_transport: true,
+    disability: true,
+    observations: true,
+    accommodation_plan: true,
+    isMainGuest: true,
+    tags: true,
+  };
+
+  const userId = 4;
+
   return (
     <Router>
       <ToastContainer
@@ -19,11 +38,14 @@ const App = () => {
         hideProgressBar={false}
       />
       <Routes>
-        <Route path="/" element={<PublicView />} />
+        <Route path="/" element={<PublicView userId={userId} />} />
         <Route path="/login" element={<LoginView />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
-            <Route path="/guests" element={<GuestView />} />
+            <Route
+              path="/guests"
+              element={<GuestView visibleColumns={guestViewColumns} />}
+            />
             <Route path="/tags" element={<TagView />} />
             <Route path="/profile" element={<ProfileView />} />
           </Route>

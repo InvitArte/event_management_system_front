@@ -4,7 +4,7 @@ import Countdown from "../components/PublicView/Countdown.jsx";
 import EventDetails from "../components/PublicView/EventDetails.jsx";
 import Footer from "../components/Ui/Footer.jsx";
 
-const PublicView = () => {
+const PublicView = ({ userId }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -63,13 +63,13 @@ const PublicView = () => {
         className="snap-section"
         style={{ height: "100vh", scrollSnapAlign: "start" }}
       >
-        <Countdown />
+        <Countdown userId={userId} />
       </div>
       <div
         className="snap-section"
         style={{ height: "100vh", scrollSnapAlign: "start" }}
       >
-        <EventDetails />
+        <EventDetails userId={userId} />
       </div>
       <div
         className="snap-section"
