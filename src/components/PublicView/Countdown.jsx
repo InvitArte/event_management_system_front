@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { publicService } from "../../services/api";
+import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
 
 const Countdown = () => {
@@ -79,15 +80,15 @@ const Countdown = () => {
     <div className="countdown">
       <div className="countdown-overlay">
         <div className="timer">
+          <img src={logo} alt="Logo" className="countdown-logo" />
           {showCountdown ? (
             <>
               <h1 className="title">Quedan</h1>
               <p className="timer-components">{timerComponents}</p>
             </>
           ) : (
-            <span className="message">¡Hoy es el día!</span>
+            <span className="message">Hoy es el día</span>
           )}
-          <div className="circle"></div>
         </div>
       </div>
     </div>

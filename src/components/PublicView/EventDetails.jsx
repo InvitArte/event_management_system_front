@@ -96,15 +96,16 @@ const EventDetails = () => {
       <div className="event-details-overlay">
         <img src={logo} alt="Logo" className="event-logo" />
         <h1>PRESENTACIÓN NUEVA COLECCIÓN</h1>
+        <h2>Fecha:</h2>
         <h2 className="event-date">{eventDateString || "Cargando fecha..."}</h2>
         {eventDate && (
           <button className="add-to-calendar" onClick={addToGoogleCalendar}>
-            Añadir a Google Calendar
+            Añadir al calendario
           </button>
         )}
         {eventLocations.length > 0 && (
           <div className="event-locations">
-            <h3>Ubicaciones:</h3>
+            <h2>Ubicaciones:</h2>
             <ul>
               {eventLocations.map((location) => (
                 <li key={location.id}>
