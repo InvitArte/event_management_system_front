@@ -25,6 +25,6 @@ export const guestViewFilters = {
   accommodation_plan: true,
 };
 
-export const userId = 4;
+export const userId = 12;
 
 export const numPlusOne = 1;

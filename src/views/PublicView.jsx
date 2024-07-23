@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import FrontPage from "../components/PublicView/FrontPage.jsx";
 import Countdown from "../components/PublicView/Countdown.jsx";
 import EventDetails from "../components/PublicView/EventDetails.jsx";
+import Collaboration from "../components/PublicView/Collaboration.jsx";
 import Footer from "../components/Ui/Footer.jsx";
 
 const PublicView = ({ userId }) => {
@@ -45,38 +46,12 @@ const PublicView = ({ userId }) => {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        height: "100vh",
-        overflowY: "scroll",
-        scrollSnapType: "y mandatory",
-      }}
-    >
-      <div
-        className="snap-section"
-        style={{ height: "100vh", scrollSnapAlign: "start" }}
-      >
-        <FrontPage />
-      </div>
-      <div
-        className="snap-section"
-        style={{ height: "100vh", scrollSnapAlign: "start" }}
-      >
-        <Countdown userId={userId} />
-      </div>
-      <div
-        className="snap-section"
-        style={{ height: "100vh", scrollSnapAlign: "start" }}
-      >
-        <EventDetails userId={userId} />
-      </div>
-      <div
-        className="snap-section"
-        style={{ height: "100vh", scrollSnapAlign: "start" }}
-      >
-        <Footer />
-      </div>
+    <div ref={containerRef}>
+      <FrontPage userId={userId} />
+      <Countdown userId={userId} />
+      <EventDetails userId={userId} />
+      <Collaboration userId={userId} />
+      <Footer />
     </div>
   );
 };

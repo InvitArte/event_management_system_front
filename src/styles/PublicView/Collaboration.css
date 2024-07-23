@@ -1,0 +1,49 @@
+/* src/components/Collaboration.css */
+.collaboration {
+  position: relative;
+  width: 100%;
+  height: 120vh;
+  background: url("../../assets/imgs/collaboration.jpg") no-repeat center -450px;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.collaboration-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgb(0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0) 70%,
+    rgb(0, 0, 0) 100%
+  );
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.collaboration-logo {
+  width: 50rem;
+  filter: drop-shadow(6px 6px 3px rgb(0, 0, 0));
+}
+
+.collaboration h3 {
+  color: white;
+  font-size: 4rem;
+  margin-top: 0;
+  padding-top: 0;
+  text-align: center;
+  letter-spacing: 7px;
+  word-spacing: 12px;
+  /* text-shadow: 6px 6px 3px rgb(0, 0, 0); */
+}
