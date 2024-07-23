@@ -6,7 +6,7 @@ import {
   getContrastColor,
 } from "../Utils/tagColors";
 
-const GuestFilters = ({ guests, onFilterChange, tags }) => {
+const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
   const [filters, setFilters] = useState({});
 
   const uniqueMenus = useMemo(
@@ -57,98 +57,112 @@ const GuestFilters = ({ guests, onFilterChange, tags }) => {
 
   return (
     <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap" }}>
-      <Autocomplete
-        options={uniqueMenus}
-        renderInput={(params) => (
-          <TextField {...params} label="Filtrar por Menú" />
-        )}
-        onChange={(event, value) => handleFilterChange("menu", value)}
-        sx={{ width: 300 }}
-      />
-      <Autocomplete
-        options={uniqueAllergies}
-        renderInput={(params) => (
-          <TextField {...params} label="Filtrar por Alergia" />
-        )}
-        onChange={(event, value) => handleFilterChange("allergy", value)}
-        sx={{ width: 300 }}
-      />
-      <Autocomplete
-        options={["Sí", "No"]}
-        renderInput={(params) => (
-          <TextField {...params} label="Necesita Hotel" />
-        )}
-        onChange={(event, value) => handleFilterChange("needs_hotel", value)}
-        sx={{ width: 200 }}
-      />
-      <Autocomplete
-        options={["Sí", "No"]}
-        renderInput={(params) => (
-          <TextField {...params} label="Necesita Transporte" />
-        )}
-        onChange={(event, value) =>
-          handleFilterChange("needs_transport", value)
-        }
-        sx={{ width: 200 }}
-      />
-      <Autocomplete
-        options={["Sí", "No"]}
-        renderInput={(params) => <TextField {...params} label="Verificado" />}
-        onChange={(event, value) => handleFilterChange("validated", value)}
-        sx={{ width: 200 }}
-      />
-      <Autocomplete
-        multiple
-        options={uniqueTags}
-        getOptionLabel={(option) => option.name}
-        renderInput={(params) => (
-          <TextField {...params} label="Filtrar por Etiquetas" />
-        )}
-        onChange={(event, value) =>
-          handleFilterChange(
-            "tags",
-            value.map((v) => v.name)
-          )
-        }
-        renderTags={(value, getTagProps) =>
-          value.map((option, index) => {
-            const { key, ...chipProps } = getTagProps({ index });
-            const backgroundColor = adjustColor(option.color, 20);
-            const textColor = getContrastColor(backgroundColor);
+      {visibleFilters.menu && (
+        <Autocomplete
+          options={uniqueMenus}
+          renderInput={(params) => (
+            <TextField {...params} label="Filtrar por Menú" />
+          )}
+          onChange={(event, value) => handleFilterChange("menu", value)}
+          sx={{ width: 300 }}
+        />
+      )}
+      {visibleFilters.allergy && (
+        <Autocomplete
+          options={uniqueAllergies}
+          renderInput={(params) => (
+            <TextField {...params} label="Filtrar por Alergia" />
+          )}
+          onChange={(event, value) => handleFilterChange("allergy", value)}
+          sx={{ width: 300 }}
+        />
+      )}
+      {visibleFilters.needs_hotel && (
+        <Autocomplete
+          options={["Sí", "No"]}
+          renderInput={(params) => (
+            <TextField {...params} label="Necesita Hotel" />
+          )}
+          onChange={(event, value) => handleFilterChange("needs_hotel", value)}
+          sx={{ width: 200 }}
+        />
+      )}
+      {visibleFilters.needs_transport && (
+        <Autocomplete
+          options={["Sí", "No"]}
+          renderInput={(params) => (
+            <TextField {...params} label="Necesita Transporte" />
+          )}
+          onChange={(event, value) =>
+            handleFilterChange("needs_transport", value)
+          }
+          sx={{ width: 200 }}
+        />
+      )}
+      {visibleFilters.validated && (
+        <Autocomplete
+          options={["Sí", "No"]}
+          renderInput={(params) => <TextField {...params} label="Verificado" />}
+          onChange={(event, value) => handleFilterChange("validated", value)}
+          sx={{ width: 200 }}
+        />
+      )}
+      {visibleFilters.tags && (
+        <Autocomplete
+          multiple
+          options={uniqueTags}
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => (
+            <TextField {...params} label="Filtrar por Etiquetas" />
+          )}
+          onChange={(event, value) =>
+            handleFilterChange(
+              "tags",
+              value.map((v) => v.name)
+            )
+          }
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => {
+              const { key, ...chipProps } = getTagProps({ index });
+              const backgroundColor = adjustColor(option.color, 20);
+              const textColor = getContrastColor(backgroundColor);
+              return (
+                <Chip
+                  key={key}
+                  {...chipProps}
+                  variant="filled"
+                  label={option.name}
+                  style={{
+                    backgroundColor: backgroundColor,
+                    color: textColor,
+                  }}
+                />
+              );
+            })
+          }
+          renderOption={(props, option) => {
+            const { key, ...otherProps } = props;
             return (
-              <Chip
-                key={key}
-                {...chipProps}
-                variant="filled"
-                label={option.name}
-                style={{
-                  backgroundColor: backgroundColor,
-                  color: textColor,
-                }}
-              />
+              <li key={key} {...otherProps}>
+                {option.name}
+              </li>
             );
-          })
-        }
-        renderOption={(props, option) => {
-          const { key, ...otherProps } = props;
-          return (
-            <li key={key} {...otherProps}>
-              {option.name}
-            </li>
-          );
-        }}
-        sx={{ width: 300 }}
-      />
-      <Autocomplete
-        options={uniqueAccommodationPlans}
-        renderInput={(params) => (
-          <TextField {...params} label="Filtrar por Plan de Alojamiento" />
-        )}
-        onChange={(event, value) =>
-          handleFilterChange("accommodation_plan", value)
-        }
-        sx={{ width: 300 }}
-      />
+          }}
+          sx={{ width: 300 }}
+        />
+      )}
+      {visibleFilters.accommodation_plan && (
+        <Autocomplete
+          options={uniqueAccommodationPlans}
+          renderInput={(params) => (
+            <TextField {...params} label="Filtrar por Plan de Alojamiento" />
+          )}
+          onChange={(event, value) =>
+            handleFilterChange("accommodation_plan", value)
+          }
+          sx={{ width: 300 }}
+        />
+      )}
     </Box>
   );
 };

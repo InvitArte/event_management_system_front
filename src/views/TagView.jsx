@@ -12,6 +12,7 @@ import {
 import { tagService, guestService } from "../services/api";
 import TagTable from "../components/TagView/TagTable";
 import TagModal from "../components/TagView/TagModal";
+import SkeletonTable from "../components/Ui/SkeletonTable";
 
 const TagView = () => {
   const [tags, setTags] = useState([]);
@@ -64,57 +65,28 @@ const TagView = () => {
     }
   };
 
-  const handleSubmitTag = async (
-    tagId,
-    tagData,
-    selectedGuestIds,
-    nameChanged,
-    assignmentsChanged
-  ) => {
-    try {
-      let updatedTag;
-      if (tagId) {
-        // Modo de edición
-        if (nameChanged) {
-          updatedTag = await tagService.updateTag(tagId, tagData);
-        }
-        if (assignmentsChanged) {
-          await tagService.bulkAssign(tagId, selectedGuestIds);
-        }
-        if (nameChanged || assignmentsChanged) {
-          setTags(
-            tags.map((tag) =>
-              tag.id === tagId
-                ? { ...tag, ...(updatedTag || {}), guests: selectedGuestIds }
-                : tag
-            )
-          );
-        }
+  const handleTagUpdate = (updatedTag) => {
+    setTags((prevTags) => {
+      const index = prevTags.findIndex((tag) => tag.id === updatedTag.id);
+      if (index !== -1) {
+        // Update existing tag
+        return [
+          ...prevTags.slice(0, index),
+          updatedTag,
+          ...prevTags.slice(index + 1),
+        ];
       } else {
-        // Modo de creación
-        updatedTag = await tagService.createTag(tagData);
-        setTags([...tags, { ...updatedTag, guests: [] }]);
+        // Add new tag
+        return [...prevTags, updatedTag];
       }
-      setModalOpen(false);
-      return updatedTag;
-    } catch (err) {
-      console.error("Error submitting tag:", err);
-      setError("Failed to submit tag. Please try again.");
-    }
+    });
   };
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedTag(null);
+    setError("");
+  };
 
   if (error) {
     return (
@@ -143,16 +115,26 @@ const TagView = () => {
         </Box>
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-        <TagTable
-          tags={tags}
-          onEditTag={handleEditTag}
-          onDeleteTag={handleDeleteTag}
-        />
+        {loading ? (
+          <SkeletonTable
+            rowsNum={5}
+            columnsNum={1}
+            height={400}
+            showCheckbox={false}
+            showActions={true}
+          />
+        ) : (
+          <TagTable
+            tags={tags}
+            onEditTag={handleEditTag}
+            onDeleteTag={handleDeleteTag}
+          />
+        )}
       </Paper>
       <TagModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleSubmitTag}
+        onClose={handleCloseModal}
+        onTagUpdate={handleTagUpdate}
         tag={selectedTag}
         guests={guests}
       />

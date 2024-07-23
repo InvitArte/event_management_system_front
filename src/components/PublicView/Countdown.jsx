@@ -3,13 +3,14 @@ import { publicService } from "../../services/api";
 import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
 
-const Countdown = () => {
+const Countdown = ({ userId }) => {
   const [timeLeft, setTimeLeft] = useState({});
   const [eventDate, setEventDate] = useState(null);
 
   useEffect(() => {
-    const fetchEventDate = async (userId) => {
+    const fetchEventDate = async () => {
       try {
+        // Usa el userId de las props, o un valor por defecto si no está definido
         const response = await publicService.getUserDate(userId);
         console.log("Respuesta de la API:", response);
 
@@ -38,8 +39,8 @@ const Countdown = () => {
       }
     };
 
-    fetchEventDate(2); // TODO: Pasar el ID del usuario autenticado
-  }, []);
+    fetchEventDate();
+  }, [userId]);
 
   useEffect(() => {
     const calculateTimeLeft = () => {

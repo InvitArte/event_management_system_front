@@ -3,17 +3,19 @@ import logo from "../../assets/imgs/maniqui.svg";
 import { useState, useEffect } from "react";
 import { publicService } from "../../services/api";
 
-const EventDetails = () => {
+const EventDetails = ({ userId }) => {
   const [eventDate, setEventDate] = useState(null);
   const [eventDateString, setEventDateString] = useState("");
-  const [eventLocations, setEventLocations] = useState([]); // Estado para la lista de ubicaciones
+  const [eventLocations, setEventLocations] = useState([]);
 
   useEffect(() => {
-    const fetchEventData = async (userId) => {
+    const fetchEventData = async () => {
       try {
+        const id = userId;
+
         const [dateResponse, locationsResponse] = await Promise.all([
-          publicService.getUserDate(userId),
-          publicService.getPublicLocations(userId), // Obtener ubicaciones
+          publicService.getUserDate(id),
+          publicService.getPublicLocations(id),
         ]);
 
         console.log("Respuesta de la API:", dateResponse, locationsResponse);
@@ -61,8 +63,8 @@ const EventDetails = () => {
       }
     };
 
-    fetchEventData(10); // TODO: Pasar el ID del usuario autenticado
-  }, []);
+    fetchEventData();
+  }, [userId]);
 
   const addToGoogleCalendar = () => {
     const startDate =

@@ -6,7 +6,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
   const columns = [
-    { field: "id", headerName: "ID", width: 70 },
     { field: "name", headerName: "Nombre", flex: 1 },
     {
       field: "actions",

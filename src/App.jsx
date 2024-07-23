@@ -9,6 +9,7 @@ import TagView from "./views/TagView";
 import ProfileView from "./views/ProfileView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import ProtectedLayout from "./components/Utils/ProtectedLayout";
+import { userId, guestViewColumns, guestViewFilters } from "./config/config";
 
 const App = () => {
   return (
@@ -19,11 +20,19 @@ const App = () => {
         hideProgressBar={false}
       />
       <Routes>
-        <Route path="/" element={<PublicView />} />
+        <Route path="/" element={<PublicView userId={userId} />} />
         <Route path="/login" element={<LoginView />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
-            <Route path="/guests" element={<GuestView />} />
+            <Route
+              path="/guests"
+              element={
+                <GuestView
+                  visibleColumns={guestViewColumns}
+                  visibleFilters={guestViewFilters}
+                />
+              }
+            />
             <Route path="/tags" element={<TagView />} />
             <Route path="/profile" element={<ProfileView />} />
           </Route>

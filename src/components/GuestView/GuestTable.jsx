@@ -17,15 +17,27 @@ const GuestTable = ({
   onVisibleColumnsChange,
   sortModel,
   onSortModelChange,
+  visibleColumns,
 }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
-  const [visibleColumns, setVisibleColumns] = useState({});
 
   const columns = [
     {
       field: "select",
       headerName: "Seleccionar",
       width: 100,
+      renderHeader: (params) => (
+        <Checkbox
+          checked={
+            selectedGuests.length === guests.filter((g) => g.isMainGuest).length
+          }
+          indeterminate={
+            selectedGuests.length > 0 &&
+            selectedGuests.length < guests.filter((g) => g.isMainGuest).length
+          }
+          onChange={handleSelectAllClick}
+        />
+      ),
       renderCell: (params) => (
         <Checkbox
           checked={selectedGuests.some((g) => g.id === params.row.id)}
@@ -34,6 +46,7 @@ const GuestTable = ({
         />
       ),
     },
+    { field: "validated", headerName: "Validado", width: 100, type: "boolean" },
     {
       field: "fullName",
       headerName: "Nombre completo",
@@ -46,7 +59,6 @@ const GuestTable = ({
     },
     { field: "email", headerName: "Correo", width: 200 },
     { field: "phone", headerName: "Teléfono", width: 150 },
-    { field: "validated", headerName: "Validado", width: 100, type: "boolean" },
     { field: "menu", headerName: "Menú", width: 150 },
     { field: "allergy", headerName: "Alergias", width: 150 },
     {
@@ -94,31 +106,32 @@ const GuestTable = ({
     },
   ];
 
-  useEffect(() => {
-    // Inicializar todas las columnas como visibles
-    const initialVisibleColumns = {};
-    columns.forEach((col) => {
-      initialVisibleColumns[col.field] = true;
-    });
-    setVisibleColumns(initialVisibleColumns);
-    onVisibleColumnsChange(initialVisibleColumns);
-  }, []);
-
   const handleColumnVisibilityChange = (newModel) => {
-    setVisibleColumns(newModel);
     onVisibleColumnsChange(newModel);
   };
+
   const handleSelectGuest = useCallback((guest) => {
-    console.log("Attempting to select/deselect guest:", guest);
     setSelectedGuests((prev) => {
       const isSelected = prev.some((g) => g.id === guest.id);
-      const newSelection = isSelected
-        ? prev.filter((g) => g.id !== guest.id)
-        : [...prev, guest];
-      console.log("New selection:", newSelection);
-      return newSelection;
+      if (isSelected) {
+        return prev.filter((g) => g.id !== guest.id);
+      } else {
+        return [...prev, guest];
+      }
     });
   }, []);
+
+  const handleSelectAllClick = useCallback(
+    (event) => {
+      if (event.target.checked) {
+        const newSelectedGuests = guests.filter((g) => g.isMainGuest);
+        setSelectedGuests(newSelectedGuests);
+      } else {
+        setSelectedGuests([]);
+      }
+    },
+    [guests]
+  );
 
   const handleRowClick = useCallback(
     (params) => {
@@ -128,10 +141,6 @@ const GuestTable = ({
     },
     [onRowClick]
   );
-
-  useEffect(() => {
-    console.log("Selected Guests Updated:", selectedGuests);
-  }, [selectedGuests]);
 
   const getRowClassName = (params) => {
     const groupIndex = getGroupIndex(

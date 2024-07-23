@@ -7,13 +7,16 @@ import {
   Button,
   Box,
   Typography,
+  TextField,
 } from "@mui/material";
-import TagForm from "./TagForm";
 import GuestTransferList from "./GuestTransferList";
+import { tagService } from "../../services/api";
 
-const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
+const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
   const [tagName, setTagName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (tag) {
@@ -26,34 +29,62 @@ const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
       setSelectedGuests([]);
       setTagName("");
     }
-  }, [tag, guests]);
+    setErrors({});
+  }, [tag, guests, open]);
 
   const handleSubmit = async () => {
-    const tagData = { name: tagName };
-    const updatedSelectedGuests = selectedGuests.map((guest) => guest.id);
+    setIsSubmitting(true);
+    setErrors({});
+    try {
+      const tagData = { name: tagName.trim() };
+      const updatedSelectedGuests = selectedGuests.map((guest) => guest.id);
 
-    if (tag) {
-      // Modo de edición
-      const nameChanged = tagName !== tag.name;
-      const assignmentsChanged = !areGuestAssignmentsSame(
-        tag.id,
-        updatedSelectedGuests
-      );
-
-      if (nameChanged || assignmentsChanged) {
-        await onSubmit(
+      let updatedTag;
+      if (tag) {
+        // Modo de edición
+        const nameChanged = tagName !== tag.name;
+        const assignmentsChanged = !areGuestAssignmentsSame(
           tag.id,
-          tagData,
-          updatedSelectedGuests,
-          nameChanged,
-          assignmentsChanged
+          updatedSelectedGuests
         );
+
+        if (nameChanged) {
+          updatedTag = await tagService.updateTag(tag.id, tagData);
+        }
+        if (assignmentsChanged) {
+          await tagService.bulkAssign(tag.id, updatedSelectedGuests);
+        }
+        if (nameChanged || assignmentsChanged) {
+          onTagUpdate({
+            ...tag,
+            ...(updatedTag || {}),
+            guests: updatedSelectedGuests,
+          });
+        }
+      } else {
+        // Modo de creación
+        updatedTag = await tagService.createTag(tagData);
+        if (updatedTag) {
+          onTagUpdate({ ...updatedTag, guests: [] });
+        } else {
+          throw new Error("Failed to create tag");
+        }
       }
-    } else {
-      // Modo de creación
-      await onSubmit(null, tagData, updatedSelectedGuests, true, false);
+      handleClose();
+    } catch (error) {
+      console.error("Error submitting tag:", error);
+      if (error.response && error.response.data) {
+        if (error.response.data.errors) {
+          setErrors(error.response.data.errors);
+        } else if (error.response.data.message) {
+          setErrors({ general: error.response.data.message });
+        }
+      } else {
+        setErrors({ general: "Failed to submit tag. Please try again." });
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-    onClose();
   };
 
   const areGuestAssignmentsSame = (tagId, newAssignments) => {
@@ -67,14 +98,29 @@ const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
     );
   };
 
+  const handleClose = () => {
+    setTagName("");
+    setSelectedGuests([]);
+    setErrors({});
+    onClose();
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>{tag ? "Editar Etiqueta" : "Crear Etiqueta"}</DialogTitle>
       <DialogContent>
         <Box mb={2}>
-          <TagForm
-            tag={{ name: tagName }}
-            onSubmit={({ name }) => setTagName(name)}
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nombre de la etiqueta"
+            type="text"
+            fullWidth
+            value={tagName}
+            onChange={(e) => setTagName(e.target.value)}
+            error={!!errors.name}
+            helperText={errors.name ? errors.name[0] : ""}
+            required
           />
         </Box>
         {tag && (
@@ -90,10 +136,21 @@ const TagModal = ({ open, onClose, onSubmit, tag, guests }) => {
             />
           </>
         )}
+        {errors.general && (
+          <Typography color="error" align="center">
+            {errors.general}
+          </Typography>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancelar</Button>
-        <Button onClick={handleSubmit} color="primary">
+        <Button onClick={handleClose} disabled={isSubmitting}>
+          Cancelar
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          color="primary"
+          disabled={isSubmitting || !tagName.trim()}
+        >
           {tag ? "Actualizar" : "Crear"}
         </Button>
       </DialogActions>

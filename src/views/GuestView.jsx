@@ -15,7 +15,10 @@ import ExcelDownloader from "../components/GuestView/ExcelDownloader";
 import GuestModal from "../components/GuestView/GuestModal";
 import SkeletonTable from "../components/Ui/SkeletonTable";
 
-const GuestView = () => {
+const GuestView = ({
+  visibleColumns: initialVisibleColumns,
+  visibleFilters,
+}) => {
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -25,7 +28,7 @@ const GuestView = () => {
   const [menus, setMenus] = useState([]);
   const [allergies, setAllergies] = useState([]);
   const [tags, setTags] = useState([]);
-  const [visibleColumns, setVisibleColumns] = useState({});
+  const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
   const [sortModel, setSortModel] = useState([]);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -200,12 +203,13 @@ const GuestView = () => {
   const handleVisibleColumnsChange = (newVisibleColumns) => {
     setVisibleColumns(newVisibleColumns);
   };
+
   const columns = [
     { field: "id", headerName: "ID" },
+    { field: "validated", headerName: "Validado" },
     { field: "fullName", headerName: "Nombre Completo" },
     { field: "email", headerName: "Email" },
     { field: "phone", headerName: "Teléfono" },
-    { field: "validated", headerName: "Validado" },
     { field: "menu", headerName: "Menú" },
     { field: "allergy", headerName: "Alergia" },
     { field: "needs_hotel", headerName: "Necesita Hotel" },
@@ -294,6 +298,7 @@ const GuestView = () => {
           guests={guests}
           onFilterChange={handleFilterChange}
           tags={tags}
+          visibleFilters={visibleFilters}
         />
         <Box
           display="flex"
@@ -304,7 +309,13 @@ const GuestView = () => {
           <ExcelDownloader data={excelData} fileName="Invitados" />
         </Box>
         {loading ? (
-          <SkeletonTable rowsNum={10} columnsNum={8} />
+          <SkeletonTable
+            rowsNum={10}
+            columnsNum={12}
+            height={600}
+            showCheckbox={true}
+            showActions={true}
+          />
         ) : (
           <GuestTable
             guests={filteredGuests}
@@ -313,6 +324,7 @@ const GuestView = () => {
             onVisibleColumnsChange={handleVisibleColumnsChange}
             sortModel={sortModel}
             onSortModelChange={setSortModel}
+            visibleColumns={visibleColumns}
           />
         )}
         <GuestModal
