@@ -11,7 +11,6 @@ const EventDetails = ({ userId }) => {
   useEffect(() => {
     const fetchEventData = async () => {
       try {
-        // Usa el userId de las props, o un valor por defecto si no está definido
         const id = userId;
 
         const [dateResponse, locationsResponse] = await Promise.all([

@@ -203,10 +203,10 @@ const GuestView = ({ visibleColumns: initialVisibleColumns }) => {
 
   const columns = [
     { field: "id", headerName: "ID" },
+    { field: "validated", headerName: "Validado" },
     { field: "fullName", headerName: "Nombre Completo" },
     { field: "email", headerName: "Email" },
     { field: "phone", headerName: "Teléfono" },
-    { field: "validated", headerName: "Validado" },
     { field: "menu", headerName: "Menú" },
     { field: "allergy", headerName: "Alergia" },
     { field: "needs_hotel", headerName: "Necesita Hotel" },
