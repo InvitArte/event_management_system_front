@@ -60,7 +60,7 @@
   text-align: center;
 }
 
-.add-to-calendar, .open-maps {
+.add-to-calendar, .open-maps, .confirmation {
   background-color: #a3a3a3;
   color: white;
   border: none;
@@ -73,7 +73,7 @@
   transition: background-color 0.3s ease;
 }
 
-.add-to-calendar:hover, .open-maps:hover {
+.add-to-calendar:hover, .open-maps:hover, .confirmation:hover {
   background-color: #868686;
 }
 
