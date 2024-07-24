@@ -49,6 +49,35 @@ const EventDetails = ({ userId }) => {
     fetchEventData();
   }, [userId]);
 
+  const addToGoogleCalendar = () => {
+    if (!eventDate) return;
+
+    const startDate =
+      eventDate.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const endDate =
+      new Date(eventDate.getTime() + 2 * 60 * 60 * 1000)
+        .toISOString()
+        .replace(/[-:]/g, "")
+        .split(".")[0] + "Z";
+
+    const locationString = eventLocations
+      .map((location) => location.direccion)
+      .join(", ");
+
+    const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=Presentación+Nueva+Colección&dates=${startDate}/${endDate}&details=Detalles+del+evento&location=${encodeURIComponent(
+      locationString || "Ubicación+del+evento"
+    )}`;
+
+    window.open(url, "_blank");
+  };
+
+  const openGoogleMaps = (address) => {
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      address
+    )}`;
+    window.open(url, "_blank");
+  };
+
   const openConfirmationModal = () => {
     setIsModalOpen(true);
   };
@@ -64,6 +93,11 @@ const EventDetails = ({ userId }) => {
         <h1>PRESENTACIÓN NUEVA COLECCIÓN</h1>
         <h2>Fecha:</h2>
         <h2 className="event-date">{eventDateString || "Cargando fecha..."}</h2>
+        {eventDate && (
+          <button className="add-to-calendar" onClick={addToGoogleCalendar}>
+            Añadir a Google Calendar
+          </button>
+        )}
         {eventLocations.length > 0 && (
           <div className="event-locations">
             <h2>Ubicaciones:</h2>
