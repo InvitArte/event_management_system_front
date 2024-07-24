@@ -95,7 +95,7 @@ const EventDetails = ({ userId }) => {
         <h2 className="event-date">{eventDateString || "Cargando fecha..."}</h2>
         {eventDate && (
           <button className="add-to-calendar" onClick={addToGoogleCalendar}>
-            Añadir a Google Calendar
+            Añadir a calendario
           </button>
         )}
         {eventLocations.length > 0 && (
