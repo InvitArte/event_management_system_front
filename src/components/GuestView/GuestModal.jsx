@@ -18,6 +18,7 @@ const GuestModal = ({
   onSubmit,
   menus,
   allergies,
+  tags,
   visibleFormFields,
 }) => {
   const [loading, setLoading] = useState(false);
@@ -49,6 +50,7 @@ const GuestModal = ({
             allergy_id: plusOne.allergy_id,
             disability: plusOne.disability,
           })),
+          tags: formData.tags, // Incluimos los tags seleccionados
         };
 
         const response = guest
@@ -100,6 +102,7 @@ const GuestModal = ({
           onSubmit={handleSubmit}
           menus={menus}
           allergies={allergies}
+          tags={tags}
           visibleFormFields={visibleFormFields}
         />
         {error && (
