@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { publicService } from "../../services/api";
+import { publicService } from "../../services/Api";
 import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
 

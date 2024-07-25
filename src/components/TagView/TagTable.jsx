@@ -1,7 +1,7 @@
 import React from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
-import { dataGridLocaleText } from "../Ui/dataGridLocaleText";
+import { dataGridLocaleText } from "../Ui/DataGridLocaleText";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const TagTable = ({ tags, onEditTag, onDeleteTag }) => {

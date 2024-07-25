@@ -15,7 +15,7 @@ import {
   guestViewFilters,
   guestFormFields,
   profileViewFields,
-} from "./config/config";
+} from "./config/Config";
 
 const App = () => {
   return (
