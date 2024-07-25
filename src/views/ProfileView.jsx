@@ -18,30 +18,24 @@ const ProfileView = ({ visibleFields }) => {
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
 
-  const handleOpenLocationModal = () => {
-    setLocationModalOpen(true);
-  };
-
-  const handleCloseLocationModal = () => {
-    setLocationModalOpen(false);
-  };
-
-  const handleOpenPasswordModal = () => {
-    setPasswordModalOpen(true);
-  };
-
-  const handleClosePasswordModal = () => {
-    setPasswordModalOpen(false);
-  };
+  const toggleModal = (setter) => () => setter((prev) => !prev);
 
   return (
     <Container maxWidth={isSmallScreen ? "sm" : "xl"}>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          flexWrap="wrap"
+        >
           <Typography
             variant={isSmallScreen ? "h5" : "h4"}
             component="h1"
-            style={{ color: "black" }}
+            style={{
+              color: "black",
+              marginBottom: isSmallScreen ? theme.spacing(2) : 0,
+            }}
           >
             Perfil de Usuario
           </Typography>
@@ -49,15 +43,18 @@ const ProfileView = ({ visibleFields }) => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleOpenLocationModal}
-              sx={{ marginRight: 2 }}
+              onClick={toggleModal(setLocationModalOpen)}
+              sx={{
+                marginRight: 2,
+                marginBottom: isSmallScreen ? theme.spacing(2) : 0,
+              }}
             >
               Ubicaciones
             </Button>
             <Button
               variant="contained"
               color="primary"
-              onClick={handleOpenPasswordModal}
+              onClick={toggleModal(setPasswordModalOpen)}
             >
               Cambiar Contraseña
             </Button>
@@ -69,11 +66,11 @@ const ProfileView = ({ visibleFields }) => {
       </Paper>
       <LocationModal
         open={locationModalOpen}
-        handleClose={handleCloseLocationModal}
+        handleClose={toggleModal(setLocationModalOpen)}
       />
       <ChangePasswordModal
         open={passwordModalOpen}
-        handleClose={handleClosePasswordModal}
+        handleClose={toggleModal(setPasswordModalOpen)}
       />
     </Container>
   );

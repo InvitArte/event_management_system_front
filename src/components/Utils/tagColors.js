@@ -1,5 +1,3 @@
-// src/utils/tagColors.js
-
 // Función para generar un color basado en una cadena
 export const stringToColor = (string) => {
   let hash = 0;

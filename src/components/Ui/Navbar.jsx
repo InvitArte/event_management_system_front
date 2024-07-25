@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import {
   Toolbar,
   Typography,
@@ -10,52 +11,67 @@ import {
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../../services/api";
 import { AnimatedAppBar, StyledNavLink } from "../../config/NavbarStyles";
+import { useScrollDetection, useUserMenu } from "../../hooks/NavbarHooks";
+
+const SCROLL_THRESHOLD = 50;
+
+const NavbarLink = ({ to, children }) => (
+  <Button color="inherit" component={StyledNavLink} to={to}>
+    {children}
+  </Button>
+);
+
+NavbarLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
+
+const UserMenu = ({ anchorEl, isOpen, onClose, onProfile, onLogout }) => (
+  <Menu
+    anchorEl={anchorEl}
+    open={isOpen}
+    onClose={onClose}
+    anchorOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+  >
+    <MenuItem onClick={onProfile}>Perfil</MenuItem>
+    <MenuItem onClick={onLogout}>Desconectarse</MenuItem>
+  </Menu>
+);
+
+UserMenu.propTypes = {
+  anchorEl: PropTypes.object,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onProfile: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
+};
 
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [scrolled]);
-
-  const handleUserMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleUserMenuClose = () => {
-    setAnchorEl(null);
-  };
+  const { isScrolled } = useScrollDetection(SCROLL_THRESHOLD);
+  const {
+    anchorEl,
+    isMenuOpen,
+    handleMenuOpen,
+    handleMenuClose,
+    handleLogout,
+  } = useUserMenu(navigate);
 
   const handleProfile = () => {
-    handleUserMenuClose();
+    handleMenuClose();
     navigate("/profile");
   };
 
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      handleUserMenuClose();
-      localStorage.removeItem("token");
-      navigate("/login");
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
-  };
-
   return (
-    <AnimatedAppBar position="fixed" elevation={3} scrolled={scrolled}>
+    <AnimatedAppBar position="fixed" elevation={3} isScrolled={isScrolled}>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
         <Toolbar
           disableGutters
@@ -64,23 +80,24 @@ const Navbar = () => {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             InvitArte
           </Typography>
-          <Button color="inherit" component={StyledNavLink} to="/guests">
-            Invitados
-          </Button>
-          <Button color="inherit" component={StyledNavLink} to="/tags">
-            Etiquetas
-          </Button>
-          <IconButton color="inherit" onClick={handleUserMenuOpen}>
+          <NavbarLink to="/guests">Invitados</NavbarLink>
+          <NavbarLink to="/tags">Etiquetas</NavbarLink>
+          <IconButton
+            color="inherit"
+            onClick={handleMenuOpen}
+            aria-label="cuenta de usuario"
+            aria-controls="user-menu"
+            aria-haspopup="true"
+          >
             <AccountCircleIcon />
           </IconButton>
-          <Menu
+          <UserMenu
             anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleUserMenuClose}
-          >
-            <MenuItem onClick={handleProfile}>Perfil</MenuItem>
-            <MenuItem onClick={handleLogout}>Desconectarse</MenuItem>
-          </Menu>
+            isOpen={isMenuOpen}
+            onClose={handleMenuClose}
+            onProfile={handleProfile}
+            onLogout={handleLogout}
+          />
         </Toolbar>
       </Container>
     </AnimatedAppBar>
