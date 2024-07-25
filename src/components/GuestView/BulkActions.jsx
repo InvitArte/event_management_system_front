@@ -1,19 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useCallback } from "react";
 import { Button, Box } from "@mui/material";
-import { guestService } from "../../services/api";
+import { guestService } from "../../services/Api";
 
-const BulkActions = ({ selectedGuests, onBulkActionComplete }) => {
-  const handleBulkValidate = async () => {
+const BulkActions = ({
+  selectedGuests,
+  onBulkActionComplete,
+  onSelectionReset,
+}) => {
+  const handleBulkValidate = useCallback(async () => {
     try {
       const guestIds = selectedGuests.map((guest) => guest.id);
       await guestService.bulkValidate(guestIds);
       onBulkActionComplete();
+      onSelectionReset(); // Reseteamos la selección después de completar la acción
     } catch (error) {
       console.error("Error validating guests in bulk:", error);
     }
-  };
-
-  useEffect(() => {}, [selectedGuests]);
+  }, [selectedGuests, onBulkActionComplete, onSelectionReset]);
 
   return (
     <Box sx={{ my: 2 }}>

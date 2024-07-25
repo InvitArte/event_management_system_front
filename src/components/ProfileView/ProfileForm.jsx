@@ -6,40 +6,46 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { userService } from "../../services/api";
+import { userService } from "../../services/Api";
+
+const initialUserData = {
+  id: "",
+  name: "",
+  email: "",
+  email_verified_at: "",
+  created_at: "",
+  updated_at: "",
+  date: "",
+  bank_account: "",
+  gift_list_url: "",
+};
 
 const ProfileForm = ({ visibleFields }) => {
-  const [userData, setUserData] = useState({
-    id: "",
-    name: "",
-    email: "",
-    email_verified_at: "",
-    created_at: "",
-    updated_at: "",
-    date: "",
-    bank_account: "",
-    gift_list_url: "",
-  });
-  const [displayDate, setDisplayDate] = useState("");
+  const [userData, setUserData] = useState(initialUserData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const data = await userService.getCurrentUser();
-        setUserData(data);
-        setDisplayDate(formatDateForDisplay(data.date));
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-        setError("Failed to load user data. Please try again.");
-        setLoading(false);
-      }
-    };
-
     fetchUserData();
   }, []);
+
+  const fetchUserData = async () => {
+    try {
+      const data = await userService.getCurrentUser();
+      setUserData(sanitizeUserData(data));
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+      setError("Failed to load user data. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const sanitizeUserData = (data) => {
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [key, value ?? ""])
+    );
+  };
 
   const formatDateForDisplay = (dateString) => {
     if (!dateString) return "";
@@ -52,19 +58,15 @@ const ProfileForm = ({ visibleFields }) => {
     const [date, time] = dateString.split(" ");
     const [day, month, year] = date.split("-");
     const [hour, minute] = time.split(":");
-    return `${year} ${month} ${day} ${hour} ${minute}`;
+    return `${year}-${month}-${day} ${hour}:${minute}`;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "date") {
-      setDisplayDate(value);
-    } else {
-      setUserData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -73,20 +75,17 @@ const ProfileForm = ({ visibleFields }) => {
     try {
       const updatedUserData = {
         ...userData,
-        date: formatDateForAPI(displayDate),
+        date: formatDateForAPI(userData.date),
       };
 
-      // Update user data
-      await userService.updateUser(updatedUserData.id, updatedUserData);
-
-      // Update date separately
-      await userService.updateDate(updatedUserData.date);
-
-      // Update gift info
-      await userService.updateGiftInfo({
-        bank_account: updatedUserData.bank_account,
-        gift_list_url: updatedUserData.gift_list_url,
-      });
+      await Promise.all([
+        userService.updateUser(updatedUserData.id, updatedUserData),
+        userService.updateDate(updatedUserData.date),
+        userService.updateGiftInfo({
+          bank_account: updatedUserData.bank_account,
+          gift_list_url: updatedUserData.gift_list_url,
+        }),
+      ]);
 
       setLoading(false);
     } catch (err) {
@@ -131,7 +130,7 @@ const ProfileForm = ({ visibleFields }) => {
             fullWidth
             label="Fecha"
             name="date"
-            value={displayDate}
+            value={formatDateForDisplay(userData.date)}
             onChange={handleChange}
             InputProps={{
               readOnly: false,

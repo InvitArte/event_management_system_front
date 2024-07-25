@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import {
-  AppBar,
   Toolbar,
   Typography,
   Button,
@@ -10,150 +10,94 @@ import {
   IconButton,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { authService } from "../../services/api";
+import { useNavigate } from "react-router-dom";
+import { AnimatedAppBar, StyledNavLink } from "../../config/NavbarStyles";
+import { useScrollDetection, useUserMenu } from "../../hooks/NavbarHooks";
 
-const bounceIn = keyframes`
-  0% { transform: translateY(-100%); }
-  50% { transform: translateY(8%); }
-  65% { transform: translateY(-4%); }
-  80% { transform: translateY(4%); }
-  95% { transform: translateY(-2%); }
-  100% { transform: translateY(0); }
-`;
+const SCROLL_THRESHOLD = 50;
 
-const AnimatedAppBar = styled(AppBar)`
-  animation: ${bounceIn} 1.2s ease-out;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: top center;
+const NavbarLink = ({ to, children }) => (
+  <Button color="inherit" component={StyledNavLink} to={to}>
+    {children}
+  </Button>
+);
 
-  &:hover {
-    width: 90% !important;
-    left: 5% !important;
-    height: 64px !important;
+NavbarLink.propTypes = {
+  to: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+};
 
-    .MuiToolbar-root {
-      opacity: 1 !important;
-    }
-  }
-`;
+const UserMenu = ({ anchorEl, isOpen, onClose, onProfile, onLogout }) => (
+  <Menu
+    anchorEl={anchorEl}
+    open={isOpen}
+    onClose={onClose}
+    anchorOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+  >
+    <MenuItem onClick={onProfile}>Perfil</MenuItem>
+    <MenuItem onClick={onLogout}>Desconectarse</MenuItem>
+  </Menu>
+);
 
-const StyledNavLink = styled(NavLink)`
-  color: inherit;
-  text-decoration: none;
-  &.active {
-    font-weight: bold;
-    text-decoration: underline;
-  }
-`;
+UserMenu.propTypes = {
+  anchorEl: PropTypes.object,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onProfile: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
+};
 
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false);
-  const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [scrolled]);
-
-  const handleUserMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleUserMenuClose = () => {
-    setAnchorEl(null);
-  };
+  const { isScrolled } = useScrollDetection(SCROLL_THRESHOLD);
+  const {
+    anchorEl,
+    isMenuOpen,
+    handleMenuOpen,
+    handleMenuClose,
+    handleLogout,
+  } = useUserMenu(navigate);
 
   const handleProfile = () => {
-    handleUserMenuClose();
+    handleMenuClose();
     navigate("/profile");
   };
 
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-      handleUserMenuClose();
-      // Limpia el token del localStorage
-      localStorage.removeItem("token");
-      // Redirige al usuario a la página de inicio de sesión
-      navigate("/login");
-    } catch (error) {
-      console.error("Error during logout:", error);
-      // Puedes manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
-    }
-  };
-
   return (
-    <AnimatedAppBar
-      position="fixed"
-      elevation={3}
-      sx={{
-        width: scrolled ? "100px" : "90%",
-        left: scrolled ? "calc(50% - 50px)" : "5%",
-        height: scrolled ? "30px" : "64px",
-        borderBottomLeftRadius: "46px",
-        borderBottomRightRadius: "46px",
-        overflow: "hidden",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "inherit",
-          transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-          clipPath: scrolled
-            ? "ellipse(50px 30px at top center)"
-            : "ellipse(100% 100% at top center)",
-        },
-        "& .MuiToolbar-root": {
-          height: "100%",
-          minHeight: "unset",
-          transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-          opacity: scrolled ? 0 : 1,
-          position: "relative",
-          zIndex: 1,
-        },
-      }}
-    >
+    <AnimatedAppBar position="fixed" elevation={3} isScrolled={isScrolled}>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
         <Toolbar
           disableGutters
           sx={{ height: "100%", justifyContent: "center" }}
         >
-          <>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              InvitArte
-            </Typography>
-            <Button color="inherit" component={StyledNavLink} to="/guests">
-              Invitados
-            </Button>
-            <Button color="inherit" component={StyledNavLink} to="/tags">
-              Etiquetas
-            </Button>
-            <IconButton color="inherit" onClick={handleUserMenuOpen}>
-              <AccountCircleIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleUserMenuClose}
-            >
-              <MenuItem onClick={handleProfile}>Perfil</MenuItem>
-              <MenuItem onClick={handleLogout}>Desconectarse</MenuItem>
-            </Menu>
-          </>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            InvitArte
+          </Typography>
+          <NavbarLink to="/guests">Invitados</NavbarLink>
+          <NavbarLink to="/tags">Etiquetas</NavbarLink>
+          <IconButton
+            color="inherit"
+            onClick={handleMenuOpen}
+            aria-label="cuenta de usuario"
+            aria-controls="user-menu"
+            aria-haspopup="true"
+          >
+            <AccountCircleIcon />
+          </IconButton>
+          <UserMenu
+            anchorEl={anchorEl}
+            isOpen={isMenuOpen}
+            onClose={handleMenuClose}
+            onProfile={handleProfile}
+            onLogout={handleLogout}
+          />
         </Toolbar>
       </Container>
     </AnimatedAppBar>
