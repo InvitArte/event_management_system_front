@@ -5,133 +5,20 @@ import {
   FormControlLabel,
   Button,
   Grid,
+  Chip,
   Typography,
   Autocomplete,
 } from "@mui/material";
-
-const PlusOneForm = ({
-  plusOne,
-  index,
-  handlePlusOneChange,
-  menus,
-  allergies,
-  visibleFormFields,
-  removePlusOne,
-}) => (
-  <Grid container item xs={12} spacing={3}>
-    <Grid item xs={12}>
-      <Typography variant="h6">Acompañante {index + 1}</Typography>
-    </Grid>
-    {visibleFormFields.plus_one_first_name && (
-      <Grid item xs={12} sm={6}>
-        <TextField
-          fullWidth
-          label="Nombre"
-          name="first_name"
-          value={plusOne.first_name}
-          onChange={(e) =>
-            handlePlusOneChange(index, "first_name", e.target.value)
-          }
-          required
-          variant="outlined"
-          InputLabelProps={{ shrink: true }}
-          margin="normal"
-        />
-      </Grid>
-    )}
-    {visibleFormFields.plus_one_last_name && (
-      <Grid item xs={12} sm={6}>
-        <TextField
-          fullWidth
-          label="Apellido"
-          name="last_name"
-          value={plusOne.last_name}
-          onChange={(e) =>
-            handlePlusOneChange(index, "last_name", e.target.value)
-          }
-          required
-          variant="outlined"
-          InputLabelProps={{ shrink: true }}
-          margin="normal"
-        />
-      </Grid>
-    )}
-    {visibleFormFields.plus_one_menu && (
-      <Grid item xs={12} sm={4}>
-        <Autocomplete
-          options={menus}
-          getOptionLabel={(option) => option.name}
-          value={plusOne.menu}
-          onChange={(event, newValue) =>
-            handlePlusOneChange(index, "menu", newValue)
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Menú"
-              variant="outlined"
-              margin="normal"
-              InputLabelProps={{ shrink: true }}
-            />
-          )}
-        />
-      </Grid>
-    )}
-    {visibleFormFields.plus_one_allergy && (
-      <Grid item xs={12} sm={4}>
-        <Autocomplete
-          options={allergies}
-          getOptionLabel={(option) => option.name}
-          value={plusOne.allergy}
-          onChange={(event, newValue) =>
-            handlePlusOneChange(index, "allergy", newValue)
-          }
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Alergia"
-              variant="outlined"
-              margin="normal"
-              InputLabelProps={{ shrink: true }}
-            />
-          )}
-        />
-      </Grid>
-    )}
-    {visibleFormFields.plus_one_disability && (
-      <Grid item xs={12} sm={4}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={plusOne.disability}
-              onChange={(e) =>
-                handlePlusOneChange(index, "disability", e.target.checked)
-              }
-              name="disability"
-            />
-          }
-          label="Tiene discapacidad"
-        />
-      </Grid>
-    )}
-    <Grid item xs={12}>
-      <Button
-        onClick={() => removePlusOne(index)}
-        color="secondary"
-        variant="outlined"
-        fullWidth
-      >
-        Eliminar Acompañante
-      </Button>
-    </Grid>
-  </Grid>
-);
+import { stringToColor, getContrastColor } from "../Utils/TagColors";
+import PlusOneForm from "./PlusOneForm";
+import TagChip from "../Ui/TagChip";
 
 const GuestForm = ({
   guest,
   onSubmit,
   menus,
   allergies,
+  tags,
   visibleFormFields,
 }) => {
   const [formData, setFormData] = useState({
@@ -147,6 +34,7 @@ const GuestForm = ({
     observations: "",
     accommodation_plan: "",
     plus_ones: [],
+    tags: [],
   });
   const [showPlusOne, setShowPlusOne] = useState(false);
 
@@ -156,6 +44,7 @@ const GuestForm = ({
         ...guest,
         menu: menus.find((m) => m.id === guest.menu_id) || null,
         allergy: allergies.find((a) => a.id === guest.allergy_id) || null,
+        tags: guest.tags || [],
         plus_ones: guest.plus_ones.map((po) => ({
           ...po,
           menu: menus.find((m) => m.id === po.menu_id) || null,
@@ -190,6 +79,13 @@ const GuestForm = ({
       };
       return { ...prevData, plus_ones: newPlusOnes };
     });
+  }, []);
+
+  const handleTagChange = useCallback((event, newValue) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      tags: newValue,
+    }));
   }, []);
 
   const addPlusOne = useCallback(() => {
@@ -236,6 +132,7 @@ const GuestForm = ({
         allergy_id: formData.allergy?.id || null,
         observations: formData.observations || "",
         accommodation_plan: formData.accommodation_plan || "",
+        tags: formData.tags.map((tag) => tag.id),
         plus_ones: formData.plus_ones.map((plusOne) => ({
           first_name: plusOne.first_name,
           last_name: plusOne.last_name,
@@ -255,6 +152,15 @@ const GuestForm = ({
       return visibleFormFields[fieldName] && component;
     },
     [visibleFormFields]
+  );
+
+  const renderTags = useMemo(
+    () => (value, getTagProps) =>
+      value.map((option, index) => {
+        const { key, ...otherProps } = getTagProps({ index });
+        return <TagChip key={key} tag={option} {...otherProps} />;
+      }),
+    []
   );
 
   return (
@@ -447,6 +353,28 @@ const GuestForm = ({
               variant="outlined"
               InputLabelProps={{ shrink: true }}
               margin="normal"
+            />
+          </Grid>
+        )}
+        {renderFormField(
+          "tags",
+          <Grid item xs={12}>
+            <Autocomplete
+              multiple
+              options={tags}
+              getOptionLabel={(option) => option.name}
+              value={formData.tags}
+              onChange={handleTagChange}
+              renderTags={renderTags}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Etiquetas"
+                  variant="outlined"
+                  margin="normal"
+                  InputLabelProps={{ shrink: true }}
+                />
+              )}
             />
           </Grid>
         )}
