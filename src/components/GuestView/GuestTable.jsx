@@ -23,6 +23,10 @@ const GuestTable = ({
 }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
 
+  const handleSelectionReset = useCallback(() => {
+    setSelectedGuests([]);
+  }, []);
+
   const handleSelectGuest = useCallback((guest) => {
     setSelectedGuests((prev) => {
       const isSelected = prev.some((g) => g.id === guest.id);
@@ -197,6 +201,7 @@ const GuestTable = ({
       <BulkActions
         selectedGuests={selectedGuests}
         onBulkActionComplete={onBulkActionComplete}
+        onSelectionReset={handleSelectionReset}
       />
       <div style={{ height: 600, width: "100%" }}>
         <DataGrid
