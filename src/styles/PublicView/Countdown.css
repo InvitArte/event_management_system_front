@@ -2,46 +2,118 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  background: url("../../assets/imgs/countdown.jpg") no-repeat center;
+  background: url("../../assets/imgs/countdown.jpg") no-repeat center center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .countdown-overlay {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(58, 58, 58, 0.164);
-  z-index: 1;
+  background: linear-gradient(
+    to bottom,
+    rgb(0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0) 70%,
+    rgb(0, 0, 0) 100%
+  );
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
-.circle {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
+.timer {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 0;
+  text-align: center;
+  color: white;
+  z-index: 10;
+  padding: 1rem;
+  width: 100%;
+  height: 100%;
+}
+
+.title,
+.timer-components,
+.message {
+  white-space: normal;
+  z-index: 1;
+  max-width: 100%;
 }
 
 .title {
-  font-size: 3rem;
-  z-index: 1;
-  margin-bottom: 20px;
-  text-align: center;
-  color: white;
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
-.timer {
-  font-size: 3.5rem;
-  z-index: 1;
-  text-align: center;
-  color: white;
+.timer-components {
+  font-size: 2.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.timer-components span {
+  margin: 0.5rem;
+}
+
+.message {
+  font-size: 3rem;
+}
+
+.countdown-logo {
+  width: 40%; /* Reducido de 50% para evitar que sea demasiado grande en móviles */
+  max-width: 150px; /* Reducido para pantallas pequeñas */
+  height: auto;
+  margin-bottom: -1.5rem; /* Ajustado para un espaciado consistente */
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media screen and (min-width: 480px) {
+  .title { font-size: 2.5rem; }
+  .timer-components { font-size: 3rem; }
+  .message { font-size: 3.5rem; }
+  .countdown-logo { 
+    width: 45%;
+    max-width: 180px;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .title { font-size: 3rem; }
+  .timer-components { font-size: 3.5rem; }
+  .message { font-size: 4rem; }
+  .countdown-logo { 
+    width: 50%;
+    max-width: 250px;
+    margin-bottom: 2rem;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .title { font-size: 3.5rem; }
+  .timer-components { font-size: 4rem; }
+  .message { font-size: 5rem; }
+  .countdown-logo { 
+    max-width: 300px;
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .title { font-size: 4rem; }
+  .timer-components { font-size: 5rem; }
+  .message { font-size: 6rem; }
+  .countdown-logo {
+    max-width: 400px;
+    margin-bottom: 3rem;
+  }
 }
