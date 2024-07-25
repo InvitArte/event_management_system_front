@@ -1,6 +1,10 @@
-// src/config/api.js
+const LOCAL_HOST = "localhost:5173";
+const API_BASE_URL =
+  window.location.host === LOCAL_HOST
+    ? "http://127.0.0.1:8000"
+    : "https://api.invitartedesign.com";
 
-const API_BASE_URL = "https://api.invitartedesign.com";
+//http://127.0.0.1:8000
 
 export const API_ROUTES = {
   // Rutas públicas

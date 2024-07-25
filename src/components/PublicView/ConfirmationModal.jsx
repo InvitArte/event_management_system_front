@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ConfirmationForm from "./ConfirmationForm";
-import { publicService } from "../../services/api";
+import { publicService } from "../../services/Api";
 import "../../styles/fonts.css";
 import aguja from "../../assets/imgs/aguja.svg";
 

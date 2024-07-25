@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { publicService } from "../../services/api";
+import { publicService } from "../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
 import "../../styles/PublicView/EventDetails.css";
 import logo from "../../assets/imgs/maniqui.svg";
