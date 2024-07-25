@@ -46,6 +46,7 @@ export const guestFormFields = {
   allergy: true,
   observations: true,
   accommodation_plan: true,
+  tags: true,
   plus_ones: true,
   plus_one_first_name: true,
   plus_one_last_name: true,
