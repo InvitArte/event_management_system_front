@@ -8,7 +8,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { guestService } from "../../services/api";
+import { guestService } from "../../services/Api";
 import GuestForm from "./GuestForm";
 
 const GuestModal = ({

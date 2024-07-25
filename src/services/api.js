@@ -1,6 +1,7 @@
 import axios from "axios";
 import API_ROUTES from "../config/BaseUrl";
 import { toast } from "react-toastify";
+import { translateError } from "../config/ErrorMessages";
 
 const axiosInstance = axios.create({
   baseURL: API_ROUTES.BASE_URL,
@@ -27,7 +28,8 @@ const handleApiError = (error, serviceName) => {
     console.error("Response data:", error.response.data);
     console.error("Response status:", error.response.status);
     console.error("Response headers:", error.response.headers);
-    toast.error(`Error: ${error.response.data.message || "Algo salió mal"}`);
+    const translatedError = translateError(error);
+    toast.error(`Error: ${translatedError}`);
   } else if (error.request) {
     console.error("No se recibió respuesta:", error.request);
     toast.error("No hubo respuesta del servidor");

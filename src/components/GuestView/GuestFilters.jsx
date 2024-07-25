@@ -4,8 +4,8 @@ import {
   stringToColor,
   adjustColor,
   getContrastColor,
-} from "../Utils/tagColors";
-import { normalizeText } from "../Utils/textUtils";
+} from "../Utils/TagColors";
+import { normalizeText } from "../Utils/TextUtils";
 
 const FilterAutocomplete = ({
   label,

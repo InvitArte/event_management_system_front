@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Modal,
   Box,
@@ -18,7 +18,7 @@ import {
   ExpandMore as ExpandMoreIcon,
   Add as AddIcon,
 } from "@mui/icons-material";
-import { locationService } from "../../services/api";
+import { locationService } from "../../services/Api";
 
 const style = {
   position: "absolute",
@@ -44,20 +44,20 @@ const LocationModal = ({ open, handleClose }) => {
   const [expandedLocation, setExpandedLocation] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      fetchLocations();
-    }
-  }, [open]);
-
-  const fetchLocations = async () => {
+  const fetchLocations = useCallback(async () => {
     try {
       const response = await locationService.getAllLocations();
       setLocations(response);
     } catch (error) {
       console.error("Error fetching locations:", error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (open) {
+      fetchLocations();
+    }
+  }, [open, fetchLocations]);
 
   const handleAddLocation = async () => {
     if (newLocation.name.trim()) {
@@ -100,187 +100,224 @@ const LocationModal = ({ open, handleClose }) => {
     setExpandedLocation(expandedLocation === id ? null : id);
   };
 
-  const handleCancelEdit = () => {
-    setEditingLocation(null);
-  };
-
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Typography variant="h5" component="h2" gutterBottom align="center">
           Gestionar Ubicaciones de la Boda
         </Typography>
-        <List>
-          {locations.length > 0 ? (
-            locations.map((location) => (
-              <React.Fragment key={location.id}>
-                <ListItem disableGutters>
-                  <ListItemText primary={location.name} />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="expand"
-                      onClick={() => handleExpandLocation(location.id)}
-                      size="small"
-                    >
-                      <ExpandMoreIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      onClick={() => setEditingLocation(location)}
-                      size="small"
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDeleteLocation(location.id)}
-                      size="small"
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-                <Collapse in={expandedLocation === location.id}>
-                  <Box sx={{ pl: 4, pr: 2, pb: 2 }}>
-                    <Typography variant="body2">
-                      Dirección: {location.direccion}
-                    </Typography>
-                    {/* <Typography variant="body2">URL: {location.url}</Typography> */}
-                  </Box>
-                </Collapse>
-              </React.Fragment>
-            ))
-          ) : (
-            <ListItem>
-              <ListItemText primary="No hay ubicaciones disponibles" />
-            </ListItem>
-          )}
-        </List>
+        <LocationList
+          locations={locations}
+          expandedLocation={expandedLocation}
+          handleExpandLocation={handleExpandLocation}
+          setEditingLocation={setEditingLocation}
+          handleDeleteLocation={handleDeleteLocation}
+        />
         {editingLocation && (
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              value={editingLocation.name}
-              onChange={(e) =>
-                setEditingLocation({ ...editingLocation, name: e.target.value })
-              }
-              fullWidth
-              size="small"
-              label="Nombre"
-              sx={{ mb: 1 }}
-            />
-            <TextField
-              value={editingLocation.direccion}
-              onChange={(e) =>
-                setEditingLocation({
-                  ...editingLocation,
-                  direccion: e.target.value,
-                })
-              }
-              fullWidth
-              size="small"
-              label="Dirección"
-              sx={{ mb: 1 }}
-            />
-            <TextField
-              value={editingLocation.url}
-              onChange={(e) =>
-                setEditingLocation({ ...editingLocation, url: e.target.value })
-              }
-              fullWidth
-              size="small"
-              label="URL"
-              sx={{ mb: 1 }}
-            />
-            <Box
-              sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}
-            >
-              <Button
-                onClick={handleUpdateLocation}
-                variant="contained"
-                color="primary"
-              >
-                Actualizar
-              </Button>
-              <Button
-                onClick={handleCancelEdit}
-                variant="outlined"
-                color="secondary"
-              >
-                Cancelar
-              </Button>
-            </Box>
-          </Box>
+          <EditLocationForm
+            editingLocation={editingLocation}
+            setEditingLocation={setEditingLocation}
+            handleUpdateLocation={handleUpdateLocation}
+            handleCancelEdit={() => setEditingLocation(null)}
+          />
         )}
-        <Box sx={{ mt: 2 }}>
-          {!isCreating ? (
-            <Button
-              onClick={() => setIsCreating(true)}
-              fullWidth
-              variant="outlined"
-              color="primary"
-              startIcon={<AddIcon />}
-            >
-              Crear nueva ubicación
-            </Button>
-          ) : (
-            <>
-              <TextField
-                value={newLocation.name}
-                onChange={(e) =>
-                  setNewLocation({ ...newLocation, name: e.target.value })
-                }
-                placeholder="Nuevo nombre"
-                fullWidth
-                size="small"
-                sx={{ mb: 1 }}
-              />
-              <TextField
-                value={newLocation.direccion}
-                onChange={(e) =>
-                  setNewLocation({ ...newLocation, direccion: e.target.value })
-                }
-                placeholder="Nueva dirección"
-                fullWidth
-                size="small"
-                sx={{ mb: 1 }}
-              />
-              {/* <TextField
-                value={newLocation.url}
-                onChange={(e) =>
-                  setNewLocation({ ...newLocation, url: e.target.value })
-                }
-                placeholder="Nueva URL"
-                fullWidth
-                size="small"
-                sx={{ mb: 1 }}
-              /> */}
-              <Button
-                onClick={handleAddLocation}
-                fullWidth
-                variant="contained"
-                color="primary"
-                sx={{ mt: 1 }}
-              >
-                Añadir Ubicación
-              </Button>
-              <Button
-                onClick={() => setIsCreating(false)}
-                fullWidth
-                variant="text"
-                color="primary"
-                sx={{ mt: 1 }}
-              >
-                Cancelar
-              </Button>
-            </>
-          )}
-        </Box>
+        <AddLocationForm
+          isCreating={isCreating}
+          setIsCreating={setIsCreating}
+          newLocation={newLocation}
+          setNewLocation={setNewLocation}
+          handleAddLocation={handleAddLocation}
+        />
       </Box>
     </Modal>
   );
 };
+
+const LocationList = ({
+  locations,
+  expandedLocation,
+  handleExpandLocation,
+  setEditingLocation,
+  handleDeleteLocation,
+}) => (
+  <List>
+    {locations.length > 0 ? (
+      locations.map((location) => (
+        <LocationListItem
+          key={location.id}
+          location={location}
+          expanded={expandedLocation === location.id}
+          handleExpandLocation={handleExpandLocation}
+          setEditingLocation={setEditingLocation}
+          handleDeleteLocation={handleDeleteLocation}
+        />
+      ))
+    ) : (
+      <ListItem>
+        <ListItemText primary="No hay ubicaciones disponibles" />
+      </ListItem>
+    )}
+  </List>
+);
+
+const LocationListItem = ({
+  location,
+  expanded,
+  handleExpandLocation,
+  setEditingLocation,
+  handleDeleteLocation,
+}) => (
+  <React.Fragment>
+    <ListItem disableGutters>
+      <ListItemText primary={location.name} />
+      <ListItemSecondaryAction>
+        <IconButton
+          edge="end"
+          aria-label="expand"
+          onClick={() => handleExpandLocation(location.id)}
+          size="small"
+        >
+          <ExpandMoreIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          edge="end"
+          aria-label="edit"
+          onClick={() => setEditingLocation(location)}
+          size="small"
+        >
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={() => handleDeleteLocation(location.id)}
+          size="small"
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+    <Collapse in={expanded}>
+      <Box sx={{ pl: 4, pr: 2, pb: 2 }}>
+        <Typography variant="body2">Dirección: {location.direccion}</Typography>
+      </Box>
+    </Collapse>
+  </React.Fragment>
+);
+
+const EditLocationForm = ({
+  editingLocation,
+  setEditingLocation,
+  handleUpdateLocation,
+  handleCancelEdit,
+}) => (
+  <Box sx={{ mt: 2 }}>
+    <TextField
+      value={editingLocation.name}
+      onChange={(e) =>
+        setEditingLocation({ ...editingLocation, name: e.target.value })
+      }
+      fullWidth
+      size="small"
+      label="Nombre"
+      sx={{ mb: 1 }}
+    />
+    <TextField
+      value={editingLocation.direccion}
+      onChange={(e) =>
+        setEditingLocation({ ...editingLocation, direccion: e.target.value })
+      }
+      fullWidth
+      size="small"
+      label="Dirección"
+      sx={{ mb: 1 }}
+    />
+    <TextField
+      value={editingLocation.url}
+      onChange={(e) =>
+        setEditingLocation({ ...editingLocation, url: e.target.value })
+      }
+      fullWidth
+      size="small"
+      label="URL"
+      sx={{ mb: 1 }}
+    />
+    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
+      <Button
+        onClick={handleUpdateLocation}
+        variant="contained"
+        color="primary"
+      >
+        Actualizar
+      </Button>
+      <Button onClick={handleCancelEdit} variant="outlined" color="secondary">
+        Cancelar
+      </Button>
+    </Box>
+  </Box>
+);
+
+const AddLocationForm = ({
+  isCreating,
+  setIsCreating,
+  newLocation,
+  setNewLocation,
+  handleAddLocation,
+}) => (
+  <Box sx={{ mt: 2 }}>
+    {!isCreating ? (
+      <Button
+        onClick={() => setIsCreating(true)}
+        fullWidth
+        variant="outlined"
+        color="primary"
+        startIcon={<AddIcon />}
+      >
+        Crear nueva ubicación
+      </Button>
+    ) : (
+      <>
+        <TextField
+          value={newLocation.name}
+          onChange={(e) =>
+            setNewLocation({ ...newLocation, name: e.target.value })
+          }
+          placeholder="Nuevo nombre"
+          fullWidth
+          size="small"
+          sx={{ mb: 1 }}
+        />
+        <TextField
+          value={newLocation.direccion}
+          onChange={(e) =>
+            setNewLocation({ ...newLocation, direccion: e.target.value })
+          }
+          placeholder="Nueva dirección"
+          fullWidth
+          size="small"
+          sx={{ mb: 1 }}
+        />
+        <Button
+          onClick={handleAddLocation}
+          fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ mt: 1 }}
+        >
+          Añadir Ubicación
+        </Button>
+        <Button
+          onClick={() => setIsCreating(false)}
+          fullWidth
+          variant="text"
+          color="primary"
+          sx={{ mt: 1 }}
+        >
+          Cancelar
+        </Button>
+      </>
+    )}
+  </Box>
+);
 
 export default LocationModal;

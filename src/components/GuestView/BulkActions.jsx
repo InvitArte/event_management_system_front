@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Button, Box } from "@mui/material";
-import { guestService } from "../../services/api";
+import { guestService } from "../../services/Api";
 
 const BulkActions = ({
   selectedGuests,
