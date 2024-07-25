@@ -3,7 +3,7 @@ import { keyframes } from "@emotion/react";
 import { AppBar } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
-const bounceIn = keyframes`
+const BOUNCE_IN_ANIMATION = keyframes`
   0% { transform: translateY(-100%); }
   50% { transform: translateY(8%); }
   65% { transform: translateY(-4%); }
@@ -12,13 +12,17 @@ const bounceIn = keyframes`
   100% { transform: translateY(0); }
 `;
 
-export const AnimatedAppBar = styled(AppBar)(({ theme, scrolled }) => ({
-  animation: `${bounceIn} 1.2s ease-out`,
-  transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+const TRANSITION = "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)";
+
+export const AnimatedAppBar = styled(AppBar, {
+  shouldForwardProp: (prop) => prop !== "isScrolled",
+})(({ theme, isScrolled }) => ({
+  animation: `${BOUNCE_IN_ANIMATION} 1.2s ease-out`,
+  transition: TRANSITION,
   transformOrigin: "top center",
-  width: scrolled ? "100px" : "90%",
-  left: scrolled ? "calc(50% - 50px)" : "5%",
-  height: scrolled ? "30px" : "64px",
+  width: isScrolled ? "100px" : "90%",
+  left: isScrolled ? "calc(50% - 50px)" : "5%",
+  height: isScrolled ? "30px" : "64px",
   borderBottomLeftRadius: "46px",
   borderBottomRightRadius: "46px",
   overflow: "hidden",
@@ -30,16 +34,16 @@ export const AnimatedAppBar = styled(AppBar)(({ theme, scrolled }) => ({
     right: 0,
     bottom: 0,
     background: "inherit",
-    transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-    clipPath: scrolled
+    transition: TRANSITION,
+    clipPath: isScrolled
       ? "ellipse(50px 30px at top center)"
       : "ellipse(100% 100% at top center)",
   },
   "& .MuiToolbar-root": {
     height: "100%",
     minHeight: "unset",
-    transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-    opacity: scrolled ? 0 : 1,
+    transition: TRANSITION,
+    opacity: isScrolled ? 0 : 1,
     position: "relative",
     zIndex: 1,
   },
@@ -53,11 +57,11 @@ export const AnimatedAppBar = styled(AppBar)(({ theme, scrolled }) => ({
   },
 }));
 
-export const StyledNavLink = styled(NavLink)`
-  color: inherit;
-  text-decoration: none;
-  &.active {
-    font-weight: bold;
-    text-decoration: underline;
-  }
-`;
+export const StyledNavLink = styled(NavLink)(({ theme }) => ({
+  color: "inherit",
+  textDecoration: "none",
+  "&.active": {
+    fontWeight: "bold",
+    textDecoration: "underline",
+  },
+}));

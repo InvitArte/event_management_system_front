@@ -9,7 +9,7 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import { tagService, guestService } from "../services/api";
+import { tagService, guestService } from "../services/Api";
 import TagTable from "../components/TagView/TagTable";
 import TagModal from "../components/TagView/TagModal";
 import SkeletonTable from "../components/Ui/SkeletonTable";
