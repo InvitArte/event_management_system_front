@@ -1,35 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PublicView from "./views/PublicView";
+import LoginView from "./views/LoginView";
+import GuestView from "./views/GuestView";
+import TagView from "./views/TagView";
+import ProfileView from "./views/ProfileView";
+import ProtectedRoute from "./components/Utils/ProtectedRoute";
+import ProtectedLayout from "./components/Utils/ProtectedLayout";
+import {
+  userId,
+  guestViewColumns,
+  guestViewFilters,
+  guestFormFields,
+  profileViewFields,
+} from "./config/config";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+      />
+      <Routes>
+        <Route path="/" element={<PublicView userId={userId} />} />
+        <Route path="/login" element={<LoginView />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedLayout />}>
+            <Route
+              path="/guests"
+              element={
+                <GuestView
+                  visibleColumns={guestViewColumns}
+                  visibleFilters={guestViewFilters}
+                  visibleFormFields={guestFormFields}
+                />
+              }
+            />
+            <Route path="/tags" element={<TagView />} />
+            <Route
+              path="/profile"
+              element={<ProfileView visibleFields={profileViewFields} />}
+            />
+          </Route>
+        </Route>
+      </Routes>
+    </Router>
+  );
+};
 
-export default App
+export default App;

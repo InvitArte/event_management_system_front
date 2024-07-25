@@ -1,0 +1,100 @@
+/* src/components/FrontPage.css */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.front-page {
+  position: relative;
+  width: 100%;
+  height: 140vh;
+  background: url("../../assets/imgs/front-page-background.jpg") no-repeat
+    center -480px;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.frontPage-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgb(0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 30%,
+    rgba(0, 0, 0, 0) 70%,
+    rgb(0, 0, 0) 100%
+  );
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+  width: 50rem;
+  margin-bottom: 250px;
+  filter: drop-shadow(6px 6px 3px rgb(0, 0, 0));
+  animation: fadeIn 2s ease-in;
+}
+
+.front-page h1 {
+  color: white;
+  font-size: 4rem;
+  margin-top: 0;
+  margin-bottom: 200px;
+  padding-top: 0;
+  text-align: center;
+  letter-spacing: 4px;
+  word-spacing: 7px;
+}
+
+/* Estilos para dispositivos móviles */
+@media screen and (max-width: 767px) {
+  .front-page {
+    height: 100vh;
+    background-position: center center;
+  }
+
+  .frontPage-overlay {
+    justify-content: space-around;
+    padding: 2rem 0;
+  }
+
+  .logo {
+    width: 80%;
+    max-width: 25rem;
+    margin-bottom: 0;
+  }
+
+  .front-page h1 {
+    font-size: 1.5rem;
+    /* margin-bottom: 0; */
+    letter-spacing: 2px;
+    word-spacing: 4px;
+    margin-top: -2rem;
+  }
+}
+
+/* Ajuste adicional para tablets */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .front-page {
+    height: 100vh;
+  }
+
+  .logo {
+    width: 40rem;
+    margin-bottom: 150px;
+  }
+
+  .front-page h1 {
+    font-size: 3rem;
+    margin-bottom: 150px;
+  }
+}

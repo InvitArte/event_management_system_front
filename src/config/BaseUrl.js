@@ -1,6 +1,6 @@
 // src/config/api.js
 
-const API_BASE_URL = 'http://localhost:8000'; 
+const API_BASE_URL = "https://api.invitartedesign.com";
 
 export const API_ROUTES = {
   // Rutas públicas
@@ -18,6 +18,7 @@ export const API_ROUTES = {
   USER: `${API_BASE_URL}/api/user`,
   LOGOUT: `${API_BASE_URL}/api/logout`,
   LOCATIONS: `${API_BASE_URL}/api/locations`,
+  UPDATE_PASSWORD: `${API_BASE_URL}/api/update-password`,
   MENUS: `${API_BASE_URL}/api/menus`,
   ALLERGIES: `${API_BASE_URL}/api/allergies`,
   GUESTS: `${API_BASE_URL}/api/guests`,
