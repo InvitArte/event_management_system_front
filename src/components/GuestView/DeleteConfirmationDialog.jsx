@@ -16,9 +16,7 @@ const DeleteConfirmationDialog = ({ open, onClose, onConfirm, guestName }) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">
-        {"Confirmar eliminación"}
-      </DialogTitle>
+      <DialogTitle id="alert-dialog-title">Confirmar eliminación</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           ¿Estás seguro de que quieres eliminar a {guestName}? Esta acción no se
@@ -37,4 +35,6 @@ const DeleteConfirmationDialog = ({ open, onClose, onConfirm, guestName }) => {
   );
 };
 
-export default DeleteConfirmationDialog;
+DeleteConfirmationDialog.displayName = "DeleteConfirmationDialog";
+
+export default React.memo(DeleteConfirmationDialog);

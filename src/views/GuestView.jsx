@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Container,
   Typography,
@@ -8,40 +8,65 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import { guestService } from "../services/api";
+import { guestService, tagService } from "../services/api";
 import GuestTable from "../components/GuestView/GuestTable";
 import GuestFilters from "../components/GuestView/GuestFilters";
 import ExcelDownloader from "../components/GuestView/ExcelDownloader";
 import GuestModal from "../components/GuestView/GuestModal";
 import SkeletonTable from "../components/Ui/SkeletonTable";
 import DeleteConfirmationDialog from "../components/GuestView/DeleteConfirmationDialog";
-import { toast } from "react-toastify";
+import { normalizeText } from "../components/Utils/textUtils";
 
 const GuestView = ({
   visibleColumns: initialVisibleColumns,
   visibleFilters,
   visibleFormFields,
 }) => {
-  const [guests, setGuests] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [filters, setFilters] = useState({});
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedGuest, setSelectedGuest] = useState(null);
-  const [menus, setMenus] = useState([]);
-  const [allergies, setAllergies] = useState([]);
-  const [tags, setTags] = useState([]);
-  const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
-  const [sortModel, setSortModel] = useState([]);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [guestToDelete, setGuestToDelete] = useState(null);
+  const [guestData, setGuestData] = useState({
+    guests: [],
+    menus: [],
+    allergies: [],
+    tags: [],
+  });
+  const [uiState, setUiState] = useState({
+    loading: true,
+    error: "",
+    filters: {},
+    modalOpen: false,
+    selectedGuest: null,
+    visibleColumns: initialVisibleColumns,
+    sortModel: [],
+    deleteDialogOpen: false,
+    guestToDelete: null,
+    selectedTagId: null,
+  });
+
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const processGuests = (guestsData) => {
+  const fetchGuests = useCallback(async () => {
+    try {
+      const guestsResponse = await guestService.getAllGuests();
+      setGuestData(processGuests(guestsResponse));
+      setUiState((prev) => ({ ...prev, loading: false, error: "" }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setUiState((prev) => ({
+        ...prev,
+        loading: false,
+        error: "Failed to fetch data. Please try again later.",
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGuests();
+  }, [fetchGuests]);
+
+  const processGuests = useCallback((guestsData) => {
     if (!Array.isArray(guestsData)) {
       console.error("guestsData is not an array:", guestsData);
-      return [];
+      return { guests: [], menus: [], allergies: [], tags: [] };
     }
 
     const uniqueMenus = new Set();
@@ -82,73 +107,44 @@ const GuestView = ({
       };
 
       const plusOnes =
-        guest.plus_ones?.map((plusOne) => {
-          if (plusOne.menu) {
-            uniqueMenus.add(JSON.stringify(plusOne.menu));
-          }
-          if (plusOne.allergy) {
-            uniqueAllergies.add(JSON.stringify(plusOne.allergy));
-          }
-
-          return {
-            id: plusOne.id,
-            fullName: `${plusOne.first_name} ${plusOne.last_name}`.trim(),
-            first_name: plusOne.first_name,
-            last_name: plusOne.last_name,
-            email: plusOne.email || "",
-            phone: plusOne.phone || "",
-            validated: Boolean(guest.validated),
-            menu: plusOne.menu?.name || "No ha especificado",
-            menu_id: plusOne.menu_id,
-            allergy: plusOne.allergy?.name || "No",
-            allergy_id: plusOne.allergy_id,
-            needs_hotel: Boolean(guest.needs_hotel),
-            needs_transport: Boolean(guest.needs_transport),
-            disability: Boolean(plusOne.disability),
-            observations: plusOne.observations || "",
-            accommodation_plan:
-              guest.accommodation_plan || "No ha especificado",
-            isMainGuest: false,
-            parentId: guest.id,
-            tags: [], // PlusOnes no tienen etiquetas
-          };
-        }) || [];
+        guest.plus_ones?.map((plusOne) => ({
+          id: plusOne.id,
+          fullName: `${plusOne.first_name} ${plusOne.last_name}`.trim(),
+          first_name: plusOne.first_name,
+          last_name: plusOne.last_name,
+          email: plusOne.email || "",
+          phone: plusOne.phone || "",
+          validated: Boolean(guest.validated),
+          menu: plusOne.menu?.name || "No ha especificado",
+          menu_id: plusOne.menu_id,
+          allergy: plusOne.allergy?.name || "No",
+          allergy_id: plusOne.allergy_id,
+          needs_hotel: Boolean(guest.needs_hotel),
+          needs_transport: Boolean(guest.needs_transport),
+          disability: Boolean(plusOne.disability),
+          observations: plusOne.observations || "",
+          accommodation_plan: guest.accommodation_plan || "No ha especificado",
+          isMainGuest: false,
+          parentId: guest.id,
+          tags: [],
+        })) || [];
 
       return [mainGuest, ...plusOnes];
     });
 
-    setMenus(Array.from(uniqueMenus).map((menu) => JSON.parse(menu)));
-    setAllergies(
-      Array.from(uniqueAllergies).map((allergy) => JSON.parse(allergy))
-    );
-    setTags(Array.from(uniqueTags).map((tag) => JSON.parse(tag)));
-
-    return processedGuests;
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const guestsResponse = await guestService.getAllGuests();
-        setGuests(processGuests(guestsResponse));
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setError("Failed to fetch data. Please try again later.");
-        setLoading(false);
-      }
+    return {
+      guests: processedGuests,
+      menus: Array.from(uniqueMenus).map((menu) => JSON.parse(menu)),
+      allergies: Array.from(uniqueAllergies).map((allergy) =>
+        JSON.parse(allergy)
+      ),
+      tags: Array.from(uniqueTags).map((tag) => JSON.parse(tag)),
     };
-
-    fetchData();
   }, []);
 
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-  };
-
   const filteredGuests = useMemo(() => {
-    return guests.filter((guest) => {
-      return Object.entries(filters).every(([key, value]) => {
+    return guestData.guests.filter((guest) => {
+      return Object.entries(uiState.filters).every(([key, value]) => {
         if (value === null || value === undefined || value === "") return true;
 
         switch (key) {
@@ -167,70 +163,94 @@ const GuestView = ({
           case "accommodation_plan":
             return guest[key]?.toLowerCase() === value.toLowerCase();
           case "full_name":
-            return guest.fullName.toLowerCase().includes(value.toLowerCase());
+            return normalizeText(guest.fullName).includes(value);
           default:
             return guest[key]?.toLowerCase().includes(value.toLowerCase());
         }
       });
     });
-  }, [guests, filters]);
+  }, [guestData.guests, uiState.filters]);
 
-  const handleCreateGuest = () => {
-    setSelectedGuest(null);
-    setModalOpen(true);
-  };
+  const handleFilterChange = useCallback((newFilters) => {
+    setUiState((prev) => ({ ...prev, filters: newFilters }));
+  }, []);
 
-  const handleEditGuest = (guest) => {
-    setSelectedGuest(guest);
-    setModalOpen(true);
-  };
+  const handleCreateGuest = useCallback(() => {
+    setUiState((prev) => ({ ...prev, selectedGuest: null, modalOpen: true }));
+  }, []);
 
-  const handleDeleteGuest = (guest) => {
-    setGuestToDelete(guest);
-    setDeleteDialogOpen(true);
-  };
+  const handleEditGuest = useCallback((guest) => {
+    setUiState((prev) => ({ ...prev, selectedGuest: guest, modalOpen: true }));
+  }, []);
 
-  const handleConfirmDelete = async () => {
-    if (guestToDelete) {
+  const handleDeleteGuest = useCallback((guest) => {
+    setUiState((prev) => ({
+      ...prev,
+      guestToDelete: guest,
+      deleteDialogOpen: true,
+    }));
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (uiState.guestToDelete) {
       try {
-        await guestService.deleteGuest(guestToDelete.id);
-        const updatedGuestsResponse = await guestService.getAllGuests();
-        setGuests(processGuests(updatedGuestsResponse));
+        await guestService.deleteGuest(uiState.guestToDelete.id);
+        await fetchGuests();
       } catch (error) {
         console.error("Error deleting guest:", error);
       } finally {
-        setDeleteDialogOpen(false);
-        setGuestToDelete(null);
+        setUiState((prev) => ({
+          ...prev,
+          deleteDialogOpen: false,
+          guestToDelete: null,
+        }));
       }
     }
-  };
+  }, [uiState.guestToDelete, fetchGuests]);
 
-  const handleBulkActionComplete = async () => {
-    try {
-      const updatedGuestsResponse = await guestService.getAllGuests();
-      setGuests(processGuests(updatedGuestsResponse));
-    } catch (error) {
-      console.error("Error updating guest list after bulk action:", error);
-      setError("Failed to update guest list. Please refresh the page.");
-    }
-  };
+  const handleBulkActionComplete = useCallback(
+    async (action, guestIds) => {
+      try {
+        if (action === "validate") {
+          await guestService.bulkValidate(guestIds);
+        } else if (action === "assignTag") {
+          const tagId = uiState.selectedTagId;
+          if (tagId) {
+            await tagService.bulkAssign(tagId, guestIds);
+          } else {
+            console.error("No tag selected for bulk assign");
+          }
+        }
+        await fetchGuests();
+      } catch (error) {
+        console.error("Error performing bulk action:", error);
+        setUiState((prev) => ({
+          ...prev,
+          error: "Failed to perform bulk action. Please try again.",
+        }));
+      }
+    },
+    [fetchGuests, uiState.selectedTagId]
+  );
 
-  const handleGuestSubmitted = async () => {
+  const handleGuestSubmitted = useCallback(async () => {
     try {
-      const updatedGuestsResponse = await guestService.getAllGuests();
-      setGuests(processGuests(updatedGuestsResponse));
-      setModalOpen(false);
+      await fetchGuests();
+      setUiState((prev) => ({ ...prev, modalOpen: false }));
     } catch (error) {
       console.error("Error updating guest list:", error);
-      setError("Failed to update guest list. Please refresh the page.");
+      setUiState((prev) => ({
+        ...prev,
+        error: "Failed to update guest list. Please refresh the page.",
+      }));
     }
-  };
+  }, [fetchGuests]);
 
-  const handleVisibleColumnsChange = (newVisibleColumns) => {
-    setVisibleColumns(newVisibleColumns);
-  };
+  const handleVisibleColumnsChange = useCallback((newVisibleColumns) => {
+    setUiState((prev) => ({ ...prev, visibleColumns: newVisibleColumns }));
+  }, []);
+
   const columns = [
-    { field: "id", headerName: "ID" },
     { field: "validated", headerName: "Validado" },
     { field: "fullName", headerName: "Nombre Completo" },
     { field: "email", headerName: "Email" },
@@ -248,8 +268,8 @@ const GuestView = ({
 
   const excelData = useMemo(() => {
     let sortedGuests = [...filteredGuests];
-    if (sortModel.length > 0) {
-      const { field, sort } = sortModel[0];
+    if (uiState.sortModel.length > 0) {
+      const { field, sort } = uiState.sortModel[0];
       sortedGuests.sort((a, b) => {
         if (a[field] < b[field]) return sort === "asc" ? -1 : 1;
         if (a[field] > b[field]) return sort === "asc" ? 1 : -1;
@@ -275,24 +295,23 @@ const GuestView = ({
         Etiquetas: guest.tags.map((tag) => tag.name).join(", "),
       };
 
-      // Solo incluir las columnas visibles
       return Object.keys(rowData).reduce((acc, key) => {
         const columnField = columns.find(
           (col) => col.headerName === key
         )?.field;
-        if (columnField && visibleColumns[columnField]) {
+        if (columnField && uiState.visibleColumns[columnField]) {
           acc[key] = rowData[key];
         }
         return acc;
       }, {});
     });
-  }, [filteredGuests, visibleColumns, sortModel]);
+  }, [filteredGuests, uiState.visibleColumns, uiState.sortModel]);
 
-  if (error) {
+  if (uiState.error) {
     return (
       <Container>
         <Typography color="error" align="center">
-          {error}
+          {uiState.error}
         </Typography>
       </Container>
     );
@@ -320,9 +339,9 @@ const GuestView = ({
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
         <GuestFilters
-          guests={guests}
+          guests={guestData.guests}
           onFilterChange={handleFilterChange}
-          tags={tags}
+          tags={guestData.tags}
           visibleFilters={visibleFilters}
         />
         <Box
@@ -333,7 +352,7 @@ const GuestView = ({
         >
           <ExcelDownloader data={excelData} fileName="Invitados" />
         </Box>
-        {loading ? (
+        {uiState.loading ? (
           <SkeletonTable
             rowsNum={10}
             columnsNum={13}
@@ -347,26 +366,30 @@ const GuestView = ({
             onRowClick={handleEditGuest}
             onBulkActionComplete={handleBulkActionComplete}
             onVisibleColumnsChange={handleVisibleColumnsChange}
-            sortModel={sortModel}
-            onSortModelChange={setSortModel}
-            visibleColumns={visibleColumns}
+            sortModel={uiState.sortModel}
+            onSortModelChange={(newSortModel) =>
+              setUiState((prev) => ({ ...prev, sortModel: newSortModel }))
+            }
+            visibleColumns={uiState.visibleColumns}
             onDeleteGuest={handleDeleteGuest}
           />
         )}
         <GuestModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          guest={selectedGuest}
+          open={uiState.modalOpen}
+          onClose={() => setUiState((prev) => ({ ...prev, modalOpen: false }))}
+          guest={uiState.selectedGuest}
           onSubmit={handleGuestSubmitted}
-          menus={menus}
-          allergies={allergies}
+          menus={guestData.menus}
+          allergies={guestData.allergies}
           visibleFormFields={visibleFormFields}
         />
         <DeleteConfirmationDialog
-          open={deleteDialogOpen}
-          onClose={() => setDeleteDialogOpen(false)}
+          open={uiState.deleteDialogOpen}
+          onClose={() =>
+            setUiState((prev) => ({ ...prev, deleteDialogOpen: false }))
+          }
           onConfirm={handleConfirmDelete}
-          guestName={guestToDelete?.fullName}
+          guestName={uiState.guestToDelete?.fullName}
         />
       </Paper>
     </Container>
