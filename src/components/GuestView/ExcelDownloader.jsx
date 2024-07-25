@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { Button } from "@mui/material";
 import ExcelJS from "exceljs";
 
 const ExcelDownloader = ({ data, fileName }) => {
-  const downloadExcel = async () => {
+  const columns = useMemo(() => {
+    if (data.length === 0) return [];
+    return Object.keys(data[0]).map((key) => ({
+      header: key,
+      key: key,
+      width: 20,
+    }));
+  }, [data]);
+
+  const downloadExcel = useCallback(async () => {
     if (data.length === 0) {
       console.error("No hay datos para exportar");
       return;
@@ -12,16 +21,7 @@ const ExcelDownloader = ({ data, fileName }) => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Invitados");
 
-    // Definir las columnas basadas en las claves del primer objeto de datos
-    const columns = Object.keys(data[0]).map((key) => ({
-      header: key,
-      key: key,
-      width: 20,
-    }));
-
     worksheet.columns = columns;
-
-    // Añadir los datos
     worksheet.addRows(data);
 
     // Estilo para las celdas
@@ -55,10 +55,15 @@ const ExcelDownloader = ({ data, fileName }) => {
     a.download = `${fileName}.xlsx`;
     a.click();
     window.URL.revokeObjectURL(url);
-  };
+  }, [data, columns, fileName]);
 
   return (
-    <Button variant="contained" color="primary" onClick={downloadExcel}>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={downloadExcel}
+      disabled={data.length === 0}
+    >
       Descargar Excel
     </Button>
   );

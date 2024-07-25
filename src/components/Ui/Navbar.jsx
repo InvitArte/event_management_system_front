@@ -51,7 +51,6 @@ const Navbar = () => {
       navigate("/login");
     } catch (error) {
       console.error("Error during logout:", error);
-      // Handle error (e.g., show error message to user)
     }
   };
 
