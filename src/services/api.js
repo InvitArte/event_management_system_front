@@ -69,6 +69,23 @@ export const authService = {
       return handleApiError(error, "logout");
     }
   },
+  updatePassword: async (
+    currentPassword,
+    newPassword,
+    newPasswordConfirmation
+  ) => {
+    try {
+      const response = await axiosInstance.post(API_ROUTES.UPDATE_PASSWORD, {
+        current_password: currentPassword,
+        new_password: newPassword,
+        new_password_confirmation: newPasswordConfirmation,
+      });
+      toast.success("Contraseña actualizada correctamente");
+      return response.data;
+    } catch (error) {
+      return handleApiError(error, "updatePassword");
+    }
+  },
 };
 
 export const userService = {

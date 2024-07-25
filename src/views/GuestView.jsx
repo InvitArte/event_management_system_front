@@ -14,10 +14,13 @@ import GuestFilters from "../components/GuestView/GuestFilters";
 import ExcelDownloader from "../components/GuestView/ExcelDownloader";
 import GuestModal from "../components/GuestView/GuestModal";
 import SkeletonTable from "../components/Ui/SkeletonTable";
+import DeleteConfirmationDialog from "../components/GuestView/DeleteConfirmationDialog";
+import { toast } from "react-toastify";
 
 const GuestView = ({
   visibleColumns: initialVisibleColumns,
   visibleFilters,
+  visibleFormFields,
 }) => {
   const [guests, setGuests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -30,6 +33,8 @@ const GuestView = ({
   const [tags, setTags] = useState([]);
   const [visibleColumns, setVisibleColumns] = useState(initialVisibleColumns);
   const [sortModel, setSortModel] = useState([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [guestToDelete, setGuestToDelete] = useState(null);
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -161,6 +166,8 @@ const GuestView = ({
             );
           case "accommodation_plan":
             return guest[key]?.toLowerCase() === value.toLowerCase();
+          case "full_name":
+            return guest.fullName.toLowerCase().includes(value.toLowerCase());
           default:
             return guest[key]?.toLowerCase().includes(value.toLowerCase());
         }
@@ -178,6 +185,26 @@ const GuestView = ({
     setModalOpen(true);
   };
 
+  const handleDeleteGuest = (guest) => {
+    setGuestToDelete(guest);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (guestToDelete) {
+      try {
+        await guestService.deleteGuest(guestToDelete.id);
+        const updatedGuestsResponse = await guestService.getAllGuests();
+        setGuests(processGuests(updatedGuestsResponse));
+      } catch (error) {
+        console.error("Error deleting guest:", error);
+      } finally {
+        setDeleteDialogOpen(false);
+        setGuestToDelete(null);
+      }
+    }
+  };
+
   const handleBulkActionComplete = async () => {
     try {
       const updatedGuestsResponse = await guestService.getAllGuests();
@@ -191,7 +218,6 @@ const GuestView = ({
   const handleGuestSubmitted = async () => {
     try {
       const updatedGuestsResponse = await guestService.getAllGuests();
-      console.log("Updated guests fetched:", updatedGuestsResponse);
       setGuests(processGuests(updatedGuestsResponse));
       setModalOpen(false);
     } catch (error) {
@@ -203,7 +229,6 @@ const GuestView = ({
   const handleVisibleColumnsChange = (newVisibleColumns) => {
     setVisibleColumns(newVisibleColumns);
   };
-
   const columns = [
     { field: "id", headerName: "ID" },
     { field: "validated", headerName: "Validado" },
@@ -311,7 +336,7 @@ const GuestView = ({
         {loading ? (
           <SkeletonTable
             rowsNum={10}
-            columnsNum={12}
+            columnsNum={13}
             height={600}
             showCheckbox={true}
             showActions={true}
@@ -325,6 +350,7 @@ const GuestView = ({
             sortModel={sortModel}
             onSortModelChange={setSortModel}
             visibleColumns={visibleColumns}
+            onDeleteGuest={handleDeleteGuest}
           />
         )}
         <GuestModal
@@ -334,6 +360,13 @@ const GuestView = ({
           onSubmit={handleGuestSubmitted}
           menus={menus}
           allergies={allergies}
+          visibleFormFields={visibleFormFields}
+        />
+        <DeleteConfirmationDialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          onConfirm={handleConfirmDelete}
+          guestName={guestToDelete?.fullName}
         />
       </Paper>
     </Container>

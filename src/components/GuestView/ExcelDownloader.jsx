@@ -4,8 +4,6 @@ import ExcelJS from "exceljs";
 
 const ExcelDownloader = ({ data, fileName }) => {
   const downloadExcel = async () => {
-    console.log("Datos recibidos en ExcelDownloader:", data);
-
     if (data.length === 0) {
       console.error("No hay datos para exportar");
       return;

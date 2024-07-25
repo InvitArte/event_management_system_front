@@ -53,7 +53,6 @@ const LocationModal = ({ open, handleClose }) => {
   const fetchLocations = async () => {
     try {
       const response = await locationService.getAllLocations();
-      console.log("Fetched locations:", response);
       setLocations(response);
     } catch (error) {
       console.error("Error fetching locations:", error);

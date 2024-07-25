@@ -9,7 +9,7 @@ import {
   Radio,
   FormControlLabel,
 } from "@mui/material";
-import "../../styles/fonts.css"; // Asegúrate de que la ruta sea correcta
+import "../../styles/fonts.css";
 
 const CustomFormControl = styled(FormControl)({
   "& .MuiFormLabel-root": {
@@ -30,6 +30,7 @@ const CustomFormControl = styled(FormControl)({
     fontFamily: "'Prata', serif",
   },
 });
+
 const CustomTextField = styled(TextField)({
   "& .MuiInputBase-root": {
     color: "white",
@@ -55,6 +56,10 @@ const CustomTextField = styled(TextField)({
       color: "white",
     },
   },
+  "& .MuiFormHelperText-root": {
+    color: "#ff6b6b",
+    fontFamily: "'Prata', serif",
+  },
 });
 
 const CustomRadio = styled(Radio)({
@@ -66,7 +71,7 @@ const CustomRadio = styled(Radio)({
   },
 });
 
-const ConfirmationForm = ({ onFormChange }) => {
+const ConfirmationForm = ({ onFormChange, onValidationChange, formErrors }) => {
   const [formData, setFormData] = useState({
     guest: {
       first_name: "",
@@ -84,6 +89,11 @@ const ConfirmationForm = ({ onFormChange }) => {
   useEffect(() => {
     onFormChange(formData);
   }, [formData, onFormChange]);
+
+  useEffect(() => {
+    const isValid = !Object.values(formErrors).some((error) => error !== "");
+    onValidationChange(isValid);
+  }, [formErrors, onValidationChange]);
 
   const handleInputChange = (e, section) => {
     const { name, value } = e.target;
@@ -114,6 +124,8 @@ const ConfirmationForm = ({ onFormChange }) => {
           onChange={(e) => handleInputChange(e, "guest")}
           required
           variant="standard"
+          error={!!formErrors.first_name}
+          helperText={formErrors.first_name}
         />
       </Grid>
       <Grid item xs={12}>
@@ -125,6 +137,8 @@ const ConfirmationForm = ({ onFormChange }) => {
           onChange={(e) => handleInputChange(e, "guest")}
           required
           variant="standard"
+          error={!!formErrors.last_name}
+          helperText={formErrors.last_name}
         />
       </Grid>
       <Grid item xs={12}>
@@ -136,6 +150,8 @@ const ConfirmationForm = ({ onFormChange }) => {
           onChange={(e) => handleInputChange(e, "guest")}
           required
           variant="standard"
+          error={!!formErrors.phone}
+          helperText={formErrors.phone}
         />
       </Grid>
       <Grid item xs={12}>
@@ -148,6 +164,8 @@ const ConfirmationForm = ({ onFormChange }) => {
           onChange={(e) => handleInputChange(e, "guest")}
           required
           variant="standard"
+          error={!!formErrors.email}
+          helperText={formErrors.email}
         />
       </Grid>
       <Grid item xs={12}>
@@ -179,6 +197,8 @@ const ConfirmationForm = ({ onFormChange }) => {
               onChange={(e) => handleInputChange(e, "plus_one")}
               required
               variant="standard"
+              error={!!formErrors.plus_one_first_name}
+              helperText={formErrors.plus_one_first_name}
             />
           </Grid>
           <Grid item xs={12}>
@@ -190,6 +210,8 @@ const ConfirmationForm = ({ onFormChange }) => {
               onChange={(e) => handleInputChange(e, "plus_one")}
               required
               variant="standard"
+              error={!!formErrors.plus_one_last_name}
+              helperText={formErrors.plus_one_last_name}
             />
           </Grid>
         </>

@@ -100,11 +100,11 @@ const EventDetails = ({ userId }) => {
         )}
         {eventLocations.length > 0 && (
           <div className="event-locations">
-            <h2>Ubicaciones:</h2>
+            <h2>{eventLocations.length > 1 ? "Ubicaciones:" : "Ubicación:"}</h2>
             <ul>
               {eventLocations.map((location) => (
                 <li key={location.id}>
-                  <p>{location.direccion}</p>
+                  <p>{location.name}</p>
                   <button
                     className="open-maps"
                     onClick={() => openGoogleMaps(location.direccion)}

@@ -9,7 +9,13 @@ import TagView from "./views/TagView";
 import ProfileView from "./views/ProfileView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import ProtectedLayout from "./components/Utils/ProtectedLayout";
-import { userId, guestViewColumns, guestViewFilters } from "./config/config";
+import {
+  userId,
+  guestViewColumns,
+  guestViewFilters,
+  guestFormFields,
+  profileViewFields,
+} from "./config/config";
 
 const App = () => {
   return (
@@ -30,11 +36,15 @@ const App = () => {
                 <GuestView
                   visibleColumns={guestViewColumns}
                   visibleFilters={guestViewFilters}
+                  visibleFormFields={guestFormFields}
                 />
               }
             />
             <Route path="/tags" element={<TagView />} />
-            <Route path="/profile" element={<ProfileView />} />
+            <Route
+              path="/profile"
+              element={<ProfileView visibleFields={profileViewFields} />}
+            />
           </Route>
         </Route>
       </Routes>

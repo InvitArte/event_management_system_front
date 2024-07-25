@@ -53,7 +53,7 @@
   text-align: center;
 }
 
-.event-details h1 {
+.event-details-overlay h1 {
   font-size: 2rem;
   color: white;
   margin-bottom: 2rem;
@@ -101,6 +101,12 @@
   margin-bottom: 1.5rem;
 }
 
+@media screen and (max-width: 479px) {
+  .event-details-overlay h1 {
+    font-size: 1.5rem !important; /* Forzar el tamaño para móviles pequeños */
+  }
+}
+
 @media screen and (min-width: 480px) {
   .event-details {
     height: 100vh;
@@ -109,8 +115,8 @@
     width: 5rem;
   }
   
-  .event-details h1 {
-    font-size: 2.25rem;
+  .event-details-overlay h1 {
+    font-size: 1.75rem; /* Tamaño para tablets y móviles grandes */
   }
   
   .event-date, .event-details h2 {
@@ -131,7 +137,7 @@
     margin-bottom: 2rem;
   }
   
-  .event-details h1 {
+  .event-details-overlay h1 {
     font-size: 2.5rem;
   }
   
@@ -156,7 +162,7 @@
     width: 7rem;
   }
   
-  .event-details h1 {
+  .event-details-overlay h1 {
     font-size: 3rem;
   }
   
@@ -182,7 +188,7 @@
     width: 8rem;
   }
   
-  .event-details h1 {
+  .event-details-overlay h1 {
     font-size: 3.5rem;
   }
   

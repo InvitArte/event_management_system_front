@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { Box, Checkbox, Chip } from "@mui/material";
+import { Box, Checkbox, Chip, Tooltip, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
 import BulkActions from "./BulkActions";
 import {
   stringToColor,
@@ -18,6 +19,7 @@ const GuestTable = ({
   sortModel,
   onSortModelChange,
   visibleColumns,
+  onDeleteGuest,
 }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
 
@@ -83,7 +85,7 @@ const GuestTable = ({
     {
       field: "tags",
       headerName: "Etiquetas",
-      width: 300,
+      width: 240,
       renderCell: (params) => (
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
           {params.value?.map((tag) => {
@@ -103,6 +105,29 @@ const GuestTable = ({
           })}
         </Box>
       ),
+    },
+    {
+      field: "actions",
+      headerName: "Acciones",
+      width: 100,
+      renderCell: (params) => {
+        if (params.row.isMainGuest) {
+          return (
+            <Tooltip title="Eliminar invitado">
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteGuest(params.row);
+                }}
+                size="small"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          );
+        }
+        return null;
+      },
     },
   ];
 
@@ -160,6 +185,10 @@ const GuestTable = ({
     return mainGuestIds.indexOf(mainGuestId);
   };
 
+  const getRowId = (row) => {
+    return row.isMainGuest ? `main-${row.id}` : `plus-one-${row.id}`;
+  };
+
   return (
     <Box>
       <BulkActions
@@ -175,7 +204,7 @@ const GuestTable = ({
           disableSelectionOnClick
           onCellClick={handleRowClick}
           getRowClassName={getRowClassName}
-          getRowId={(row) => row.id}
+          getRowId={getRowId}
           onColumnVisibilityModelChange={handleColumnVisibilityChange}
           columnVisibilityModel={visibleColumns}
           sortModel={sortModel}

@@ -4,25 +4,21 @@ import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
 
 const Countdown = ({ userId }) => {
-  const [timeLeft, setTimeLeft] = useState({});
+  const [timeLeft, setTimeLeft] = useState(null);
   const [eventDate, setEventDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchEventDate = async () => {
+      setIsLoading(true);
       try {
-        // Usa el userId de las props, o un valor por defecto si no está definido
         const response = await publicService.getUserDate(userId);
-        console.log("Respuesta de la API:", response);
-
         if (response && response.date) {
           const dateString = response.date;
           const [year, month, day, hour, minute] = dateString
             .split(" ")
             .map(Number);
-
-          // Crear un objeto Date en formato "año, mes, día, hora, minuto"
           const eventDateFromAPI = new Date(year, month - 1, day, hour, minute);
-
           if (!isNaN(eventDateFromAPI.getTime())) {
             setEventDate(eventDateFromAPI);
           } else {
@@ -38,25 +34,28 @@ const Countdown = ({ userId }) => {
         console.error("Error fetching event date:", error.message || error);
       }
     };
-
     fetchEventDate();
   }, [userId]);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
+      if (!eventDate) return null;
+
       const now = new Date();
       const difference = eventDate - now;
 
-      let timeLeft = {};
-
-      if (difference > 0) {
-        timeLeft = {
-          días: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          horas: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutos: Math.floor((difference / 1000 / 60) % 60),
-        };
+      if (difference <= 0) {
+        setIsLoading(false);
+        return {};
       }
 
+      const timeLeft = {
+        días: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        horas: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutos: Math.floor((difference / 1000 / 60) % 60),
+      };
+
+      setIsLoading(false);
       return timeLeft;
     };
 
@@ -64,32 +63,39 @@ const Countdown = ({ userId }) => {
       const timer = setInterval(() => {
         setTimeLeft(calculateTimeLeft());
       }, 1000);
-
       return () => clearInterval(timer);
     }
   }, [eventDate]);
 
-  const timerComponents = Object.keys(timeLeft).map((interval) => (
-    <span key={interval}>
-      {timeLeft[interval]} {interval}{" "}
-    </span>
-  ));
+  const timerComponents =
+    timeLeft &&
+    Object.keys(timeLeft).map((interval) => (
+      <span key={interval}>
+        {timeLeft[interval]} {interval}{" "}
+      </span>
+    ));
 
-  const showCountdown = Object.keys(timeLeft).length > 0;
+  const renderContent = () => {
+    if (isLoading || timeLeft === null) {
+      return <span className="message">Contando los días ...</span>;
+    } else if (Object.keys(timeLeft).length > 0) {
+      return (
+        <>
+          <h1 className="title">Quedan</h1>
+          <p className="timer-components">{timerComponents}</p>
+        </>
+      );
+    } else {
+      return <span className="message">Hoy es el día</span>;
+    }
+  };
 
   return (
     <div className="countdown">
       <div className="countdown-overlay">
         <div className="timer">
           <img src={logo} alt="Logo" className="countdown-logo" />
-          {showCountdown ? (
-            <>
-              <h1 className="title">Quedan</h1>
-              <p className="timer-components">{timerComponents}</p>
-            </>
-          ) : (
-            <span className="message">Hoy es el día</span>
-          )}
+          {renderContent()}
         </div>
       </div>
     </div>

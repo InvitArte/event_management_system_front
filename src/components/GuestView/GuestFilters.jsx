@@ -57,6 +57,13 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
 
   return (
     <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap" }}>
+      {visibleFilters.full_name && (
+        <TextField
+          label="Buscar por nombre"
+          onChange={(e) => handleFilterChange("full_name", e.target.value)}
+          sx={{ width: 300 }}
+        />
+      )}
       {visibleFilters.menu && (
         <Autocomplete
           options={uniqueMenus}

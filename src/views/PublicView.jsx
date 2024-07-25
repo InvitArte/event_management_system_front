@@ -3,7 +3,7 @@ import FrontPage from "../components/PublicView/FrontPage.jsx";
 import Countdown from "../components/PublicView/Countdown.jsx";
 import EventDetails from "../components/PublicView/EventDetails.jsx";
 import Collaboration from "../components/PublicView/Collaboration.jsx";
-import Footer from "../components/Ui/Footer.jsx";
+import "../styles/PublicView/Footer.css";
 
 const PublicView = ({ userId }) => {
   const containerRef = useRef(null);
@@ -51,7 +51,24 @@ const PublicView = ({ userId }) => {
       <Countdown userId={userId} />
       <EventDetails userId={userId} />
       <Collaboration userId={userId} />
-      <Footer />
+      <footer className="footer">
+        <div className="footer-content">
+          <p>
+            Los datos de carácter personal que proporcione en el presente
+            formulario serán tratados por J Roldán Atelier como responsable de
+            este evento. Sus datos no se compartirán con ninguna empresa
+            participante, patrocinadores, colaboradores u otros.
+          </p>
+          <p>
+            <a
+              href="https://www.jroldanatelier.com/politica-privacidad/"
+              className="footer-link"
+            >
+              Política de Privacidad
+            </a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

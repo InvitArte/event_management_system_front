@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { userService } from "../../services/api";
 
-const ProfileForm = () => {
+const ProfileForm = ({ visibleFields }) => {
   const [userData, setUserData] = useState({
     id: "",
     name: "",
@@ -138,25 +138,28 @@ const ProfileForm = () => {
             }}
           />
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Cuenta Bancaria"
-            name="bank_account"
-            value={userData.bank_account}
-            onChange={handleChange}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="URL Lista de Regalos"
-            name="gift_list_url"
-            value={userData.gift_list_url}
-            onChange={handleChange}
-          />
-        </Grid>
-
+        {visibleFields.bankAccount && (
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Cuenta Bancaria"
+              name="bank_account"
+              value={userData.bank_account}
+              onChange={handleChange}
+            />
+          </Grid>
+        )}
+        {visibleFields.giftList && (
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="URL Lista de Regalos"
+              name="gift_list_url"
+              value={userData.gift_list_url}
+              onChange={handleChange}
+            />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <Button
             type="submit"
