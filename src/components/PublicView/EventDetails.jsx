@@ -19,6 +19,7 @@ const EventDetails = ({ userId }) => {
         ]);
 
         if (dateResponse && dateResponse.date) {
+          console.log(dateResponse.date);
           const dateString = dateResponse.date;
           const [year, month, day, hour, minute] = dateString
             .split(" ")
@@ -27,14 +28,18 @@ const EventDetails = ({ userId }) => {
 
           if (!isNaN(eventDateFromAPI.getTime())) {
             setEventDate(eventDateFromAPI);
-            setEventDateString(
-              eventDateFromAPI.toLocaleDateString("es-ES", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
-            );
+            const formattedDate = eventDateFromAPI.toLocaleDateString("es-ES", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+            const formattedTime = eventDateFromAPI.toLocaleTimeString("es-ES", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            setEventDateString(`${formattedDate} - ${formattedTime}h`);
           }
         }
 
