@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { dataGridLocaleText } from "../Ui/DataGridLocaleText";
+import { dataGridLocaleText } from "../../config/DataGridLocaleText";
 
 const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
   const columns = useMemo(

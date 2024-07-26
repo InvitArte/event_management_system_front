@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from "react";
+import PropTypes from "prop-types";
 import { Box, Checkbox, Chip, Tooltip, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -8,7 +9,7 @@ import {
   adjustColor,
   getContrastColor,
 } from "../Utils/TagColors";
-import { dataGridLocaleText } from "../Ui/DataGridLocaleText";
+import { dataGridLocaleText } from "../../config/DataGridLocaleText";
 import "../../styles/GuestView/Datatable.css";
 
 const GuestTable = ({
@@ -222,6 +223,42 @@ const GuestTable = ({
       </div>
     </Box>
   );
+};
+
+GuestTable.propTypes = {
+  guests: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      isMainGuest: PropTypes.bool.isRequired,
+      fullName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      phone: PropTypes.string.isRequired,
+      menu: PropTypes.string,
+      allergy: PropTypes.string,
+      needs_hotel: PropTypes.bool,
+      needs_transport: PropTypes.bool,
+      disability: PropTypes.bool,
+      accommodation_plan: PropTypes.string,
+      tags: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number.isRequired,
+          name: PropTypes.string.isRequired,
+        })
+      ),
+    })
+  ).isRequired,
+  onRowClick: PropTypes.func.isRequired,
+  onBulkActionComplete: PropTypes.func.isRequired,
+  onVisibleColumnsChange: PropTypes.func.isRequired,
+  sortModel: PropTypes.arrayOf(
+    PropTypes.shape({
+      field: PropTypes.string.isRequired,
+      sort: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    })
+  ).isRequired,
+  onSortModelChange: PropTypes.func.isRequired,
+  visibleColumns: PropTypes.object.isRequired,
+  onDeleteGuest: PropTypes.func.isRequired,
 };
 
 export default GuestTable;

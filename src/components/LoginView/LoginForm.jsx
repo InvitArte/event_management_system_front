@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, InputAdornment, IconButton } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import React, { useState } from "react";
+import PropTypes from "prop-types";
+import {
+  TextField,
+  Button,
+  Box,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const LoginForm = ({ onSubmit }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
@@ -39,7 +46,7 @@ const LoginForm = ({ onSubmit }) => {
         fullWidth
         name="password"
         label="Contraseña"
-        type={showPassword ? 'text' : 'password'}
+        type={showPassword ? "text" : "password"}
         id="password"
         autoComplete="current-password"
         value={password}
@@ -56,19 +63,18 @@ const LoginForm = ({ onSubmit }) => {
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
-          )
+          ),
         }}
       />
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        sx={{ mt: 3, mb: 2 }}
-      >
+      <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         Acceder
       </Button>
     </Box>
   );
+};
+
+LoginForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
