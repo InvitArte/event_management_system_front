@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Chip } from "@mui/material";
 import {
   stringToColor,
@@ -22,6 +23,14 @@ const TagChip = ({ tag, onDelete, style = {} }) => {
       }}
     />
   );
+};
+
+TagChip.propTypes = {
+  tag: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+  onDelete: PropTypes.func,
+  style: PropTypes.object,
 };
 
 export default TagChip;

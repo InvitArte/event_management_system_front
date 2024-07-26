@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import FrontPage from "../components/PublicView/FrontPage.jsx";
 import Countdown from "../components/PublicView/Countdown.jsx";
 import EventDetails from "../components/PublicView/EventDetails.jsx";
@@ -71,6 +72,10 @@ const PublicView = ({ userId }) => {
       </footer>
     </div>
   );
+};
+
+PublicView.propTypes = {
+  userId: PropTypes.number,
 };
 
 export default PublicView;

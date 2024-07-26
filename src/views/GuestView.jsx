@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import PropTypes from "prop-types";
 import {
   Container,
   Typography,
@@ -420,6 +421,12 @@ const GuestView = ({
       </Paper>
     </Container>
   );
+};
+
+GuestView.propTypes = {
+  visibleColumns: PropTypes.objectOf(PropTypes.bool),
+  visibleFilters: PropTypes.objectOf(PropTypes.bool),
+  visibleFormFields: PropTypes.objectOf(PropTypes.bool),
 };
 
 export default GuestView;

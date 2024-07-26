@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { dataGridLocaleText } from "../../config/DataGridLocaleText";
 
-const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
+const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
   const columns = useMemo(
     () => [
       {
@@ -59,6 +60,17 @@ const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
       />
     </Box>
   );
+};
+
+TagTable.propTypes = {
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ),
+  onEditTag: PropTypes.func.isRequired,
+  onDeleteTag: PropTypes.func.isRequired,
 };
 
 export default TagTable;

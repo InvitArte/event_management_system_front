@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Table,
   TableBody,
@@ -81,6 +82,14 @@ const SkeletonTable = ({
       </Box>
     </Paper>
   );
+};
+
+SkeletonTable.propTypes = {
+  rowsNum: PropTypes.number,
+  columnsNum: PropTypes.number,
+  height: PropTypes.number,
+  showCheckbox: PropTypes.bool,
+  showActions: PropTypes.bool,
 };
 
 export default SkeletonTable;
