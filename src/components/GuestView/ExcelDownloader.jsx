@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo } from "react";
+import PropTypes from "prop-types";
 import { Button } from "@mui/material";
 import ExcelJS from "exceljs";
 
@@ -24,7 +25,6 @@ const ExcelDownloader = ({ data, fileName }) => {
     worksheet.columns = columns;
     worksheet.addRows(data);
 
-    // Estilo para las celdas
     worksheet.eachRow((row, rowNumber) => {
       row.eachCell((cell) => {
         cell.border = {
@@ -44,7 +44,6 @@ const ExcelDownloader = ({ data, fileName }) => {
       }
     });
 
-    // Generar el archivo Excel
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -67,6 +66,11 @@ const ExcelDownloader = ({ data, fileName }) => {
       Descargar Excel
     </Button>
   );
+};
+
+ExcelDownloader.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fileName: PropTypes.string.isRequired,
 };
 
 export default ExcelDownloader;

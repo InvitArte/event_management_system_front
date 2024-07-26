@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import {
   Container,
   Typography,
@@ -74,6 +75,10 @@ const ProfileView = ({ visibleFields }) => {
       />
     </Container>
   );
+};
+
+ProfileView.propTypes = {
+  visibleFields: PropTypes.objectOf(PropTypes.bool),
 };
 
 export default ProfileView;
