@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import { authService } from "../services/Api";
 export const useScrollDetection = (threshold) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -27,10 +27,14 @@ export const useUserMenu = (navigate) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    handleMenuClose();
-    // Aquí iría la lógica de cierre de sesión
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      handleMenuClose();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return {
