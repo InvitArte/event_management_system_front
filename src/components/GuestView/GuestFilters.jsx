@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Grid, Paper } from "@mui/material";
 import { normalizeText } from "../Utils/TextUtils";
 import { stringToColor } from "../Utils/TagColors";
 import TagChip from "../Ui/TagChip";
@@ -77,6 +77,13 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
         <TextField
           label="Buscar por nombre"
           onChange={(e) => handleFilterChange("full_name", e.target.value)}
+          sx={{ width: 300 }}
+        />
+      )}
+      {visibleFilters.phone && (
+        <TextField
+          label="Buscar por teléfono"
+          onChange={(e) => handleFilterChange("phone", e.target.value)}
           sx={{ width: 300 }}
         />
       )}
