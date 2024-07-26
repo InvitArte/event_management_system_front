@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   Grid,
   List,
@@ -177,6 +178,31 @@ const GuestTransferList = ({
       </Grid>
     </Grid>
   );
+};
+
+GuestTransferList.propTypes = {
+  guests: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+      tags: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.number.isRequired,
+          name: PropTypes.string.isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
+  selectedGuests: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onSelectionChange: PropTypes.func.isRequired,
+  tagId: PropTypes.number.isRequired,
 };
 
 export default GuestTransferList;

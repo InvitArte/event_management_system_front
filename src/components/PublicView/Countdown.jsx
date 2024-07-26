@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
 import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
@@ -12,7 +13,7 @@ const Countdown = ({ userId }) => {
     const fetchEventDate = async () => {
       setIsLoading(true);
       try {
-        const response = await publicService.getUserDate(userId);
+        const response = await publicService.getUserDate(userId.toString());
         if (response && response.date) {
           const dateString = response.date;
           const [year, month, day, hour, minute] = dateString
@@ -100,6 +101,10 @@ const Countdown = ({ userId }) => {
       </div>
     </div>
   );
+};
+
+Countdown.propTypes = {
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 export default Countdown;

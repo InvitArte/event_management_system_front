@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   TextField,
   Button,
@@ -172,6 +173,13 @@ const ProfileForm = ({ visibleFields }) => {
       </Grid>
     </form>
   );
+};
+
+ProfileForm.propTypes = {
+  visibleFields: PropTypes.shape({
+    bankAccount: PropTypes.bool,
+    giftList: PropTypes.bool,
+  }).isRequired,
 };
 
 export default ProfileForm;

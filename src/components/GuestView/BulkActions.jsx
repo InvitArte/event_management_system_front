@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import PropTypes from "prop-types";
 import { Button, Box } from "@mui/material";
 import { guestService } from "../../services/Api";
 
@@ -30,6 +31,16 @@ const BulkActions = ({
       </Button>
     </Box>
   );
+};
+
+BulkActions.propTypes = {
+  selectedGuests: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    })
+  ).isRequired,
+  onBulkActionComplete: PropTypes.func.isRequired,
+  onSelectionReset: PropTypes.func.isRequired,
 };
 
 export default BulkActions;

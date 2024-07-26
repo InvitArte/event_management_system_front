@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { TextField, Button, Box } from "@mui/material";
 
 const ChangePasswordForm = ({ handleUpdatePassword, handleClose }) => {
@@ -50,6 +51,11 @@ const ChangePasswordForm = ({ handleUpdatePassword, handleClose }) => {
       </Box>
     </form>
   );
+};
+
+ChangePasswordForm.propTypes = {
+  handleUpdatePassword: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default ChangePasswordForm;
