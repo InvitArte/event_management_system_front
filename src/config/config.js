@@ -1,5 +1,5 @@
 //configuración del user para la vista pública
-export const userId = 1;
+export const userId = 2;
 //configuración del limite de más uno por invitado
 export const numPlusOne = 1;
 
@@ -24,6 +24,7 @@ export const guestViewColumns = {
 //configuración de los filtros de la vista de invitados
 export const guestViewFilters = {
   full_name: true,
+  phone: true,
   menu: true,
   allergy: true,
   needs_hotel: true,

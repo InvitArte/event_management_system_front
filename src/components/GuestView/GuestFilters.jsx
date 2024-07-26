@@ -80,6 +80,13 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           sx={{ width: 300 }}
         />
       )}
+      {visibleFilters.phone && (
+        <TextField
+          label="Buscar por teléfono"
+          onChange={(e) => handleFilterChange("phone", e.target.value)}
+          sx={{ width: 300 }}
+        />
+      )}
       {visibleFilters.menu && (
         <FilterAutocomplete
           label="Filtrar por Menú"
