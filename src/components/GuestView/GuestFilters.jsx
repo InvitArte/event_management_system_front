@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Grid, Paper } from "@mui/material";
 import { normalizeText } from "../Utils/TextUtils";
 import { stringToColor } from "../Utils/TagColors";
 import TagChip from "../Ui/TagChip";
