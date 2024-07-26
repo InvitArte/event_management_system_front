@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import PropTypes from "prop-types";
 import {
   TextField,
   Checkbox,
   FormControlLabel,
   Button,
   Grid,
-  Chip,
-  Typography,
   Autocomplete,
 } from "@mui/material";
 import { stringToColor, getContrastColor } from "../Utils/TagColors";
@@ -409,6 +408,71 @@ const GuestForm = ({
       </Grid>
     </form>
   );
+};
+
+GuestForm.propTypes = {
+  guest: PropTypes.shape({
+    first_name: PropTypes.string,
+    last_name: PropTypes.string,
+    phone: PropTypes.string,
+    email: PropTypes.string,
+    needs_transport: PropTypes.bool,
+    needs_hotel: PropTypes.bool,
+    disability: PropTypes.bool,
+    menu_id: PropTypes.number,
+    allergy_id: PropTypes.number,
+    observations: PropTypes.string,
+    accommodation_plan: PropTypes.string,
+    tags: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+      })
+    ),
+    plus_ones: PropTypes.arrayOf(
+      PropTypes.shape({
+        first_name: PropTypes.string,
+        last_name: PropTypes.string,
+        menu_id: PropTypes.number,
+        allergy_id: PropTypes.number,
+        disability: PropTypes.bool,
+      })
+    ),
+  }),
+  onSubmit: PropTypes.func.isRequired,
+  menus: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  allergies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  visibleFormFields: PropTypes.shape({
+    first_name: PropTypes.bool,
+    last_name: PropTypes.bool,
+    phone: PropTypes.bool,
+    email: PropTypes.bool,
+    needs_transport: PropTypes.bool,
+    needs_hotel: PropTypes.bool,
+    disability: PropTypes.bool,
+    menu: PropTypes.bool,
+    allergy: PropTypes.bool,
+    observations: PropTypes.bool,
+    accommodation_plan: PropTypes.bool,
+    tags: PropTypes.bool,
+    plus_ones: PropTypes.bool,
+  }).isRequired,
 };
 
 export default GuestForm;
