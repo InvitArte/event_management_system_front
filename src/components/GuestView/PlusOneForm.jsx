@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   TextField,
   Checkbox,
@@ -126,5 +127,43 @@ const PlusOneForm = ({
     </Grid>
   </Grid>
 );
+
+PlusOneForm.propTypes = {
+  plusOne: PropTypes.shape({
+    first_name: PropTypes.string,
+    last_name: PropTypes.string,
+    menu: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+    allergy: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }),
+    disability: PropTypes.bool,
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+  handlePlusOneChange: PropTypes.func.isRequired,
+  menus: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  allergies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  visibleFormFields: PropTypes.shape({
+    plus_one_first_name: PropTypes.bool,
+    plus_one_last_name: PropTypes.bool,
+    plus_one_menu: PropTypes.bool,
+    plus_one_allergy: PropTypes.bool,
+    plus_one_disability: PropTypes.bool,
+  }).isRequired,
+  removePlusOne: PropTypes.func.isRequired,
+};
 
 export default PlusOneForm;

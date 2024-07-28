@@ -1,58 +1,13 @@
 import React from "react";
-import PropTypes from "prop-types";
-import {
-  Toolbar,
-  Typography,
-  Button,
-  Container,
-  Menu,
-  MenuItem,
-  IconButton,
-} from "@mui/material";
+import { Toolbar, Typography, Container, IconButton } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
-import { AnimatedAppBar, StyledNavLink } from "../../config/NavbarStyles";
+import { AnimatedAppBar } from "../../config/NavbarStyles";
 import { useScrollDetection, useUserMenu } from "../../hooks/NavbarHooks";
+import NavbarLink from "./Navbar/NavbarLink";
+import UserMenu from "./Navbar/UserMenu";
 
 const SCROLL_THRESHOLD = 50;
-
-const NavbarLink = ({ to, children }) => (
-  <Button color="inherit" component={StyledNavLink} to={to}>
-    {children}
-  </Button>
-);
-
-NavbarLink.propTypes = {
-  to: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-};
-
-const UserMenu = ({ anchorEl, isOpen, onClose, onProfile, onLogout }) => (
-  <Menu
-    anchorEl={anchorEl}
-    open={isOpen}
-    onClose={onClose}
-    anchorOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "right",
-    }}
-  >
-    <MenuItem onClick={onProfile}>Perfil</MenuItem>
-    <MenuItem onClick={onLogout}>Desconectarse</MenuItem>
-  </Menu>
-);
-
-UserMenu.propTypes = {
-  anchorEl: PropTypes.object,
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onProfile: PropTypes.func.isRequired,
-  onLogout: PropTypes.func.isRequired,
-};
 
 const Navbar = () => {
   const navigate = useNavigate();

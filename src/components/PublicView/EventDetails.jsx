@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
 import "../../styles/PublicView/EventDetails.css";
@@ -134,6 +135,10 @@ const EventDetails = ({ userId }) => {
       </div>
     </div>
   );
+};
+
+EventDetails.propTypes = {
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 export default EventDetails;

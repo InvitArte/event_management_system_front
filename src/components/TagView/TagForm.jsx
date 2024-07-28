@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { TextField, Button, Box } from "@mui/material";
 
 const TagForm = ({ tag, onSubmit }) => {
@@ -36,6 +37,14 @@ const TagForm = ({ tag, onSubmit }) => {
       </Box>
     </form>
   );
+};
+
+TagForm.propTypes = {
+  tag: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    name: PropTypes.string.isRequired,
+  }),
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default TagForm;

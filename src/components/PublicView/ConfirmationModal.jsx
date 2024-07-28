@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import {
   Dialog,
   DialogActions,
@@ -118,13 +119,7 @@ const ErrorListItem = styled(ListItem)({
   padding: "4px 0",
 });
 
-const ConfirmationModal = ({
-  isOpen,
-  onClose,
-  userId,
-  eventDate,
-  eventLocations,
-}) => {
+const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   const [formData, setFormData] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
@@ -237,6 +232,12 @@ const ConfirmationModal = ({
       </DialogActions>
     </CustomDialog>
   );
+};
+
+ConfirmationModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  userId: PropTypes.number.isRequired,
 };
 
 export default ConfirmationModal;
