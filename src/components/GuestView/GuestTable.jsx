@@ -8,7 +8,7 @@ import {
   adjustColor,
   getContrastColor,
 } from "../Utils/TagColors";
-import { dataGridLocaleText } from "../Ui/DataGridLocaleText";
+import { dataGridLocaleText } from "../../config/DataGridLocaleText";
 import "../../styles/GuestView/Datatable.css";
 
 const GuestTable = ({

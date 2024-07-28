@@ -65,12 +65,19 @@ export const authService = {
   logout: async () => {
     try {
       const response = await axiosInstance.post(API_ROUTES.LOGOUT);
+      // Clear local storage
+      localStorage.removeItem("token");
+      // Clear any other stored user data
+      localStorage.removeItem("user");
+      // Reset axios instance
+      axiosInstance.defaults.headers["Authorization"] = null;
       toast.success("Logout correcto");
       return response.data;
     } catch (error) {
       return handleApiError(error, "logout");
     }
   },
+
   updatePassword: async (
     currentPassword,
     newPassword,
