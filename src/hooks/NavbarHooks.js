@@ -1,13 +1,11 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { authService } from "../services/Api";
-
 export const useScrollDetection = (threshold) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > threshold;
-      setIsScrolled(isScrolled);
+      setIsScrolled(window.scrollY > threshold);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -19,6 +17,7 @@ export const useScrollDetection = (threshold) => {
 
 export const useUserMenu = (navigate) => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const isMenuOpen = Boolean(anchorEl);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,20 +27,19 @@ export const useUserMenu = (navigate) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout = async () => {
     try {
       await authService.logout();
       handleMenuClose();
-      localStorage.removeItem("token");
       navigate("/login");
     } catch (error) {
-      console.error("Error during logout:", error);
+      console.error("Logout failed:", error);
     }
-  }, [navigate]);
+  };
 
   return {
     anchorEl,
-    isMenuOpen: Boolean(anchorEl),
+    isMenuOpen,
     handleMenuOpen,
     handleMenuClose,
     handleLogout,

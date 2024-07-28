@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Dialog,
   DialogActions,
@@ -8,7 +9,12 @@ import {
   Button,
 } from "@mui/material";
 
-const DeleteConfirmationDialog = ({ open, onClose, onConfirm, guestName }) => {
+const DeleteConfirmationDialog = ({
+  open,
+  onClose,
+  onConfirm,
+  guestName = "",
+}) => {
   return (
     <Dialog
       open={open}
@@ -35,6 +41,11 @@ const DeleteConfirmationDialog = ({ open, onClose, onConfirm, guestName }) => {
   );
 };
 
-DeleteConfirmationDialog.displayName = "DeleteConfirmationDialog";
+DeleteConfirmationDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  guestName: PropTypes.string,
+};
 
 export default React.memo(DeleteConfirmationDialog);

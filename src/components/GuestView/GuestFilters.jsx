@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import PropTypes from "prop-types";
 import { Box, TextField } from "@mui/material";
 import { normalizeText } from "../Utils/TextUtils";
 import { stringToColor } from "../Utils/TagColors";
@@ -165,6 +166,33 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
       )}
     </Box>
   );
+};
+
+GuestFilters.propTypes = {
+  guests: PropTypes.arrayOf(
+    PropTypes.shape({
+      menu: PropTypes.string,
+      allergy: PropTypes.string,
+      accommodation_plan: PropTypes.string,
+    })
+  ).isRequired,
+  onFilterChange: PropTypes.func.isRequired,
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  visibleFilters: PropTypes.shape({
+    full_name: PropTypes.bool,
+    phone: PropTypes.bool,
+    menu: PropTypes.bool,
+    allergy: PropTypes.bool,
+    needs_hotel: PropTypes.bool,
+    needs_transport: PropTypes.bool,
+    validated: PropTypes.bool,
+    tags: PropTypes.bool,
+    accommodation_plan: PropTypes.bool,
+  }).isRequired,
 };
 
 export default GuestFilters;

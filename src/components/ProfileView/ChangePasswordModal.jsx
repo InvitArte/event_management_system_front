@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
 import ChangePasswordForm from "./ChangePasswordForm";
 import { authService } from "../../services/Api";
@@ -21,7 +22,6 @@ const ChangePasswordModal = ({ open, handleClose }) => {
       );
       handleClose();
     } catch (error) {
-      // El error ya se maneja en el servicio, pero puedes añadir lógica adicional aquí si es necesario
       console.error("Error al cambiar la contraseña:", error);
     }
   };
@@ -55,6 +55,11 @@ const ChangePasswordModal = ({ open, handleClose }) => {
       </Box>
     </Modal>
   );
+};
+
+ChangePasswordModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
 
 export default ChangePasswordModal;

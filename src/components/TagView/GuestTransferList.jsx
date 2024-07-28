@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   Grid,
   List,
@@ -13,10 +14,11 @@ import {
   Autocomplete,
 } from "@mui/material";
 
+// Función que devuelve los elementos de a que no están en b
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
-
+// Función que devuelve los elementos que están en a y en b
 function intersection(a, b) {
   return a.filter((value) => b.indexOf(value) !== -1);
 }
@@ -177,6 +179,32 @@ const GuestTransferList = ({
       </Grid>
     </Grid>
   );
+};
+
+GuestTransferList.propTypes = {
+  guests: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+      tags: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+            .isRequired,
+          name: PropTypes.string.isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
+  selectedGuests: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  onSelectionChange: PropTypes.func.isRequired,
+  tagId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 export default GuestTransferList;
