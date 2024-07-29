@@ -1,31 +1,10 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { Box, Autocomplete, TextField, Chip } from "@mui/material";
-import {
-  stringToColor,
-  adjustColor,
-  getContrastColor,
-} from "../Utils/TagColors";
+import PropTypes from "prop-types";
+import { Box, TextField } from "@mui/material";
 import { normalizeText } from "../Utils/TextUtils";
-
-const FilterAutocomplete = ({
-  label,
-  options,
-  onChange,
-  width = 300,
-  multiple = false,
-  renderTags,
-  renderOption,
-}) => (
-  <Autocomplete
-    multiple={multiple}
-    options={options}
-    renderInput={(params) => <TextField {...params} label={label} />}
-    onChange={onChange}
-    renderTags={renderTags}
-    renderOption={renderOption}
-    sx={{ width }}
-  />
-);
+import { stringToColor } from "../Utils/TagColors";
+import TagChip from "../Ui/TagChip";
+import FilterAutocomplete from "../Ui/FilterAutocomplete";
 
 const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
   const [filters, setFilters] = useState({});
@@ -62,7 +41,6 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
   }, []);
 
   useEffect(() => {
-    // Aplicar normalización al filtro de nombre completo
     const normalizedFilters = { ...filters };
     if (normalizedFilters.full_name) {
       normalizedFilters.full_name = normalizeText(normalizedFilters.full_name);
@@ -74,18 +52,11 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
     (value, getTagProps) =>
       value.map((option, index) => {
         const { key, ...chipProps } = getTagProps({ index });
-        const backgroundColor = adjustColor(option.color, 20);
-        const textColor = getContrastColor(backgroundColor);
         return (
-          <Chip
-            key={key}
+          <TagChip
+            key={`${option.name}-${index}`}
+            tag={option}
             {...chipProps}
-            variant="filled"
-            label={option.name}
-            style={{
-              backgroundColor,
-              color: textColor,
-            }}
           />
         );
       }),
@@ -95,7 +66,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
   const renderTagOption = useCallback((props, option) => {
     const { key, ...otherProps } = props;
     return (
-      <li key={key} {...otherProps}>
+      <li key={`${option.name}-${key}`} {...otherProps}>
         {option.name}
       </li>
     );
@@ -110,11 +81,20 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           sx={{ width: 300 }}
         />
       )}
+      {visibleFilters.phone && (
+        <TextField
+          label="Buscar por teléfono"
+          onChange={(e) => handleFilterChange("phone", e.target.value)}
+          sx={{ width: 300 }}
+        />
+      )}
       {visibleFilters.menu && (
         <FilterAutocomplete
           label="Filtrar por Menú"
           options={uniqueValues.menus}
           onChange={(_, value) => handleFilterChange("menu", value)}
+          getOptionLabel={(option) => option || ""}
+          isOptionEqualToValue={(option, value) => option === value}
         />
       )}
       {visibleFilters.allergy && (
@@ -122,6 +102,8 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           label="Filtrar por Alergia"
           options={uniqueValues.allergies}
           onChange={(_, value) => handleFilterChange("allergy", value)}
+          getOptionLabel={(option) => option || ""}
+          isOptionEqualToValue={(option, value) => option === value}
         />
       )}
       {visibleFilters.needs_hotel && (
@@ -130,6 +112,8 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           options={["Sí", "No"]}
           onChange={(_, value) => handleFilterChange("needs_hotel", value)}
           width={200}
+          getOptionLabel={(option) => option}
+          isOptionEqualToValue={(option, value) => option === value}
         />
       )}
       {visibleFilters.needs_transport && (
@@ -138,6 +122,8 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           options={["Sí", "No"]}
           onChange={(_, value) => handleFilterChange("needs_transport", value)}
           width={200}
+          getOptionLabel={(option) => option}
+          isOptionEqualToValue={(option, value) => option === value}
         />
       )}
       {visibleFilters.validated && (
@@ -146,6 +132,8 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           options={["Sí", "No"]}
           onChange={(_, value) => handleFilterChange("validated", value)}
           width={200}
+          getOptionLabel={(option) => option}
+          isOptionEqualToValue={(option, value) => option === value}
         />
       )}
       {visibleFilters.tags && (
@@ -161,6 +149,8 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           multiple={true}
           renderTags={renderTagChips}
           renderOption={renderTagOption}
+          getOptionLabel={(option) => option.name}
+          isOptionEqualToValue={(option, value) => option.name === value.name}
         />
       )}
       {visibleFilters.accommodation_plan && (
@@ -170,10 +160,39 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           onChange={(_, value) =>
             handleFilterChange("accommodation_plan", value)
           }
+          getOptionLabel={(option) => option || ""}
+          isOptionEqualToValue={(option, value) => option === value}
         />
       )}
     </Box>
   );
+};
+
+GuestFilters.propTypes = {
+  guests: PropTypes.arrayOf(
+    PropTypes.shape({
+      menu: PropTypes.string,
+      allergy: PropTypes.string,
+      accommodation_plan: PropTypes.string,
+    })
+  ).isRequired,
+  onFilterChange: PropTypes.func.isRequired,
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  visibleFilters: PropTypes.shape({
+    full_name: PropTypes.bool,
+    phone: PropTypes.bool,
+    menu: PropTypes.bool,
+    allergy: PropTypes.bool,
+    needs_hotel: PropTypes.bool,
+    needs_transport: PropTypes.bool,
+    validated: PropTypes.bool,
+    tags: PropTypes.bool,
+    accommodation_plan: PropTypes.bool,
+  }).isRequired,
 };
 
 export default GuestFilters;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import {
   TextField,
   Grid,
@@ -218,6 +219,12 @@ const ConfirmationForm = ({ onFormChange, onValidationChange, formErrors }) => {
       )}
     </Grid>
   );
+};
+
+ConfirmationForm.propTypes = {
+  onFormChange: PropTypes.func.isRequired,
+  onValidationChange: PropTypes.func.isRequired,
+  formErrors: PropTypes.objectOf(PropTypes.string).isRequired,
 };
 
 export default ConfirmationForm;

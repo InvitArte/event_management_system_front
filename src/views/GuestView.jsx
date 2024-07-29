@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+import PropTypes from "prop-types";
 import {
   Container,
   Typography,
@@ -27,6 +28,7 @@ const GuestView = ({
     menus: [],
     allergies: [],
     tags: [],
+    allTags: [],
   });
   const [uiState, setUiState] = useState({
     loading: true,
@@ -44,24 +46,18 @@ const GuestView = ({
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const fetchGuests = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
-      const guestsResponse = await guestService.getAllGuests();
-      setGuestData(processGuests(guestsResponse));
-      setUiState((prev) => ({ ...prev, loading: false, error: "" }));
+      const [guestsResponse, tagsResponse] = await Promise.all([
+        guestService.getAllGuests(),
+        tagService.getAllTags(),
+      ]);
+      return { guests: guestsResponse, tags: tagsResponse };
     } catch (error) {
       console.error("Error fetching data:", error);
-      setUiState((prev) => ({
-        ...prev,
-        loading: false,
-        error: "Failed to fetch data. Please try again later.",
-      }));
+      throw error;
     }
   }, []);
-
-  useEffect(() => {
-    fetchGuests();
-  }, [fetchGuests]);
 
   const processGuests = useCallback((guestsData) => {
     if (!Array.isArray(guestsData)) {
@@ -141,6 +137,36 @@ const GuestView = ({
       tags: Array.from(uniqueTags).map((tag) => JSON.parse(tag)),
     };
   }, []);
+
+  const processData = useCallback(
+    (data) => {
+      const processedGuests = processGuests(data.guests);
+      return {
+        ...processedGuests,
+        allTags: data.tags,
+      };
+    },
+    [processGuests]
+  );
+
+  const fetchGuests = useCallback(async () => {
+    try {
+      const data = await fetchData();
+      const processedData = processData(data);
+      setGuestData(processedData);
+      setUiState((prev) => ({ ...prev, loading: false, error: "" }));
+    } catch (error) {
+      setUiState((prev) => ({
+        ...prev,
+        loading: false,
+        error: "Failed to fetch data. Please try again later.",
+      }));
+    }
+  }, [fetchData, processData]);
+
+  useEffect(() => {
+    fetchGuests();
+  }, [fetchGuests]);
 
   const filteredGuests = useMemo(() => {
     return guestData.guests.filter((guest) => {
@@ -305,7 +331,7 @@ const GuestView = ({
         return acc;
       }, {});
     });
-  }, [filteredGuests, uiState.visibleColumns, uiState.sortModel]);
+  }, [filteredGuests, uiState.visibleColumns, uiState.sortModel, columns]);
 
   if (uiState.error) {
     return (
@@ -381,6 +407,7 @@ const GuestView = ({
           onSubmit={handleGuestSubmitted}
           menus={guestData.menus}
           allergies={guestData.allergies}
+          tags={guestData.allTags}
           visibleFormFields={visibleFormFields}
         />
         <DeleteConfirmationDialog
@@ -394,6 +421,12 @@ const GuestView = ({
       </Paper>
     </Container>
   );
+};
+
+GuestView.propTypes = {
+  visibleColumns: PropTypes.objectOf(PropTypes.bool),
+  visibleFilters: PropTypes.objectOf(PropTypes.bool),
+  visibleFormFields: PropTypes.objectOf(PropTypes.bool),
 };
 
 export default GuestView;

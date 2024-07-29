@@ -1,32 +1,54 @@
-import React from "react";
+import React, { useMemo } from "react";
+import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
-import { IconButton } from "@mui/material";
-import { dataGridLocaleText } from "../Ui/DataGridLocaleText";
+import { IconButton, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { dataGridLocaleText } from "../../config/DataGridLocaleText";
 
-const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
-  const columns = [
-    { field: "name", headerName: "Nombre", flex: 1 },
-    {
-      field: "actions",
-      headerName: "Acciones",
-      width: 120,
-      sortable: false,
-      renderCell: (params) => (
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            onDeleteTag(params.row.id);
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      ),
-    },
-  ];
+const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
+  const columns = useMemo(
+    () => [
+      {
+        field: "name",
+        headerName: "Nombre",
+        flex: 1,
+        renderCell: (params) => (
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              "&:hover": { cursor: "pointer" },
+            }}
+          >
+            {params.value}
+          </Box>
+        ),
+      },
+      {
+        field: "actions",
+        headerName: "Acciones",
+        width: 120,
+        sortable: false,
+        renderCell: (params) => (
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteTag(params.row.id);
+            }}
+            size="small"
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        ),
+      },
+    ],
+    [onDeleteTag]
+  );
 
   return (
-    <div style={{ height: 400, width: "100%" }}>
+    <Box sx={{ height: 400, width: "100%" }}>
       <DataGrid
         rows={tags}
         columns={columns}
@@ -36,8 +58,19 @@ const TagTable = ({ tags, onEditTag, onDeleteTag }) => {
         disableSelectionOnClick
         localeText={dataGridLocaleText}
       />
-    </div>
+    </Box>
   );
+};
+
+TagTable.propTypes = {
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ),
+  onEditTag: PropTypes.func.isRequired,
+  onDeleteTag: PropTypes.func.isRequired,
 };
 
 export default TagTable;
