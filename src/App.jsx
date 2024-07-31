@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import PublicView from "./views/PublicView";
 import LoginView from "./views/LoginView";
 import GuestView from "./views/GuestView";
+import ContactView from "./views/ContactView";
 import TagView from "./views/TagView";
 import ProfileView from "./views/ProfileView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";
@@ -41,6 +42,7 @@ const App = () => {
               }
             />
             <Route path="/tags" element={<TagView />} />
+            <Route path="/contacts" element={<ContactView />} />
             <Route
               path="/profile"
               element={<ProfileView visibleFields={profileViewFields} />}
