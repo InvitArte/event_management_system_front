@@ -37,6 +37,7 @@ const Navbar = () => {
           </Typography>
           <NavbarLink to="/guests">Invitados</NavbarLink>
           <NavbarLink to="/tags">Etiquetas</NavbarLink>
+          <NavbarLink to="/contacts">Contactos</NavbarLink>
           <IconButton
             color="inherit"
             onClick={handleMenuOpen}
