@@ -13,7 +13,10 @@ const DeleteConfirmationDialog = ({
   open,
   onClose,
   onConfirm,
-  guestName = "",
+  title = "Confirmar eliminación",
+  content,
+  cancelButtonText = "Cancelar",
+  confirmButtonText = "Eliminar",
 }) => {
   return (
     <Dialog
@@ -22,19 +25,18 @@ const DeleteConfirmationDialog = ({
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">Confirmar eliminación</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          ¿Estás seguro de que quieres eliminar a {guestName}? Esta acción no se
-          puede deshacer.
+          {content}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
-          Cancelar
+          {cancelButtonText}
         </Button>
         <Button onClick={onConfirm} color="error" autoFocus>
-          Eliminar
+          {confirmButtonText}
         </Button>
       </DialogActions>
     </Dialog>
@@ -45,7 +47,10 @@ DeleteConfirmationDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
-  guestName: PropTypes.string,
+  title: PropTypes.string,
+  content: PropTypes.string.isRequired,
+  cancelButtonText: PropTypes.string,
+  confirmButtonText: PropTypes.string,
 };
 
 export default React.memo(DeleteConfirmationDialog);
