@@ -15,7 +15,7 @@ import GuestFilters from "../components/GuestView/GuestFilters";
 import ExcelDownloader from "../components/GuestView/ExcelDownloader";
 import GuestModal from "../components/GuestView/GuestModal";
 import SkeletonTable from "../components/Ui/SkeletonTable";
-import DeleteConfirmationDialog from "../components/GuestView/DeleteConfirmationDialog";
+import DeleteConfirmationDialog from "../components/Ui/DeleteConfirmationDialog";
 import { normalizeText } from "../components/Utils/TextUtils";
 
 const GuestView = ({
@@ -416,7 +416,10 @@ const GuestView = ({
             setUiState((prev) => ({ ...prev, deleteDialogOpen: false }))
           }
           onConfirm={handleConfirmDelete}
-          guestName={uiState.guestToDelete?.fullName}
+          title="Confirmar eliminación de invitado"
+          content={`¿Estás seguro de que quieres eliminar a ${uiState.guestToDelete?.fullName}? Esta acción no se puede deshacer.`}
+          cancelButtonText="Cancelar"
+          confirmButtonText="Eliminar invitado"
         />
       </Paper>
     </Container>

@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from "react";
+// src/components/PublicView/EventDetails.jsx
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
 import "../../styles/PublicView/EventDetails.css";
 import logo from "../../assets/imgs/maniqui.svg";
+import { useBackgroundImage } from "../../context/BackgroundImageContext";
 
 const EventDetails = ({ userId }) => {
   const [eventDate, setEventDate] = useState(null);
   const [eventDateString, setEventDateString] = useState("");
   const [eventLocations, setEventLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { backgroundImages, setBackgroundImage } = useBackgroundImage();
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -55,6 +58,22 @@ const EventDetails = ({ userId }) => {
     fetchEventData();
   }, [userId]);
 
+  useEffect(() => {
+    const loadBackgroundImage = async () => {
+      try {
+        // Cargar la imagen de fondo de manera dinamica
+        const imageModule = await import("../../assets/imgs/eventdetails.jpg");
+        setBackgroundImage("eventDetails", imageModule.default);
+      } catch (error) {
+        console.error(
+          "Error loading background image:",
+          error.message || error
+        );
+      }
+    };
+    loadBackgroundImage();
+  }, [setBackgroundImage]);
+
   const addToGoogleCalendar = () => {
     if (!eventDate) return;
 
@@ -93,7 +112,10 @@ const EventDetails = ({ userId }) => {
   };
 
   return (
-    <div className="event-details">
+    <div
+      className="event-details"
+      style={{ backgroundImage: `url(${backgroundImages.eventDetails})` }}
+    >
       <div className="event-details-overlay">
         <img src={logo} alt="Logo" className="event-logo" />
         <h1>PRESENTACIÓN NUEVA COLECCIÓN</h1>

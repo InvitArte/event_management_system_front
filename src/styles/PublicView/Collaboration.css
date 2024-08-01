@@ -3,7 +3,7 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: url("../../assets/imgs/collaboration.jpg") no-repeat center center;
+  /* background: url("../../assets/imgs/collaboration.jpg") no-repeat center center; */
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -62,8 +62,7 @@
   height: auto;
   filter: drop-shadow(2px 2px 1px rgba(0, 0, 0, 0.5));
   transform: rotate(15deg); /* Rotación de 15 grados a la derecha */
-  transform-origin: center center; 
-
+  transform-origin: center center;
 }
 
 /* Media queries para diferentes tamaños de pantalla */
