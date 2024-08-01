@@ -3,12 +3,14 @@
 .event-details {
   position: relative;
   width: 100%;
-  min-height: 150vh;
+  min-height: 120vh;
   /* background: url("../../assets/imgs/eventdetails.jpg") no-repeat center center/cover; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-position: center center;
+  background-size: cover;
 }
 
 .event-details-overlay {
