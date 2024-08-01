@@ -1,5 +1,5 @@
 // src/components/PublicView/EventDetails.jsx
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
