@@ -649,6 +649,61 @@ export const tagService = {
     }
   },
 };
+export const contactService = {
+  getAllContacts: async () => {
+    try {
+      const response = await axiosInstance.get(API_ROUTES.CONTACTS);
+      return response.data;
+    } catch (error) {
+      return handleApiError(error, "getAllContacts");
+    }
+  },
+  getContact: async (contactId) => {
+    try {
+      const response = await axiosInstance.get(
+        `${API_ROUTES.CONTACTS}/${contactId}`
+      );
+      return response.data;
+    } catch (error) {
+      return handleApiError(error, "getContact");
+    }
+  },
+  createContact: async (contactData) => {
+    try {
+      const response = await axiosInstance.post(
+        API_ROUTES.CONTACTS,
+        contactData
+      );
+      toast.success("Contacto creado correctamente");
+      return response.data;
+    } catch (error) {
+      return handleApiError(error, "createContact");
+    }
+  },
+  updateContact: async (contactId, contactData) => {
+    try {
+      const response = await axiosInstance.put(
+        `${API_ROUTES.CONTACTS}/${contactId}`,
+        contactData
+      );
+      toast.success("Contacto actualizado correctamente");
+      return response.data;
+    } catch (error) {
+      return handleApiError(error, "updateContact");
+    }
+  },
+  deleteContact: async (contactId) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${API_ROUTES.CONTACTS}/${contactId}`
+      );
+      toast.success("Contacto eliminado correctamente");
+      return response.data;
+    } catch (error) {
+      return handleApiError(error, "deleteContact");
+    }
+  },
+};
 
 export default {
   auth: authService,
@@ -660,4 +715,5 @@ export default {
   menu: menuService,
   public: publicService,
   tag: tagService,
+  contact: contactService,
 };
