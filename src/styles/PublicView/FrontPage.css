@@ -1,10 +1,18 @@
 /* src/components/FrontPage.css */
-@keyframes fadeIn {
+@font-face {
+  font-family: "FuenteGerminar";
+  src: url("../../assets/fonts/GaryDownleyScript_PERSONAL_USE_ONLY.otf")
+    format("opentype");
+}
+
+@keyframes fadeUp {
   from {
     opacity: 0;
+    clip-path: inset(100% 0 0 0);
   }
   to {
     opacity: 1;
+    clip-path: inset(0% 0 0 0);
   }
 }
 
@@ -12,7 +20,9 @@
   position: relative;
   width: 100%;
   height: 140vh;
+
   /* background: none; */
+  background-position: center -18rem;
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -48,10 +58,10 @@
 }
 
 .logo {
-  width: 60rem;
+  width: 40rem;
   margin-bottom: 250px;
   filter: drop-shadow(6px 6px 3px rgb(0, 0, 0));
-  animation: fadeIn 2s ease-in;
+  animation: fadeUp 4s;
 }
 
 .front-page h1 {
@@ -64,17 +74,19 @@
   letter-spacing: 4px;
   word-spacing: 7px;
 }
-
+/* GERMINAR */
 .front-page h2 {
+  opacity: 0;
   color: white;
-  font-size: 2rem;
+  font-size: 4rem;
   margin-top: 10px;
-  /* margin-bottom: 200px; */
   padding-top: 0;
   text-align: center;
-  letter-spacing: 4px;
   word-spacing: 7px;
-  animation: fadeIn 2s ease-in;
+  animation: fadeUp 2s ease-in forwards;
+  animation-delay: 2s;
+  font-family: "FuenteGerminar" !important;
+  font-weight: 100;
 }
 
 /* Estilos para dispositivos móviles */
@@ -90,7 +102,7 @@
   }
 
   .logo {
-    width: 70%;
+    width: 80%;
     max-width: 25rem;
     margin-bottom: 0;
   }
@@ -101,19 +113,21 @@
     word-spacing: 4px;
     margin-top: -2rem;
   }
+  /* GERMINAR */
   .container-logo h2 {
-    font-size: 1.5rem;
-    letter-spacing: 2px;
+    font-size: 3.5rem;
     word-spacing: 4px;
     padding: 0;
     margin: 0;
+    font-family: "FuenteLocal", "OtraFuente", sans-serif;
   }
 }
 
 /* Ajuste adicional para tablets */
-@media screen and (min-width: 768px) and (max-width: 1023px) {
+@media screen and (min-width: 768px) and (max-width: 1300px) {
   .front-page {
     height: 100vh;
+    background-position: center center;
   }
 
   .logo {
@@ -126,17 +140,16 @@
     margin-bottom: 150px;
   }
 
-  .container-logo h2 {
-    font-size: 3rem;
-    letter-spacing: 2px;
-    word-spacing: 4px;
-
-    padding: 0;
-    margin: 0;
-  }
-
   .frontPage-overlay {
     justify-content: space-between;
     /* padding: 2rem 0; */
+  }
+  /* GERMINAR */
+  .container-logo h2 {
+    font-size: 5.5rem;
+    word-spacing: 4px;
+    padding: 0;
+    margin: 0;
+    font-family: "FuenteLocal";
   }
 }
