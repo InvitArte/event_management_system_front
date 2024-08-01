@@ -1,15 +1,18 @@
 /* src/components/FrontPage.css */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .front-page {
   position: relative;
   width: 100%;
   height: 140vh;
-  background: url("../../assets/imgs/front-page-background.jpg") no-repeat
-    center -480px;
+  /* background: none; */
   background-size: cover;
   display: flex;
   flex-direction: column;
@@ -21,7 +24,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   position: absolute;
   top: 0;
   left: 0;
@@ -37,8 +40,15 @@
   background-color: rgba(0, 0, 0, 0.3);
 }
 
+.container-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .logo {
-  width: 50rem;
+  width: 60rem;
   margin-bottom: 250px;
   filter: drop-shadow(6px 6px 3px rgb(0, 0, 0));
   animation: fadeIn 2s ease-in;
@@ -47,12 +57,24 @@
 .front-page h1 {
   color: white;
   font-size: 4rem;
-  margin-top: 0;
-  margin-bottom: 200px;
+  margin-top: 20px;
+  margin-bottom: 180px;
   padding-top: 0;
   text-align: center;
   letter-spacing: 4px;
   word-spacing: 7px;
+}
+
+.front-page h2 {
+  color: white;
+  font-size: 2rem;
+  margin-top: 10px;
+  /* margin-bottom: 200px; */
+  padding-top: 0;
+  text-align: center;
+  letter-spacing: 4px;
+  word-spacing: 7px;
+  animation: fadeIn 2s ease-in;
 }
 
 /* Estilos para dispositivos móviles */
@@ -63,22 +85,28 @@
   }
 
   .frontPage-overlay {
-    justify-content: space-around;
-    padding: 2rem 0;
+    justify-content: space-evenly;
+    /* padding: 2rem 0; */
   }
 
   .logo {
-    width: 80%;
+    width: 70%;
     max-width: 25rem;
     margin-bottom: 0;
   }
 
   .front-page h1 {
     font-size: 1.5rem;
-    /* margin-bottom: 0; */
     letter-spacing: 2px;
     word-spacing: 4px;
     margin-top: -2rem;
+  }
+  .container-logo h2 {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    word-spacing: 4px;
+    padding: 0;
+    margin: 0;
   }
 }
 
@@ -90,11 +118,25 @@
 
   .logo {
     width: 40rem;
-    margin-bottom: 150px;
+    margin-bottom: 100px;
   }
 
   .front-page h1 {
     font-size: 3rem;
     margin-bottom: 150px;
+  }
+
+  .container-logo h2 {
+    font-size: 3rem;
+    letter-spacing: 2px;
+    word-spacing: 4px;
+
+    padding: 0;
+    margin: 0;
+  }
+
+  .frontPage-overlay {
+    justify-content: space-between;
+    /* padding: 2rem 0; */
   }
 }
