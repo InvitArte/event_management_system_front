@@ -1,4 +1,3 @@
-// src/components/PublicView/EventDetails.jsx
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
@@ -23,7 +22,6 @@ const EventDetails = ({ userId }) => {
         ]);
 
         if (dateResponse && dateResponse.date) {
-          console.log(dateResponse.date);
           const dateString = dateResponse.date;
           const [year, month, day, hour, minute] = dateString
             .split(" ")
@@ -61,7 +59,6 @@ const EventDetails = ({ userId }) => {
   useEffect(() => {
     const loadBackgroundImage = async () => {
       try {
-        // Cargar la imagen de fondo de manera dinamica
         const imageModule = await import("../../assets/imgs/eventdetails.jpg");
         setBackgroundImage("eventDetails", imageModule.default);
       } catch (error) {
@@ -96,11 +93,12 @@ const EventDetails = ({ userId }) => {
     window.open(url, "_blank");
   };
 
-  const openGoogleMaps = (address) => {
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      address
-    )}`;
-    window.open(url, "_blank");
+  const openGoogleMaps = (url) => {
+    if (url) {
+      window.open(url, "_blank");
+    } else {
+      console.error("No URL provided for this location");
+    }
   };
 
   const openConfirmationModal = () => {
@@ -135,7 +133,7 @@ const EventDetails = ({ userId }) => {
                   <p>{location.name}</p>
                   <button
                     className="open-maps"
-                    onClick={() => openGoogleMaps(location.direccion)}
+                    onClick={() => openGoogleMaps(location.url)}
                   >
                     Cómo llegar
                   </button>
