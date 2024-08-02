@@ -1,8 +1,7 @@
 /* src/components/FrontPage.css */
 @font-face {
   font-family: "FuenteGerminar";
-  src: url("../../assets/fonts/GaryDownleyScript_PERSONAL_USE_ONLY.otf")
-    format("opentype");
+  src: url("../../assets/fonts/Billion_Miracles.otf") format("opentype");
 }
 
 @keyframes fadeUp {
@@ -59,6 +58,7 @@
 
 .logo {
   width: 40rem;
+  margin-top: -30px;
   margin-bottom: 250px;
   filter: drop-shadow(6px 6px 3px rgb(0, 0, 0));
   animation: fadeUp 4s;
@@ -78,7 +78,7 @@
 .front-page h2 {
   opacity: 0;
   color: white;
-  font-size: 4rem;
+  font-size: 12rem;
   margin-top: 10px;
   padding-top: 0;
   text-align: center;
@@ -86,7 +86,7 @@
   animation: fadeUp 2s ease-in forwards;
   animation-delay: 2s;
   font-family: "FuenteGerminar" !important;
-  font-weight: 100;
+  font-weight: 100 !important;
 }
 
 /* Estilos para dispositivos móviles */
@@ -115,7 +115,7 @@
   }
   /* GERMINAR */
   .container-logo h2 {
-    font-size: 3.5rem;
+    font-size: 8rem;
     word-spacing: 4px;
     padding: 0;
     margin: 0;
@@ -146,7 +146,6 @@
   }
   /* GERMINAR */
   .container-logo h2 {
-    font-size: 5.5rem;
     word-spacing: 4px;
     padding: 0;
     margin: 0;
