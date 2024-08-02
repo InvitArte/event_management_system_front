@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import FrontPage from "../components/PublicView/FrontPage.jsx";
 import Countdown from "../components/PublicView/Countdown.jsx";
