@@ -4,12 +4,14 @@ import { publicService } from "../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
 import "../../styles/PublicView/EventDetails.css";
 import logo from "../../assets/imgs/maniqui.svg";
+import { useBackgroundImage } from "../../context/BackgroundImageContext";
 
 const EventDetails = ({ userId }) => {
   const [eventDate, setEventDate] = useState(null);
   const [eventDateString, setEventDateString] = useState("");
   const [eventLocations, setEventLocations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { backgroundImages, setBackgroundImage } = useBackgroundImage();
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -28,14 +30,18 @@ const EventDetails = ({ userId }) => {
 
           if (!isNaN(eventDateFromAPI.getTime())) {
             setEventDate(eventDateFromAPI);
-            setEventDateString(
-              eventDateFromAPI.toLocaleDateString("es-ES", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
-            );
+            const formattedDate = eventDateFromAPI.toLocaleDateString("es-ES", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            });
+            const formattedTime = eventDateFromAPI.toLocaleTimeString("es-ES", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            setEventDateString(`${formattedDate} - ${formattedTime}h`);
           }
         }
 
@@ -49,6 +55,21 @@ const EventDetails = ({ userId }) => {
 
     fetchEventData();
   }, [userId]);
+
+  useEffect(() => {
+    const loadBackgroundImage = async () => {
+      try {
+        const imageModule = await import("../../assets/imgs/eventdetails.jpg");
+        setBackgroundImage("eventDetails", imageModule.default);
+      } catch (error) {
+        console.error(
+          "Error loading background image:",
+          error.message || error
+        );
+      }
+    };
+    loadBackgroundImage();
+  }, [setBackgroundImage]);
 
   const addToGoogleCalendar = () => {
     if (!eventDate) return;
@@ -72,11 +93,12 @@ const EventDetails = ({ userId }) => {
     window.open(url, "_blank");
   };
 
-  const openGoogleMaps = (address) => {
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      address
-    )}`;
-    window.open(url, "_blank");
+  const openGoogleMaps = (url) => {
+    if (url) {
+      window.open(url, "_blank");
+    } else {
+      console.error("No URL provided for this location");
+    }
   };
 
   const openConfirmationModal = () => {
@@ -88,7 +110,10 @@ const EventDetails = ({ userId }) => {
   };
 
   return (
-    <div className="event-details">
+    <div
+      className="event-details"
+      style={{ backgroundImage: `url(${backgroundImages.eventDetails})` }}
+    >
       <div className="event-details-overlay">
         <img src={logo} alt="Logo" className="event-logo" />
         <h1>PRESENTACIÓN NUEVA COLECCIÓN</h1>
@@ -108,7 +133,7 @@ const EventDetails = ({ userId }) => {
                   <p>{location.name}</p>
                   <button
                     className="open-maps"
-                    onClick={() => openGoogleMaps(location.direccion)}
+                    onClick={() => openGoogleMaps(location.url)}
                   >
                     Cómo llegar
                   </button>

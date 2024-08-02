@@ -3,12 +3,14 @@
 .event-details {
   position: relative;
   width: 100%;
-  min-height: 150vh;
-  background: url("../../assets/imgs/eventdetails.jpg") no-repeat center center/cover;
+  min-height: 120vh;
+  /* background: url("../../assets/imgs/eventdetails.jpg") no-repeat center center/cover; */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-position: center center;
+  background-size: cover;
 }
 
 .event-details-overlay {
@@ -60,7 +62,9 @@
   text-align: center;
 }
 
-.add-to-calendar, .open-maps, .confirmation {
+.add-to-calendar,
+.open-maps,
+.confirmation {
   background-color: #a3a3a3;
   color: white;
   border: none;
@@ -73,7 +77,9 @@
   transition: background-color 0.3s ease;
 }
 
-.add-to-calendar:hover, .open-maps:hover, .confirmation:hover {
+.add-to-calendar:hover,
+.open-maps:hover,
+.confirmation:hover {
   background-color: #868686;
 }
 
@@ -114,12 +120,13 @@
   .event-logo {
     width: 5rem;
   }
-  
+
   .event-details-overlay h1 {
     font-size: 1.75rem; /* Tamaño para tablets y móviles grandes */
   }
-  
-  .event-date, .event-details h2 {
+
+  .event-date,
+  .event-details h2 {
     font-size: 1.75rem;
   }
 }
@@ -131,20 +138,21 @@
   .event-details-overlay {
     padding: 3rem 2rem;
   }
-  
+
   .event-logo {
     width: 6rem;
     margin-bottom: 2rem;
   }
-  
+
   .event-details-overlay h1 {
     font-size: 2.5rem;
   }
-  
-  .event-date, .event-details h2 {
+
+  .event-date,
+  .event-details h2 {
     font-size: 2rem;
   }
-  
+
   .event-locations li {
     font-size: 1.5rem;
   }
@@ -157,20 +165,22 @@
   .event-details-overlay {
     padding: 4rem 2rem;
   }
-  
+
   .event-logo {
     width: 7rem;
   }
-  
+
   .event-details-overlay h1 {
     font-size: 3rem;
   }
-  
-  .event-date, .event-details h2 {
+
+  .event-date,
+  .event-details h2 {
     font-size: 2.25rem;
   }
-  
-  .add-to-calendar, .open-maps {
+
+  .add-to-calendar,
+  .open-maps {
     font-size: 1.1rem;
     padding: 1rem 2rem;
   }
@@ -183,19 +193,20 @@
   .event-details-overlay {
     padding: 5rem 2rem;
   }
-  
+
   .event-logo {
     width: 8rem;
   }
-  
+
   .event-details-overlay h1 {
     font-size: 3.5rem;
   }
-  
-  .event-date, .event-details h2 {
+
+  .event-date,
+  .event-details h2 {
     font-size: 2.5rem;
   }
-  
+
   .event-locations li {
     font-size: 1.75rem;
   }

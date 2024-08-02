@@ -1,13 +1,16 @@
+// src/components/Countdown.jsx
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
 import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
+import { useBackgroundImage } from "../../context/BackgroundImageContext";
 
 const Countdown = ({ userId }) => {
   const [timeLeft, setTimeLeft] = useState(null);
   const [eventDate, setEventDate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { backgroundImages, setBackgroundImage } = useBackgroundImage();
 
   useEffect(() => {
     const fetchEventDate = async () => {
@@ -37,6 +40,20 @@ const Countdown = ({ userId }) => {
     };
     fetchEventDate();
   }, [userId]);
+
+  useEffect(() => {
+    const loadBackgroundImage = async () => {
+      try {
+        // Cargar la imagen de fondo de manera dinamica
+        const imageModule = await import("../../assets/imgs/countdown.jpg");
+        setBackgroundImage("countdown", imageModule.default);
+      } catch (error) {
+        console.error("Error loading background image:", error);
+      }
+    };
+
+    loadBackgroundImage();
+  }, [setBackgroundImage]);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -92,7 +109,10 @@ const Countdown = ({ userId }) => {
   };
 
   return (
-    <div className="countdown">
+    <div
+      className="countdown"
+      style={{ backgroundImage: `url(${backgroundImages.countdown})` }}
+    >
       <div className="countdown-overlay">
         <div className="timer">
           <img src={logo} alt="Logo" className="countdown-logo" />

@@ -2,8 +2,9 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  background: url("../../assets/imgs/countdown.jpg") no-repeat center center;
+  /* background: url("../../assets/imgs/countdown.jpg") no-repeat center center; */
   background-size: cover;
+  background-position: center center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,10 +78,16 @@
 
 /* Media queries para diferentes tamaños de pantalla */
 @media screen and (min-width: 480px) {
-  .title { font-size: 2.5rem; }
-  .timer-components { font-size: 3rem; }
-  .message { font-size: 3.5rem; }
-  .countdown-logo { 
+  .title {
+    font-size: 2.5rem;
+  }
+  .timer-components {
+    font-size: 3rem;
+  }
+  .message {
+    font-size: 3.5rem;
+  }
+  .countdown-logo {
     width: 45%;
     max-width: 180px;
     margin-bottom: 1.5rem;
@@ -88,10 +95,16 @@
 }
 
 @media screen and (min-width: 768px) {
-  .title { font-size: 3rem; }
-  .timer-components { font-size: 3.5rem; }
-  .message { font-size: 4rem; }
-  .countdown-logo { 
+  .title {
+    font-size: 3rem;
+  }
+  .timer-components {
+    font-size: 3.5rem;
+  }
+  .message {
+    font-size: 4rem;
+  }
+  .countdown-logo {
     width: 50%;
     max-width: 250px;
     margin-bottom: 2rem;
@@ -99,19 +112,31 @@
 }
 
 @media screen and (min-width: 1024px) {
-  .title { font-size: 3.5rem; }
-  .timer-components { font-size: 4rem; }
-  .message { font-size: 5rem; }
-  .countdown-logo { 
+  .title {
+    font-size: 3.5rem;
+  }
+  .timer-components {
+    font-size: 4rem;
+  }
+  .message {
+    font-size: 5rem;
+  }
+  .countdown-logo {
     max-width: 300px;
     margin-bottom: 2.5rem;
   }
 }
 
 @media screen and (min-width: 1200px) {
-  .title { font-size: 4rem; }
-  .timer-components { font-size: 5rem; }
-  .message { font-size: 6rem; }
+  .title {
+    font-size: 4rem;
+  }
+  .timer-components {
+    font-size: 5rem;
+  }
+  .message {
+    font-size: 6rem;
+  }
   .countdown-logo {
     max-width: 400px;
     margin-bottom: 3rem;
