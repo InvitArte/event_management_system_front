@@ -126,16 +126,6 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           isOptionEqualToValue={(option, value) => option === value}
         />
       )}
-      {visibleFilters.validated && (
-        <FilterAutocomplete
-          label="Verificado"
-          options={["Sí", "No"]}
-          onChange={(_, value) => handleFilterChange("validated", value)}
-          width={200}
-          getOptionLabel={(option) => option}
-          isOptionEqualToValue={(option, value) => option === value}
-        />
-      )}
       {visibleFilters.tags && (
         <FilterAutocomplete
           label="Filtrar por Etiquetas"
@@ -151,6 +141,16 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           renderOption={renderTagOption}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.name === value.name}
+        />
+      )}
+      {visibleFilters.validated && (
+        <FilterAutocomplete
+          label="Verificado"
+          options={["Sí", "No"]}
+          onChange={(_, value) => handleFilterChange("validated", value)}
+          width={200}
+          getOptionLabel={(option) => option}
+          isOptionEqualToValue={(option, value) => option === value}
         />
       )}
       {visibleFilters.accommodation_plan && (
