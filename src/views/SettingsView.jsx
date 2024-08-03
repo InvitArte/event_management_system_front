@@ -1,24 +1,31 @@
 import React, { useState, useEffect } from "react";
-import api from "../services/Api";
+import { useUserConfig } from "../context/UserConfigContext";
+import defaultConfig from "../config/Config";
+import {
+  Container,
+  Paper,
+  Typography,
+  Button,
+  Box,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import ConfigSection from "../components/SettingsView/ConfigSection";
+import ConfigSectionSkeleton from "../components/SettingsView/ConfigSectionSkeleton";
+import translations from "../components/SettingsView/Translations";
 
 const SettingsView = () => {
-  const [config, setConfig] = useState(null);
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const { userConfig, updateUserConfig } = useUserConfig();
+  const [localConfig, setLocalConfig] = useState(null);
 
   useEffect(() => {
-    fetchConfig();
-  }, []);
-
-  const fetchConfig = async () => {
-    try {
-      const userConfig = await api.userConfig.getUserConfig();
-      setConfig(userConfig);
-    } catch (error) {
-      console.error("Error fetching user config:", error);
-    }
-  };
+    setLocalConfig(userConfig);
+  }, [userConfig]);
 
   const handleConfigChange = (section, key, value) => {
-    setConfig((prevConfig) => ({
+    setLocalConfig((prevConfig) => ({
       ...prevConfig,
       [section]: {
         ...prevConfig[section],
@@ -30,85 +37,70 @@ const SettingsView = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.userConfig.updateUserConfig(config);
-      // Puedes agregar una notificación de éxito aquí si lo deseas
+      await updateUserConfig(localConfig);
     } catch (error) {
       console.error("Error updating user config:", error);
     }
   };
 
-  if (!config) return <div>Loading...</div>;
+  const renderSkeletons = () => {
+    return [...Array(4)].map((_, index) => (
+      <ConfigSectionSkeleton key={index} />
+    ));
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Configuración de la aplicación</h2>
+    <Container maxWidth="xl">
+      <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+        <Typography
+          variant={isSmallScreen ? "h5" : "h4"}
+          component="h1"
+          gutterBottom
+        >
+          {translations.settingsView.title}
+        </Typography>
+      </Paper>
 
-      <h3>Columnas de la vista de invitados</h3>
-      {Object.entries(config.guestViewColumns).map(([key, value]) => (
-        <div key={key}>
-          <label>
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={(e) =>
-                handleConfigChange("guestViewColumns", key, e.target.checked)
-              }
-            />
-            {key}
-          </label>
-        </div>
-      ))}
-
-      <h3>Filtros de la vista de invitados</h3>
-      {Object.entries(config.guestViewFilters).map(([key, value]) => (
-        <div key={key}>
-          <label>
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={(e) =>
-                handleConfigChange("guestViewFilters", key, e.target.checked)
-              }
-            />
-            {key}
-          </label>
-        </div>
-      ))}
-
-      <h3>Campos del formulario de invitados</h3>
-      {Object.entries(config.guestFormFields).map(([key, value]) => (
-        <div key={key}>
-          <label>
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={(e) =>
-                handleConfigChange("guestFormFields", key, e.target.checked)
-              }
-            />
-            {key}
-          </label>
-        </div>
-      ))}
-
-      <h3>Campos de la vista de perfil</h3>
-      {Object.entries(config.profileViewFields).map(([key, value]) => (
-        <div key={key}>
-          <label>
-            <input
-              type="checkbox"
-              checked={value}
-              onChange={(e) =>
-                handleConfigChange("profileViewFields", key, e.target.checked)
-              }
-            />
-            {key}
-          </label>
-        </div>
-      ))}
-
-      <button type="submit">Guardar configuración</button>
-    </form>
+      {!localConfig ? (
+        renderSkeletons()
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <ConfigSection
+            title={translations.guestViewColumns.title}
+            config={defaultConfig.guestViewColumns}
+            localConfig={localConfig}
+            handleConfigChange={handleConfigChange}
+            section="guestViewColumns"
+          />
+          <ConfigSection
+            title={translations.guestViewFilters.title}
+            config={defaultConfig.guestViewFilters}
+            localConfig={localConfig}
+            handleConfigChange={handleConfigChange}
+            section="guestViewFilters"
+          />
+          <ConfigSection
+            title={translations.guestFormFields.title}
+            config={defaultConfig.guestFormFields}
+            localConfig={localConfig}
+            handleConfigChange={handleConfigChange}
+            section="guestFormFields"
+          />
+          <ConfigSection
+            title={translations.profileViewFields.title}
+            config={defaultConfig.profileViewFields}
+            localConfig={localConfig}
+            handleConfigChange={handleConfigChange}
+            section="profileViewFields"
+          />
+          <Box display="flex" justifyContent="flex-end" mt={2}>
+            <Button type="submit" variant="contained" color="primary">
+              {translations.settingsView.saveButton}
+            </Button>
+          </Box>
+        </form>
+      )}
+    </Container>
   );
 };
 

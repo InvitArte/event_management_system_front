@@ -54,3 +54,5 @@ export const defaultConfig = {
     giftList: true,
   },
 };
+
+export default defaultConfig;
