@@ -1,13 +1,18 @@
-import { useRef, useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useRef, useEffect } from "react";
 import FrontPage from "../components/PublicView/FrontPage.jsx";
 import Countdown from "../components/PublicView/Countdown.jsx";
 import EventDetails from "../components/PublicView/EventDetails.jsx";
 import Collaboration from "../components/PublicView/Collaboration.jsx";
 import "../styles/PublicView/Footer.css";
+import { useUserConfig } from "../context/UserConfigContext";
+import { defaultConfig } from "../config/Config";
 
-const PublicView = ({ userId }) => {
+const PublicView = () => {
   const containerRef = useRef(null);
+  const { userConfig } = useUserConfig();
+
+  // Usar el userId de userConfig si está disponible, de lo contrario usar el de defaultConfig
+  const effectiveUserId = userConfig?.userId || defaultConfig.userId;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -48,10 +53,10 @@ const PublicView = ({ userId }) => {
 
   return (
     <div ref={containerRef}>
-      <FrontPage userId={userId} />
-      <Countdown userId={userId} />
-      <EventDetails userId={userId} />
-      <Collaboration userId={userId} />
+      <FrontPage userId={effectiveUserId} />
+      <Countdown userId={effectiveUserId} />
+      <EventDetails userId={effectiveUserId} />
+      <Collaboration userId={effectiveUserId} />
       <footer className="footer">
         <div className="footer-content">
           <p>
@@ -72,10 +77,6 @@ const PublicView = ({ userId }) => {
       </footer>
     </div>
   );
-};
-
-PublicView.propTypes = {
-  userId: PropTypes.number,
 };
 
 export default PublicView;

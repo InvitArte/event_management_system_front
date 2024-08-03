@@ -7,6 +7,7 @@ const useLocations = (open) => {
     name: "",
     direccion: "",
     url: "",
+    capacity: "",
   });
   const [editingLocation, setEditingLocation] = useState(null);
   const [expandedLocation, setExpandedLocation] = useState(null);
@@ -15,7 +16,12 @@ const useLocations = (open) => {
   const fetchLocations = useCallback(async () => {
     try {
       const response = await locationService.getAllLocations();
-      setLocations(response);
+      setLocations(
+        response.map((location) => ({
+          ...location,
+          capacity: location.capacity ? location.capacity.toString() : "",
+        }))
+      );
     } catch (error) {
       console.error("Error fetching locations:", error);
     }
@@ -30,8 +36,14 @@ const useLocations = (open) => {
   const handleAddLocation = async () => {
     if (newLocation.name.trim()) {
       try {
-        await locationService.createLocation(newLocation);
-        setNewLocation({ name: "", direccion: "", url: "" });
+        const locationToAdd = {
+          ...newLocation,
+          capacity: newLocation.capacity
+            ? parseInt(newLocation.capacity, 10)
+            : null,
+        };
+        await locationService.createLocation(locationToAdd);
+        setNewLocation({ name: "", direccion: "", url: "", capacity: "" });
         setIsCreating(false);
         fetchLocations();
       } catch (error) {
@@ -43,9 +55,15 @@ const useLocations = (open) => {
   const handleUpdateLocation = async () => {
     if (editingLocation && editingLocation.name.trim()) {
       try {
+        const locationToUpdate = {
+          ...editingLocation,
+          capacity: editingLocation.capacity
+            ? parseInt(editingLocation.capacity, 10)
+            : null,
+        };
         await locationService.updateLocation(
-          editingLocation.id,
-          editingLocation
+          locationToUpdate.id,
+          locationToUpdate
         );
         setEditingLocation(null);
         fetchLocations();

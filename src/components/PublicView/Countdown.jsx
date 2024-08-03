@@ -1,10 +1,10 @@
-// src/components/Countdown.jsx
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
 import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
 import { useBackgroundImage } from "../../context/BackgroundImageContext";
+import { defaultConfig } from "../../config/Config";
 
 const Countdown = ({ userId }) => {
   const [timeLeft, setTimeLeft] = useState(null);
@@ -16,7 +16,10 @@ const Countdown = ({ userId }) => {
     const fetchEventDate = async () => {
       setIsLoading(true);
       try {
-        const response = await publicService.getUserDate(userId.toString());
+        const effectiveUserId = userId || defaultConfig.userId;
+        const response = await publicService.getUserDate(
+          effectiveUserId.toString()
+        );
         if (response && response.date) {
           const dateString = response.date;
           const [year, month, day, hour, minute] = dateString
@@ -29,10 +32,7 @@ const Countdown = ({ userId }) => {
             console.error("Fecha del evento no válida:", dateString);
           }
         } else {
-          console.error(
-            "No se recibió una fecha válida del evento:",
-            response.data
-          );
+          console.error("No se recibió una fecha válida del evento:", response);
         }
       } catch (error) {
         console.error("Error fetching event date:", error.message || error);
@@ -44,35 +44,29 @@ const Countdown = ({ userId }) => {
   useEffect(() => {
     const loadBackgroundImage = async () => {
       try {
-        // Cargar la imagen de fondo de manera dinamica
         const imageModule = await import("../../assets/imgs/countdown.jpg");
         setBackgroundImage("countdown", imageModule.default);
       } catch (error) {
         console.error("Error loading background image:", error);
       }
     };
-
     loadBackgroundImage();
   }, [setBackgroundImage]);
 
   useEffect(() => {
     const calculateTimeLeft = () => {
       if (!eventDate) return null;
-
       const now = new Date();
       const difference = eventDate - now;
-
       if (difference <= 0) {
         setIsLoading(false);
         return {};
       }
-
       const timeLeft = {
         días: Math.floor(difference / (1000 * 60 * 60 * 24)),
         horas: Math.floor((difference / (1000 * 60 * 60)) % 24),
         minutos: Math.floor((difference / 1000 / 60) % 60),
       };
-
       setIsLoading(false);
       return timeLeft;
     };
@@ -124,7 +118,7 @@ const Countdown = ({ userId }) => {
 };
 
 Countdown.propTypes = {
-  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default Countdown;
