@@ -2,7 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Menu, MenuItem } from "@mui/material";
 
-const UserMenu = ({ anchorEl, isOpen, onClose, onProfile, onLogout }) => (
+const UserMenu = ({
+  anchorEl,
+  isOpen,
+  onClose,
+  onProfile,
+  onLogout,
+  onSettings,
+}) => (
   <Menu
     anchorEl={anchorEl}
     open={isOpen}
@@ -17,6 +24,7 @@ const UserMenu = ({ anchorEl, isOpen, onClose, onProfile, onLogout }) => (
     }}
   >
     <MenuItem onClick={onProfile}>Perfil</MenuItem>
+    <MenuItem onClick={onSettings}>Ajustes</MenuItem>
     <MenuItem onClick={onLogout}>Desconectarse</MenuItem>
   </Menu>
 );
@@ -27,6 +35,7 @@ UserMenu.propTypes = {
   onClose: PropTypes.func.isRequired,
   onProfile: PropTypes.func.isRequired,
   onLogout: PropTypes.func.isRequired,
+  onSettings: PropTypes.func.isRequired,
 };
 
 export default UserMenu;
