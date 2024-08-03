@@ -40,12 +40,14 @@ LocationForm.propTypes = {
     name: PropTypes.string.isRequired,
     direccion: PropTypes.string.isRequired,
     url: PropTypes.string,
+    capacity: PropTypes.string, // Changed to string
   }),
   isCreating: PropTypes.bool.isRequired,
   newLocation: PropTypes.shape({
     name: PropTypes.string.isRequired,
     direccion: PropTypes.string.isRequired,
     url: PropTypes.string,
+    capacity: PropTypes.string, // Changed to string
   }).isRequired,
   setEditingLocation: PropTypes.func.isRequired,
   handleUpdateLocation: PropTypes.func.isRequired,
@@ -90,6 +92,17 @@ const EditLocationForm = ({
       label="URL"
       sx={{ mb: 1 }}
     />
+    <TextField
+      value={editingLocation.capacity}
+      onChange={(e) =>
+        setEditingLocation({ ...editingLocation, capacity: e.target.value })
+      }
+      fullWidth
+      size="small"
+      label="Capacidad"
+      type="number"
+      sx={{ mb: 1 }}
+    />
     <Box sx={{ display: "flex", justifyContent: "space-between", mt: 1 }}>
       <Button
         onClick={handleUpdateLocation}
@@ -115,6 +128,7 @@ EditLocationForm.propTypes = {
     name: PropTypes.string.isRequired,
     direccion: PropTypes.string.isRequired,
     url: PropTypes.string,
+    capacity: PropTypes.string, // Changed to string
   }).isRequired,
   setEditingLocation: PropTypes.func.isRequired,
   handleUpdateLocation: PropTypes.func.isRequired,
@@ -160,6 +174,27 @@ const AddLocationForm = ({
           size="small"
           sx={{ mb: 1 }}
         />
+        <TextField
+          value={newLocation.url}
+          onChange={(e) =>
+            setNewLocation({ ...newLocation, url: e.target.value })
+          }
+          placeholder="Nueva URL"
+          fullWidth
+          size="small"
+          sx={{ mb: 1 }}
+        />
+        <TextField
+          value={newLocation.capacity}
+          onChange={(e) =>
+            setNewLocation({ ...newLocation, capacity: e.target.value })
+          }
+          placeholder="Capacidad"
+          fullWidth
+          size="small"
+          type="number"
+          sx={{ mb: 1 }}
+        />
         <Button
           onClick={handleAddLocation}
           fullWidth
@@ -189,6 +224,7 @@ AddLocationForm.propTypes = {
     name: PropTypes.string.isRequired,
     direccion: PropTypes.string.isRequired,
     url: PropTypes.string,
+    capacity: PropTypes.string,
   }).isRequired,
   setIsCreating: PropTypes.func.isRequired,
   setNewLocation: PropTypes.func.isRequired,
