@@ -500,7 +500,7 @@ export const publicService = {
       throw error;
     }
   },
-  getPublicLocations: async (userId) => {
+  getPublicLocations: async (userId = defaultConfig.userId) => {
     try {
       const response = await axiosInstance.get(API_ROUTES.LOCATIONS_PUBLIC, {
         params: { user_id: userId },
@@ -511,7 +511,7 @@ export const publicService = {
       throw error;
     }
   },
-  getUserDate: async (userId) => {
+  getUserDate: async (userId = defaultConfig.userId) => {
     try {
       const response = await axiosInstance.get(API_ROUTES.USER_DATE_PUBLIC, {
         params: { user_id: userId },
