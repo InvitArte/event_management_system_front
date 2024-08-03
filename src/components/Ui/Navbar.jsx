@@ -25,6 +25,11 @@ const Navbar = () => {
     navigate("/profile");
   };
 
+  const handleSettings = () => {
+    handleMenuClose();
+    navigate("/settings");
+  };
+
   return (
     <AnimatedAppBar position="fixed" elevation={3} isScrolled={isScrolled}>
       <Container maxWidth="lg" sx={{ height: "100%" }}>
@@ -52,6 +57,7 @@ const Navbar = () => {
             isOpen={isMenuOpen}
             onClose={handleMenuClose}
             onProfile={handleProfile}
+            onSettings={handleSettings}
             onLogout={handleLogout}
           />
         </Toolbar>
