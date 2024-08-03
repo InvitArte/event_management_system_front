@@ -8,6 +8,12 @@ import {
   Typography,
 } from "@mui/material";
 import { userService } from "../../services/Api";
+import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+
+const DATE_FORMAT = "YYYY MM DD HH mm";
 
 const initialUserData = {
   id: "",
@@ -25,10 +31,17 @@ const ProfileForm = ({ visibleFields }) => {
   const [userData, setUserData] = useState(initialUserData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [date, setDate] = useState(null);
 
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    if (userData.date) {
+      setDate(dayjs(userData.date, DATE_FORMAT));
+    }
+  }, [userData.date]);
 
   const fetchUserData = async () => {
     try {
@@ -54,12 +67,21 @@ const ProfileForm = ({ visibleFields }) => {
     return `${day}-${month}-${year} ${hour}:${minute}`;
   };
 
-  const formatDateForAPI = (dateString) => {
-    if (!dateString) return "";
-    const [date, time] = dateString.split(" ");
-    const [day, month, year] = date.split("-");
-    const [hour, minute] = time.split(":");
-    return `${year}-${month}-${day} ${hour}:${minute}`;
+  //NO PUEDO USAR ESTA FUNCION CON 'dayjs'
+  // const formatDateForAPI = (dateString) => {
+  //   if (!dateString) return "";
+  //   const [date, time] = dateString.split(" ");
+  //   const [day, month, year] = date.split("-");
+  //   const [hour, minute] = time.split(":");
+  //   return `${year}-${month}-${day} ${hour}:${minute}`;
+  // };
+
+  const handleDateChange = (newValue) => {
+    setDate(newValue);
+    setUserData((prevData) => ({
+      ...prevData,
+      date: newValue ? newValue.format(DATE_FORMAT) : "",
+    }));
   };
 
   const handleChange = (e) => {
@@ -76,7 +98,7 @@ const ProfileForm = ({ visibleFields }) => {
     try {
       const updatedUserData = {
         ...userData,
-        date: formatDateForAPI(userData.date),
+        date: date ? date.format(DATE_FORMAT) : "",
       };
 
       await Promise.all([
@@ -127,16 +149,17 @@ const ProfileForm = ({ visibleFields }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Fecha"
-            name="date"
-            value={formatDateForDisplay(userData.date)}
-            onChange={handleChange}
-            InputProps={{
-              readOnly: false,
-            }}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              label="Fecha y Hora"
+              value={date}
+              onChange={handleDateChange}
+              format={formatDateForDisplay(DATE_FORMAT)}
+              slotProps={{
+                textField: { fullWidth: true },
+              }}
+            />
+          </LocalizationProvider>
         </Grid>
         {visibleFields.bankAccount && (
           <Grid item xs={12}>
