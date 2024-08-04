@@ -2,6 +2,7 @@ import axios from "axios";
 import API_ROUTES from "../config/BaseUrl";
 import { toast } from "react-toastify";
 import { translateError } from "../config/ErrorMessages";
+import { defaultConfig } from "../config/Config";
 
 const axiosInstance = axios.create({
   baseURL: API_ROUTES.BASE_URL,
@@ -499,7 +500,7 @@ export const publicService = {
       throw error;
     }
   },
-  getPublicLocations: async (userId) => {
+  getPublicLocations: async (userId = defaultConfig.userId) => {
     try {
       const response = await axiosInstance.get(API_ROUTES.LOCATIONS_PUBLIC, {
         params: { user_id: userId },
@@ -510,7 +511,7 @@ export const publicService = {
       throw error;
     }
   },
-  getUserDate: async (userId) => {
+  getUserDate: async (userId = defaultConfig.userId) => {
     try {
       const response = await axiosInstance.get(API_ROUTES.USER_DATE_PUBLIC, {
         params: { user_id: userId },
@@ -705,6 +706,31 @@ export const contactService = {
   },
 };
 
+export const userConfigService = {
+  getUserConfig: async () => {
+    try {
+      const response = await axiosInstance.get(API_ROUTES.USER_CONFIG);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching user config:", error);
+      // Si hay un error, devolvemos la configuración por defecto
+      return defaultConfig;
+    }
+  },
+  updateUserConfig: async (configData) => {
+    try {
+      const response = await axiosInstance.put(
+        API_ROUTES.USER_CONFIG,
+        configData
+      );
+      toast.success("Configuración actualizada correctamente");
+      return response.data;
+    } catch (error) {
+      return handleApiError(error, "updateUserConfig");
+    }
+  },
+};
+
 export default {
   auth: authService,
   user: userService,
@@ -716,4 +742,5 @@ export default {
   public: publicService,
   tag: tagService,
   contact: contactService,
+  userConfig: userConfigService,
 };

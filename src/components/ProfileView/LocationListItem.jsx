@@ -55,6 +55,12 @@ const LocationListItem = ({
     <Collapse in={expanded}>
       <Box sx={{ pl: 4, pr: 2, pb: 2 }}>
         <Typography variant="body2">Dirección: {location.direccion}</Typography>
+        <Typography variant="body2">
+          Capacidad: {location.capacity ? location.capacity : "No especificada"}
+        </Typography>
+        {location.url && (
+          <Typography variant="body2">URL: {location.url}</Typography>
+        )}
       </Box>
     </Collapse>
   </React.Fragment>
@@ -66,6 +72,7 @@ LocationListItem.propTypes = {
     name: PropTypes.string.isRequired,
     direccion: PropTypes.string.isRequired,
     url: PropTypes.string,
+    capacity: PropTypes.string, // Changed from number to string
   }).isRequired,
   expanded: PropTypes.bool.isRequired,
   handleExpandLocation: PropTypes.func.isRequired,
