@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PublicView from "./views/PublicView";
@@ -32,6 +33,7 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<PublicView userId={userConfig.userId} />} />
         <Route path="/login" element={<LoginView />} />
+
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
             <Route
