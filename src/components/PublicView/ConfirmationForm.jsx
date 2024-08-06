@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import {
   TextField,
@@ -72,7 +72,12 @@ const CustomRadio = styled(Radio)({
   },
 });
 
-const ConfirmationForm = ({ onFormChange, onValidationChange, formErrors }) => {
+const ConfirmationForm = ({
+  onFormChange,
+  onValidationChange,
+  formErrors,
+  initialData,
+}) => {
   const [formData, setFormData] = useState({
     guest: {
       first_name: "",
@@ -88,6 +93,12 @@ const ConfirmationForm = ({ onFormChange, onValidationChange, formErrors }) => {
   });
 
   useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
+
+  useEffect(() => {
     onFormChange(formData);
   }, [formData, onFormChange]);
 
@@ -96,23 +107,23 @@ const ConfirmationForm = ({ onFormChange, onValidationChange, formErrors }) => {
     onValidationChange(isValid);
   }, [formErrors, onValidationChange]);
 
-  const handleInputChange = (e, section) => {
+  const handleInputChange = useCallback((e, section) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
+    setFormData((prevData) => ({
+      ...prevData,
       [section]: {
-        ...prevState[section],
+        ...prevData[section],
         [name]: value,
       },
     }));
-  };
+  }, []);
 
-  const handlePlusOneChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
+  const handlePlusOneChange = useCallback((e) => {
+    setFormData((prevData) => ({
+      ...prevData,
       hasPlusOne: e.target.value,
     }));
-  };
+  }, []);
 
   return (
     <Grid container spacing={2}>
@@ -225,6 +236,19 @@ ConfirmationForm.propTypes = {
   onFormChange: PropTypes.func.isRequired,
   onValidationChange: PropTypes.func.isRequired,
   formErrors: PropTypes.objectOf(PropTypes.string).isRequired,
+  initialData: PropTypes.shape({
+    guest: PropTypes.shape({
+      first_name: PropTypes.string,
+      last_name: PropTypes.string,
+      phone: PropTypes.string,
+      email: PropTypes.string,
+    }),
+    plus_one: PropTypes.shape({
+      first_name: PropTypes.string,
+      last_name: PropTypes.string,
+    }),
+    hasPlusOne: PropTypes.string,
+  }),
 };
 
 export default ConfirmationForm;
