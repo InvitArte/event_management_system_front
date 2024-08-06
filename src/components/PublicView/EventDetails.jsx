@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { publicService } from "../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
 import "../../styles/PublicView/EventDetails.css";
-import logo from "../../assets/imgs/maniqui.svg";
 import { useBackgroundImage } from "../../context/BackgroundImageContext";
 
 const EventDetails = ({ userId }) => {
@@ -115,36 +114,46 @@ const EventDetails = ({ userId }) => {
       style={{ backgroundImage: `url(${backgroundImages.eventDetails})` }}
     >
       <div className="event-details-overlay">
-        <img src={logo} alt="Logo" className="event-logo" />
-        <h1>PRESENTACIÓN NUEVA COLECCIÓN</h1>
-        <h2>Fecha:</h2>
-        <h2 className="event-date">{eventDateString || "Cargando fecha..."}</h2>
-        {eventDate && (
-          <button className="add-to-calendar" onClick={addToGoogleCalendar}>
-            Añadir a calendario
+        <div>
+          <p>
+            La ceremonia se celebrará en la parroquia nuestra señora del Carmen,
+            a continuación lo celebraremos en los Jardines Palacio de la Dehesa
+            el próximo{" "}
+          </p>
+          <h2 className="event-date">
+            {eventDateString || "Cargando fecha..."}
+          </h2>
+        </div>
+        <div>
+          {eventDate && (
+            <button className="add-to-calendar" onClick={addToGoogleCalendar}>
+              Añadir a calendario
+            </button>
+          )}
+          {eventLocations.length > 0 && (
+            <div className="event-locations">
+              <h2>
+                {eventLocations.length > 1 ? "Ubicaciones:" : "Ubicación:"}
+              </h2>
+              <ul>
+                {eventLocations.map((location) => (
+                  <li key={location.id}>
+                    <p>{location.name}</p>
+                    <button
+                      className="open-maps"
+                      onClick={() => openGoogleMaps(location.url)}
+                    >
+                      Cómo llegar
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <button className="confirmation" onClick={openConfirmationModal}>
+            Confirmar asistencia
           </button>
-        )}
-        {eventLocations.length > 0 && (
-          <div className="event-locations">
-            <h2>{eventLocations.length > 1 ? "Ubicaciones:" : "Ubicación:"}</h2>
-            <ul>
-              {eventLocations.map((location) => (
-                <li key={location.id}>
-                  <p>{location.name}</p>
-                  <button
-                    className="open-maps"
-                    onClick={() => openGoogleMaps(location.url)}
-                  >
-                    Cómo llegar
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <button className="confirmation" onClick={openConfirmationModal}>
-          Confirmar asistencia
-        </button>
+        </div>
         <ConfirmationModal
           isOpen={isModalOpen}
           onClose={closeConfirmationModal}

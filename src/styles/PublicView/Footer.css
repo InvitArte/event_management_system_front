@@ -1,71 +1,71 @@
 /* src/styles/Footer.css */
 .footer {
-    position: relative;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 2rem 1rem;
-    text-align: center;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    overflow: hidden;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(
+    to bottom,
+    rgb(255, 255, 255) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.footer-content {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-top: 50px;
+}
+
+.footer p {
+  margin-bottom: 1rem;
+}
+
+.footer-link {
+  color: white;
+  text-decoration: underline;
+}
+
+@media screen and (min-width: 768px) {
+  .footer {
+    padding: 3rem 2rem;
+    font-size: 1rem;
   }
-  
+
   .footer::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100px;
-    background: linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0.5) 0%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    pointer-events: none;
+    height: 150px;
   }
-  
+
   .footer-content {
-    position: relative;
-    max-width: 800px;
-    margin: 0 auto;
-    padding-top: 50px;
+    padding-top: 75px;
   }
-  
-  .footer p {
-    margin-bottom: 1rem;
+}
+
+@media screen and (min-width: 1024px) {
+  .footer {
+    padding: 4rem 2rem;
   }
-  
-  .footer-link {
-    color: white;
-    text-decoration: underline;
+
+  .footer::before {
+    height: 200px;
   }
-  
-  @media screen and (min-width: 768px) {
-    .footer {
-      padding: 3rem 2rem;
-      font-size: 1rem;
-    }
-  
-    .footer::before {
-      height: 150px;
-    }
-  
-    .footer-content {
-      padding-top: 75px;
-    }
+
+  .footer-content {
+    padding-top: 100px;
   }
-  
-  @media screen and (min-width: 1024px) {
-    .footer {
-      padding: 4rem 2rem;
-    }
-  
-    .footer::before {
-      height: 200px;
-    }
-  
-    .footer-content {
-      padding-top: 100px;
-    }
-  }
+}

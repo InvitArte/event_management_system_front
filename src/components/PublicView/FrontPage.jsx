@@ -32,11 +32,12 @@ const PublicView = () => {
       style={{ backgroundImage: `url(${backgroundImages.frontPage})` }}
     >
       <div className="frontPage-overlay">
-        <h1>PRESENTACIÓN NUEVA COLECCIÓN</h1>
-        <div className="container-logo">
-          <h2>Germinar</h2>
-          <img src={logo} alt="Logo" className="logo" />
-        </div>
+        <h1>Lucas y Marina</h1>
+        <h2>¡NOS CASAMOS!</h2>
+        <p>
+          Y NADA NOS HARÍA MÁS FELICES QUE CONTAR CON VOSOTROS EN ESTE DÍA TAN
+          ESPECIAL.
+        </p>
       </div>
     </div>
   );

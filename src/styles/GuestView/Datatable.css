@@ -1,21 +1,21 @@
-
 .data-grid-container {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /* Ajusta el box-shadow según tus preferencias */
- }
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); /* Ajusta el box-shadow según tus preferencias */
+}
 
 .even-group {
-    background-color: #f5f5f5;
-  }
-  
+  background-color: #f5f5f5;
+}
+
 .odd-group {
-    background-color: #ffffff;
-  }
-  
+  background-color: #ffffff;
+}
+
 .plus-one-row {
-    font-style: italic;
-  }
-  
+  font-style: italic;
+}
+
 /* Esto es para mantener los colores al hacer hover */
-.even-group:hover, .odd-group:hover {
-    background-color: #e0e0e0 !important;
-  }
+.even-group:hover,
+.odd-group:hover {
+  background-color: #e0e0e0 !important;
+}

@@ -108,10 +108,7 @@ const Countdown = ({ userId }) => {
       style={{ backgroundImage: `url(${backgroundImages.countdown})` }}
     >
       <div className="countdown-overlay">
-        <div className="timer">
-          <img src={logo} alt="Logo" className="countdown-logo" />
-          {renderContent()}
-        </div>
+        <div className="timer">{renderContent()}</div>
       </div>
     </div>
   );
