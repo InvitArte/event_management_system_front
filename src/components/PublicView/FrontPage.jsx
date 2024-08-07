@@ -1,16 +1,14 @@
-// src/components/PublicView.jsx
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useBackgroundImage } from "../../context/BackgroundImageContext";
 import "../../styles/PublicView/FrontPage.css";
 import logo from "../../assets/imgs/logo.png";
 
-const PublicView = () => {
+const FrontPage = () => {
   const { backgroundImages, setBackgroundImage } = useBackgroundImage();
 
   useEffect(() => {
     const loadBackgroundImage = async () => {
       try {
-        // Cargar la imagen de fondo de manera dinámica
         const imageModule = await import(
           "../../assets/imgs/front-page-background.jpg"
         );
@@ -28,7 +26,7 @@ const PublicView = () => {
 
   return (
     <div
-      className="front-page"
+      className="front-page snap-section"
       style={{ backgroundImage: `url(${backgroundImages.frontPage})` }}
     >
       <div className="frontPage-overlay">
@@ -42,4 +40,4 @@ const PublicView = () => {
   );
 };
 
-export default PublicView;
+export default FrontPage;
