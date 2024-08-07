@@ -11,48 +11,55 @@ const PublicView = () => {
   const containerRef = useRef(null);
   const { userConfig } = useUserConfig();
 
-  // Usar el userId de userConfig si está disponible, de lo contrario usar el de defaultConfig
   const effectiveUserId = userConfig?.userId || defaultConfig.userId;
 
   useEffect(() => {
     const container = containerRef.current;
     let isScrolling = false;
-    let targetSection = null;
+    let lastScrollTop = 0;
 
     const handleScroll = () => {
       if (!isScrolling) {
         isScrolling = true;
         window.requestAnimationFrame(() => {
-          const sections = container.querySelectorAll(".snap-section");
+          const sections = Array.from(
+            container.querySelectorAll(".snap-section")
+          );
           const containerRect = container.getBoundingClientRect();
-          let closestSection = null;
-          let minDistance = Infinity;
+          const currentScrollTop = container.scrollTop;
+          const scrollDirection = currentScrollTop > lastScrollTop ? 1 : -1;
 
-          sections.forEach((section) => {
+          const visibleSections = sections.filter((section) => {
             const rect = section.getBoundingClientRect();
-            const distance = Math.abs(rect.top - containerRect.top);
-            if (distance < minDistance) {
-              minDistance = distance;
-              closestSection = section;
-            }
+            return (
+              rect.top < containerRect.bottom && rect.bottom > containerRect.top
+            );
           });
 
-          if (closestSection && closestSection !== targetSection) {
-            targetSection = closestSection;
-            closestSection.scrollIntoView({ behavior: "smooth" });
+          if (visibleSections.length > 0) {
+            const targetSection =
+              scrollDirection > 0
+                ? visibleSections[visibleSections.length - 1]
+                : visibleSections[0];
+
+            targetSection.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
           }
 
+          lastScrollTop = currentScrollTop;
           isScrolling = false;
         });
       }
     };
 
-    container.addEventListener("scroll", handleScroll);
+    container.addEventListener("scroll", handleScroll, { passive: true });
     return () => container.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="public-view-container">
       <FrontPage userId={effectiveUserId} />
       <Countdown userId={effectiveUserId} />
       <EventDetails userId={effectiveUserId} />
