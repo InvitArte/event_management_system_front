@@ -3,14 +3,13 @@
 .event-details {
   position: relative;
   width: 100%;
-  min-height: 120vh;
-  /* background: url("../../assets/imgs/eventdetails.jpg") no-repeat center center/cover; */
+  height: 100vh;
+  background-size: cover;
+  background-position: center center;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-position: center center;
-  background-size: cover;
+  overflow: hidden;
 }
 
 .event-details-overlay {
@@ -19,10 +18,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   background: linear-gradient(
     to bottom,
     rgb(0, 0, 0) 0%,
@@ -31,34 +26,49 @@
     rgb(0, 0, 0) 100%
   );
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.event-details-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
   padding: 2rem 1rem;
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
 }
 
 .event-logo {
-  width: 4rem;
+  width: 60px;
+  height: auto;
+  max-width: 15%;
+  margin-bottom: 1rem;
   filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
-  margin-bottom: 1.5rem;
 }
 
-.event-date {
+.event-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-details-content h1 {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
   color: white;
+  margin-bottom: 0.5rem;
   text-align: center;
 }
 
-.event-details h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+.event-date, .event-details h2 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
   color: white;
-  text-align: center;
-}
-
-.event-details-overlay h1 {
-  font-size: 2rem;
-  color: white;
-  margin-bottom: 2rem;
   text-align: center;
 }
 
@@ -68,12 +78,12 @@
   background-color: #a3a3a3;
   color: white;
   border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
   border-radius: 5px;
   cursor: pointer;
   box-shadow: 2px 2px 4px rgba(49, 49, 49, 0.5);
-  margin: 1rem 0;
+  margin: 0.5rem 0;
   transition: background-color 0.3s ease;
 }
 
@@ -84,15 +94,9 @@
 }
 
 .event-locations {
-  margin-top: 2rem;
+  margin-top: 0.5rem;
   text-align: center;
   width: 100%;
-}
-
-.event-locations h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: white;
 }
 
 .event-locations ul {
@@ -103,111 +107,103 @@
 
 .event-locations li {
   color: white;
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-@media screen and (max-width: 479px) {
-  .event-details-overlay h1 {
-    font-size: 1.5rem !important; /* Forzar el tamaño para móviles pequeños */
-  }
-}
-
+/* Media queries para diferentes tamaños de pantalla */
 @media screen and (min-width: 480px) {
-  .event-details {
-    height: 100vh;
-  }
   .event-logo {
-    width: 5rem;
+    width: 70px;
+    margin-bottom: 1.5rem;
   }
-
-  .event-details-overlay h1 {
-    font-size: 1.75rem; /* Tamaño para tablets y móviles grandes */
+  
+  .event-details-content h1 {
+    font-size: 1.8rem;
   }
-
-  .event-date,
-  .event-details h2 {
-    font-size: 1.75rem;
+  
+  .event-date, .event-details h2 {
+    font-size: 1.4rem;
+  }
+  
+  .add-to-calendar,
+  .open-maps,
+  .confirmation {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
   }
 }
 
 @media screen and (min-width: 768px) {
-  .event-details {
-    height: 100vh;
-  }
-  .event-details-overlay {
-    padding: 3rem 2rem;
-  }
-
   .event-logo {
-    width: 6rem;
+    width: 80px;
     margin-bottom: 2rem;
   }
-
-  .event-details-overlay h1 {
-    font-size: 2.5rem;
+  
+  .event-details-content h1 {
+    font-size: 2.2rem;
   }
-
-  .event-date,
-  .event-details h2 {
-    font-size: 2rem;
+  
+  .event-date, .event-details h2 {
+    font-size: 1.6rem;
   }
-
+  
+  .add-to-calendar,
+  .open-maps,
+  .confirmation {
+    padding: 0.7rem 1.4rem;
+    font-size: 1.1rem;
+  }
+  
   .event-locations li {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 }
 
 @media screen and (min-width: 1024px) {
-  .event-details {
-    height: 100vh;
-  }
-  .event-details-overlay {
-    padding: 4rem 2rem;
-  }
-
   .event-logo {
-    width: 7rem;
+    width: 90px;
+    margin-bottom: 2.5rem;
   }
-
-  .event-details-overlay h1 {
-    font-size: 3rem;
+  
+  .event-details-content h1 {
+    font-size: 2.6rem;
   }
-
-  .event-date,
-  .event-details h2 {
-    font-size: 2.25rem;
+  
+  .event-date, .event-details h2 {
+    font-size: 1.8rem;
   }
-
+  
   .add-to-calendar,
-  .open-maps {
-    font-size: 1.1rem;
-    padding: 1rem 2rem;
+  .open-maps,
+  .confirmation {
+    padding: 0.8rem 1.6rem;
+    font-size: 1.2rem;
   }
 }
 
 @media screen and (min-width: 1200px) {
-  .event-details {
-    height: 100vh;
-  }
-  .event-details-overlay {
-    padding: 5rem 2rem;
-  }
-
   .event-logo {
-    width: 8rem;
+    width: 100px;
+    margin-bottom: 3rem;
   }
-
-  .event-details-overlay h1 {
-    font-size: 3.5rem;
+  
+  .event-details-content h1 {
+    font-size: 3rem;
   }
-
-  .event-date,
-  .event-details h2 {
-    font-size: 2.5rem;
+  
+  .event-date, .event-details h2 {
+    font-size: 2rem;
   }
-
+  
+  .add-to-calendar,
+  .open-maps,
+  .confirmation {
+    padding: 1rem 2rem;
+    font-size: 1.3rem;
+  }
+  
   .event-locations li {
-    font-size: 1.75rem;
+    font-size: 1.4rem;
   }
 }
