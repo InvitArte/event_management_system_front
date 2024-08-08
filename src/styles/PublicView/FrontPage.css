@@ -101,12 +101,7 @@
   }
 
   .front-page h1 {
-    font-size: 3rem;
-    margin-bottom: 150px;
-  }
-
-  .frontPage-overlay {
-    justify-content: space-between;
-    /* padding: 2rem 0; */
+    font-size: 7rem;
+    margin-bottom: 100px;
   }
 }

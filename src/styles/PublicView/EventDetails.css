@@ -3,7 +3,7 @@
 .event-details {
   position: relative;
   width: 100%;
-  min-height: 150vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -58,7 +58,7 @@
 .add-to-calendar,
 .open-maps,
 .confirmation {
-  background-color: #c88eff7a;
+  background-color: #c88effd0;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -150,20 +150,17 @@
   }
   .event-details-overlay {
     padding: 3rem 2rem;
+    justify-content: center;
   }
 
-  .event-logo {
-    width: 6rem;
-    margin-bottom: 2rem;
-  }
-
-  .event-details-overlay h1 {
-    font-size: 2.5rem;
+  .event-details-overlay p {
+    font-size: 1.8rem;
+    margin-bottom: 80px;
   }
 
   .event-date,
   .event-details h2 {
-    font-size: 2rem;
+    font-size: 3.5rem;
   }
 
   .event-locations li {
@@ -205,10 +202,6 @@
   }
   .event-details-overlay {
     padding: 5rem 2rem;
-  }
-
-  .event-logo {
-    width: 8rem;
   }
 
   .event-details-overlay h1 {
