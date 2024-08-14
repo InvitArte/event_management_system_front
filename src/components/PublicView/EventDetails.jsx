@@ -115,7 +115,7 @@ const EventDetails = ({ userId }) => {
     >
       <div className="event-details-overlay">
         <div>
-          <p>
+          <p className="texto">
             La ceremonia se celebrará en la parroquia nuestra señora del Carmen,
             a continuación lo celebraremos en los Jardines Palacio de la Dehesa
             el próximo{" "}
@@ -130,6 +130,7 @@ const EventDetails = ({ userId }) => {
               Añadir a calendario
             </button>
           )}
+
           {eventLocations.length > 0 && (
             <div className="event-locations">
               <h2>
