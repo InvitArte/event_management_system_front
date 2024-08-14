@@ -1,3 +1,4 @@
+// ConfirmationForm.JSX
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
@@ -90,6 +91,16 @@ const CustomRadio = styled(Radio)({
   },
 });
 
+const CustomCheck = styled(Checkbox)({
+  "&.MuiRadio-root": {
+    color: "#f5a9d0",
+    padding: "12px",
+  },
+  "&.Mui-checked": {
+    color: "#b83c8e",
+  },
+});
+
 const ConfirmationForm = ({
   onFormChange,
   onValidationChange,
@@ -106,6 +117,7 @@ const ConfirmationForm = ({
       needs_hotel: false,
       menu_id: "",
       allergy_ids: [],
+      honeypot: false,
     },
     plus_one: {
       first_name: "",
@@ -153,6 +165,7 @@ const ConfirmationForm = ({
 
   const handleInputChange = useCallback((e, section) => {
     const { name, value } = e.target;
+
     setFormData((prevData) => ({
       ...prevData,
       [section]: {
@@ -285,11 +298,10 @@ const ConfirmationForm = ({
         <CustomFormControl>
           <FormControlLabel
             control={
-              <Checkbox
+              <CustomCheck
                 checked={formData.guest.needs_transport}
                 onChange={handleCheckboxChange}
                 name="needs_transport"
-                color="primary"
               />
             }
             label="¿Necesita transporte?"
@@ -302,11 +314,10 @@ const ConfirmationForm = ({
         <CustomFormControl>
           <FormControlLabel
             control={
-              <Checkbox
+              <CustomCheck
                 checked={formData.guest.needs_hotel}
                 onChange={handleCheckboxChange}
                 name="needs_hotel"
-                color="primary"
               />
             }
             label="¿Necesita hotel?"
@@ -356,6 +367,19 @@ const ConfirmationForm = ({
               helperText={formErrors.allergy_ids}
             />
           )}
+        />
+      </Grid>
+      {/* HONEYPOT */}
+      <Grid item xs={12} sx={{ display: "none" }}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={formData.guest.honeypot}
+              onChange={(e) => handleInputChange(e, "guest")}
+              name="honeypot"
+            />
+          }
+          label="¿Eres humano?"
         />
       </Grid>
 

@@ -1,3 +1,4 @@
+// ConfirmationModal.JSX
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import {
@@ -182,6 +183,12 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
 
   const handleSubmit = useCallback(async () => {
     if (!validateForm() || isSubmitting) {
+      return;
+    }
+
+    // verificamos el campo honeypot
+    if (formData.guest.honeypot) {
+      console.log("Bot detected.");
       return;
     }
 
