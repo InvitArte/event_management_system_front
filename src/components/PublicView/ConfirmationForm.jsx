@@ -1,125 +1,79 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
-  TextField,
   Grid,
-  styled,
   FormControl,
   FormLabel,
   RadioGroup,
-  Radio,
   FormControlLabel,
 } from "@mui/material";
+import {
+  CustomFormControl,
+  CustomTextField,
+  CustomRadio,
+} from "./ConfirmationModalStyles";
 import "../../styles/fonts.css";
 
-const CustomFormControl = styled(FormControl)(({ theme }) => ({
-  "& .MuiFormLabel-root": {
-    color: "white",
-    fontFamily: "'Prata', serif",
-    fontSize: "16px",
-    "&.Mui-focused": {
-      color: "white",
-    },
+const initialFormData = {
+  guest: {
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
   },
-  "& .MuiRadio-root": {
-    color: "white",
-    padding: "12px",
-    "&.Mui-checked": {
-      color: "white",
-    },
+  plus_one: {
+    first_name: "",
+    last_name: "",
   },
-  "& .MuiFormControlLabel-label": {
-    color: "white",
-    fontFamily: "'Prata', serif",
-    fontSize: "16px",
-  },
-}));
-
-const CustomTextField = styled(TextField)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  "& .MuiInputBase-root": {
-    color: "white",
-    fontFamily: "'Prata', serif",
-    fontSize: "16px",
-    "&:before": {
-      borderBottomColor: "rgba(255, 255, 255, 0.5)",
-    },
-    "&:hover:not(.Mui-disabled):before": {
-      borderBottomColor: "white",
-    },
-    "&.Mui-focused:after": {
-      borderBottomColor: "white",
-    },
-  },
-  "& .MuiInputBase-input": {
-    padding: "10px 0",
-    WebkitAppearance: "none",
-    borderRadius: 0,
-    "&:-webkit-autofill": {
-      WebkitBoxShadow: "0 0 0 30px #231f20 inset !important",
-      WebkitTextFillColor: "white !important",
-    },
-  },
-  "& .MuiInputLabel-root": {
-    color: "rgba(255, 255, 255, 0.7)",
-    fontFamily: "'Prata', serif",
-    fontSize: "16px",
-    "&.Mui-focused": {
-      color: "white",
-    },
-  },
-  "& .MuiFormHelperText-root": {
-    color: "#ff6b6b",
-    fontFamily: "'Prata', serif",
-    fontSize: "14px",
-    marginTop: "4px",
-  },
-}));
-
-const CustomRadio = styled(Radio)({
-  "&.MuiRadio-root": {
-    color: "white",
-    padding: "12px",
-  },
-  "&.Mui-checked": {
-    color: "white",
-  },
-});
+  hasPlusOne: "no",
+};
 
 const ConfirmationForm = ({
   onFormChange,
   onValidationChange,
-  formErrors,
   initialData = null,
 }) => {
-  const [formData, setFormData] = useState({
-    guest: {
-      first_name: "",
-      last_name: "",
-      phone: "",
-      email: "",
-    },
-    plus_one: {
-      first_name: "",
-      last_name: "",
-    },
-    hasPlusOne: "no",
-  });
-
-  useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-    }
-  }, [initialData]);
+  const [formData, setFormData] = useState(initialData || initialFormData);
+  const [touchedFields, setTouchedFields] = useState({});
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     onFormChange(formData);
-  }, [formData, onFormChange]);
+    const errors = validateForm(formData, touchedFields);
+    setFormErrors(errors);
+    onValidationChange(Object.keys(errors).length === 0);
+  }, [formData, touchedFields, onFormChange, onValidationChange]);
 
-  useEffect(() => {
-    const isValid = !Object.values(formErrors).some((error) => error !== "");
-    onValidationChange(isValid);
-  }, [formErrors, onValidationChange]);
+  const validateForm = useCallback((data, touched) => {
+    const errors = {};
+    const { guest, plus_one, hasPlusOne } = data;
+
+    const validateField = (section, field, message) => {
+      if (!data[section][field] && touched[`${section}.${field}`]) {
+        errors[`${section}.${field}`] = message;
+      }
+    };
+
+    validateField("guest", "first_name", "El nombre es requerido");
+    validateField("guest", "last_name", "El apellido es requerido");
+    validateField("guest", "phone", "El teléfono es requerido");
+    validateField("guest", "email", "El email es requerido");
+
+    if (hasPlusOne === "yes") {
+      validateField(
+        "plus_one",
+        "first_name",
+        "El nombre del acompañante es requerido"
+      );
+      validateField(
+        "plus_one",
+        "last_name",
+        "El apellido del acompañante es requerido"
+      );
+    }
+
+    return errors;
+  }, []);
 
   const handleInputChange = useCallback((e, section) => {
     const { name, value } = e.target;
@@ -130,6 +84,7 @@ const ConfirmationForm = ({
         [name]: value,
       },
     }));
+    setTouchedFields((prev) => ({ ...prev, [`${section}.${name}`]: true }));
   }, []);
 
   const handlePlusOneChange = useCallback((e) => {
@@ -138,6 +93,37 @@ const ConfirmationForm = ({
       hasPlusOne: e.target.value,
     }));
   }, []);
+
+  const renderTextField = useCallback(
+    (field, section) => (
+      <Grid item xs={12} key={field.name}>
+        <CustomTextField
+          fullWidth
+          label={field.label}
+          name={field.name}
+          type={field.type}
+          value={formData[section][field.name]}
+          onChange={(e) => handleInputChange(e, section)}
+          onBlur={() =>
+            setTouchedFields((prev) => ({
+              ...prev,
+              [`${section}.${field.name}`]: true,
+            }))
+          }
+          required
+          variant="standard"
+          error={!!formErrors[`${section}.${field.name}`]}
+          helperText={formErrors[`${section}.${field.name}`]}
+          inputProps={{
+            autoCapitalize: field.autoCapitalize,
+            autoCorrect: "off",
+            inputMode: field.inputMode,
+          }}
+        />
+      </Grid>
+    ),
+    [formData, formErrors, handleInputChange]
+  );
 
   const guestFields = useMemo(
     () => [
@@ -185,27 +171,7 @@ const ConfirmationForm = ({
 
   return (
     <Grid container spacing={2}>
-      {guestFields.map((field) => (
-        <Grid item xs={12} key={field.name}>
-          <CustomTextField
-            fullWidth
-            label={field.label}
-            name={field.name}
-            type={field.type}
-            value={formData.guest[field.name]}
-            onChange={(e) => handleInputChange(e, "guest")}
-            required
-            variant="standard"
-            error={!!formErrors[field.name]}
-            helperText={formErrors[field.name]}
-            inputProps={{
-              autoCapitalize: field.autoCapitalize,
-              autoCorrect: "off",
-              inputMode: field.inputMode,
-            }}
-          />
-        </Grid>
-      ))}
+      {guestFields.map((field) => renderTextField(field, "guest"))}
       <Grid item xs={12}>
         <CustomFormControl component="fieldset">
           <FormLabel component="legend">¿Vienes acompañado?</FormLabel>
@@ -225,26 +191,7 @@ const ConfirmationForm = ({
         </CustomFormControl>
       </Grid>
       {formData.hasPlusOne === "yes" &&
-        plusOneFields.map((field) => (
-          <Grid item xs={12} key={field.name}>
-            <CustomTextField
-              fullWidth
-              label={field.label}
-              name={field.name}
-              type={field.type}
-              value={formData.plus_one[field.name]}
-              onChange={(e) => handleInputChange(e, "plus_one")}
-              required
-              variant="standard"
-              error={!!formErrors[`plus_one_${field.name}`]}
-              helperText={formErrors[`plus_one_${field.name}`]}
-              inputProps={{
-                autoCapitalize: field.autoCapitalize,
-                autoCorrect: "off",
-              }}
-            />
-          </Grid>
-        ))}
+        plusOneFields.map((field) => renderTextField(field, "plus_one"))}
     </Grid>
   );
 };
@@ -252,7 +199,6 @@ const ConfirmationForm = ({
 ConfirmationForm.propTypes = {
   onFormChange: PropTypes.func.isRequired,
   onValidationChange: PropTypes.func.isRequired,
-  formErrors: PropTypes.objectOf(PropTypes.string).isRequired,
   initialData: PropTypes.shape({
     guest: PropTypes.shape({
       first_name: PropTypes.string,
