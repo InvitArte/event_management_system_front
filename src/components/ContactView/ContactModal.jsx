@@ -1,3 +1,8 @@
+/**
+ * @file ContactModal.jsx
+ * @description Componente modal para la creación y edición de contactos.
+ */
+
 import React, { useState, useCallback, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
@@ -12,10 +17,38 @@ import {
 import { contactService } from "../../services/Api";
 import ContactForm from "./ContactForm";
 
+/**
+ * @typedef {Object} Contact
+ * @property {number} id - Identificador único del contacto
+ * @property {string} name - Nombre del contacto
+ * @property {string} email - Correo electrónico del contacto
+ * @property {string} phone - Número de teléfono del contacto
+ * @property {string} description - Descripción del contacto
+ * @property {string} observation - Observaciones sobre el contacto
+ */
+
+/**
+ * @function ContactModal
+ * @description Componente modal para crear o editar un contacto.
+ * @param {Object} props - Propiedades del componente
+ * @param {boolean} props.open - Indica si el modal está abierto
+ * @param {function} props.onClose - Función para cerrar el modal
+ * @param {Contact} [props.contact] - Contacto a editar (si es null, se crea un nuevo contacto)
+ * @param {function} props.onSubmit - Función a llamar después de guardar el contacto
+ * @returns {JSX.Element} Elemento JSX que representa el modal de contacto
+ */
 const ContactModal = ({ open, onClose, contact, onSubmit }) => {
+  /** @type {[boolean, function]} loading */
   const [loading, setLoading] = useState(false);
+
+  /** @type {[string, function]} error */
   const [error, setError] = useState("");
 
+  /**
+   * @function handleSubmit
+   * @description Maneja la submisión del formulario de contacto.
+   * @param {Object} formData - Datos del formulario
+   */
   const handleSubmit = useCallback(
     async (formData) => {
       setLoading(true);
@@ -45,6 +78,12 @@ const ContactModal = ({ open, onClose, contact, onSubmit }) => {
     [contact, onSubmit, onClose]
   );
 
+  /**
+   * @function handleErrorMessage
+   * @description Genera un mensaje de error legible a partir de un error de la API.
+   * @param {Error} err - Error capturado
+   * @returns {string} Mensaje de error formateado
+   */
   const handleErrorMessage = useCallback((err) => {
     if (err.response) {
       if (err.response.data && err.response.data.errors) {
@@ -64,6 +103,10 @@ const ContactModal = ({ open, onClose, contact, onSubmit }) => {
     }
   }, []);
 
+  /**
+   * @type {string}
+   * @description Título del modal, cambia según si se está creando o editando un contacto
+   */
   const modalTitle = useMemo(
     () => (contact ? "Editar Contacto" : "Crear Nuevo Contacto"),
     [contact]

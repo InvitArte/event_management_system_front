@@ -1,3 +1,8 @@
+/**
+ * @file ContactTable.jsx
+ * @description Componente de tabla para mostrar y gestionar contactos.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import {
@@ -14,6 +19,33 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import QrCodeIcon from "@mui/icons-material/QrCode";
 
+/**
+ * @typedef {Object} Contact
+ * @property {number} id - Identificador único del contacto
+ * @property {string} name - Nombre del contacto
+ * @property {string} email - Correo electrónico del contacto
+ * @property {string} [phone] - Número de teléfono del contacto
+ * @property {string} [description] - Descripción del contacto
+ */
+
+/**
+ * @typedef {Object} SortModel
+ * @property {string} field - Campo por el que se ordena
+ * @property {'asc'|'desc'} sort - Dirección de ordenamiento
+ */
+
+/**
+ * @function ContactTable
+ * @description Componente que muestra una tabla de contactos con funcionalidades de ordenamiento y acciones.
+ * @param {Object} props - Propiedades del componente
+ * @param {Contact[]} props.contacts - Array de contactos a mostrar
+ * @param {function} props.onRowClick - Función a llamar cuando se hace clic en una fila
+ * @param {SortModel[]} props.sortModel - Modelo de ordenamiento actual
+ * @param {function} props.onSortModelChange - Función para cambiar el modelo de ordenamiento
+ * @param {function} props.onDeleteContact - Función para eliminar un contacto
+ * @param {function} props.onGenerateQR - Función para generar un código QR para un contacto
+ * @returns {JSX.Element} Elemento JSX que representa la tabla de contactos
+ */
 const ContactTable = ({
   contacts,
   onRowClick,
@@ -22,6 +54,10 @@ const ContactTable = ({
   onDeleteContact,
   onGenerateQR,
 }) => {
+  /**
+   * @type {Object[]}
+   * @description Definición de las columnas de la tabla
+   */
   const columns = [
     { field: "name", headerName: "Nombre" },
     { field: "email", headerName: "Email" },
@@ -29,6 +65,11 @@ const ContactTable = ({
     { field: "description", headerName: "Descripción" },
   ];
 
+  /**
+   * @function handleSort
+   * @description Maneja el cambio de ordenamiento de una columna
+   * @param {string} field - Campo por el que se va a ordenar
+   */
   const handleSort = (field) => {
     const isAsc = sortModel[0]?.field === field && sortModel[0]?.sort === "asc";
     onSortModelChange([{ field, sort: isAsc ? "desc" : "asc" }]);

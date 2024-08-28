@@ -1,8 +1,34 @@
+/**
+ * @file ContactForm.jsx
+ * @description Componente de formulario para la creación y edición de contactos.
+ */
+
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { TextField, Grid } from "@mui/material";
 
+/**
+ * @typedef {Object} Contact
+ * @property {string} name - Nombre del contacto
+ * @property {string} email - Correo electrónico del contacto
+ * @property {string} phone - Número de teléfono del contacto
+ * @property {string} description - Descripción del contacto
+ * @property {string} observation - Observaciones sobre el contacto
+ */
+
+/**
+ * @function ContactForm
+ * @description Componente de formulario para crear o editar un contacto.
+ * @param {Object} props - Propiedades del componente
+ * @param {Contact} [props.contact] - Contacto a editar (si es null, se crea un nuevo contacto)
+ * @param {function} props.onSubmit - Función a llamar con los datos del formulario al enviar
+ * @returns {JSX.Element} Elemento JSX que representa el formulario de contacto
+ */
 const ContactForm = ({ contact, onSubmit }) => {
+  /**
+   * @type {[Contact, function]} formData
+   * @description Estado para almacenar los datos del formulario
+   */
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,6 +37,9 @@ const ContactForm = ({ contact, onSubmit }) => {
     observation: "",
   });
 
+  /**
+   * @description Efecto para cargar los datos del contacto en el formulario cuando se edita
+   */
   useEffect(() => {
     if (contact) {
       setFormData({
@@ -23,6 +52,11 @@ const ContactForm = ({ contact, onSubmit }) => {
     }
   }, [contact]);
 
+  /**
+   * @function handleChange
+   * @description Maneja los cambios en los campos del formulario
+   * @param {Object} e - Evento de cambio
+   */
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -31,6 +65,11 @@ const ContactForm = ({ contact, onSubmit }) => {
     }));
   }, []);
 
+  /**
+   * @function handleSubmit
+   * @description Maneja el envío del formulario
+   * @param {Object} e - Evento de envío del formulario
+   */
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();

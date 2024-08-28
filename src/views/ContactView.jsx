@@ -1,3 +1,9 @@
+/**
+ * @file ContactView.jsx
+ * @description Componente principal para la vista de contactos. Maneja la lógica de estado,
+ * filtrado, y operaciones CRUD para los contactos.
+ */
+
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Container,
@@ -18,8 +24,37 @@ import DeleteConfirmationDialog from "../components/Ui/DeleteConfirmationDialog"
 import { normalizeText } from "../components/Utils/TextUtils";
 import { generateVCardData } from "../components/Utils/vCardUtils";
 
+/**
+ * @function ContactView
+ * @description Componente principal que gestiona la vista de contactos.
+ * @returns {JSX.Element} Elemento JSX que representa la vista de contactos.
+ */
 const ContactView = () => {
+  /**
+   * @typedef {Object} Contact
+   * @property {string} id - Identificador único del contacto
+   * @property {string} name - Nombre del contacto
+   * // Añade más propiedades según la estructura de tus contactos
+   */
+
+  /**
+   * @typedef {Object} UIState
+   * @property {boolean} loading - Indica si se están cargando los datos
+   * @property {string} error - Mensaje de error, si lo hay
+   * @property {Object} filters - Filtros aplicados a los contactos
+   * @property {boolean} modalOpen - Indica si el modal de contacto está abierto
+   * @property {Contact|null} selectedContact - Contacto seleccionado para edición
+   * @property {Array} sortModel - Modelo de ordenación actual
+   * @property {boolean} deleteDialogOpen - Indica si el diálogo de confirmación de eliminación está abierto
+   * @property {Contact|null} contactToDelete - Contacto a eliminar
+   * @property {boolean} qrModalOpen - Indica si el modal de QR está abierto
+   * @property {string} vCardData - Datos de vCard para el QR
+   */
+
+  /** @type {[Contact[], function]} */
   const [contactData, setContactData] = useState([]);
+
+  /** @type {[UIState, function]} */
   const [uiState, setUiState] = useState({
     loading: true,
     error: "",
@@ -36,6 +71,10 @@ const ContactView = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  /**
+   * @function fetchContacts
+   * @description Obtiene los contactos del servicio y actualiza el estado.
+   */
   const fetchContacts = useCallback(async () => {
     try {
       const contacts = await contactService.getAllContacts();
@@ -55,6 +94,10 @@ const ContactView = () => {
     fetchContacts();
   }, [fetchContacts]);
 
+  /**
+   * @type {Contact[]}
+   * @description Lista de contactos filtrada según los filtros aplicados.
+   */
   const filteredContacts = useMemo(() => {
     return contactData.filter((contact) => {
       return Object.entries(uiState.filters).every(([key, value]) => {
@@ -65,14 +108,28 @@ const ContactView = () => {
     });
   }, [contactData, uiState.filters]);
 
+  /**
+   * @function handleFilterChange
+   * @description Maneja los cambios en los filtros de contactos.
+   * @param {Object} newFilters - Nuevos filtros a aplicar
+   */
   const handleFilterChange = useCallback((newFilters) => {
     setUiState((prev) => ({ ...prev, filters: newFilters }));
   }, []);
 
+  /**
+   * @function handleCreateContact
+   * @description Abre el modal para crear un nuevo contacto.
+   */
   const handleCreateContact = useCallback(() => {
     setUiState((prev) => ({ ...prev, selectedContact: null, modalOpen: true }));
   }, []);
 
+  /**
+   * @function handleEditContact
+   * @description Abre el modal para editar un contacto existente.
+   * @param {Contact} contact - Contacto a editar
+   */
   const handleEditContact = useCallback((contact) => {
     setUiState((prev) => ({
       ...prev,
@@ -81,6 +138,11 @@ const ContactView = () => {
     }));
   }, []);
 
+  /**
+   * @function handleDeleteContact
+   * @description Inicia el proceso de eliminación de un contacto.
+   * @param {Contact} contact - Contacto a eliminar
+   */
   const handleDeleteContact = useCallback((contact) => {
     setUiState((prev) => ({
       ...prev,
@@ -89,6 +151,10 @@ const ContactView = () => {
     }));
   }, []);
 
+  /**
+   * @function handleConfirmDelete
+   * @description Confirma y ejecuta la eliminación de un contacto.
+   */
   const handleConfirmDelete = useCallback(async () => {
     if (uiState.contactToDelete) {
       try {
@@ -106,6 +172,10 @@ const ContactView = () => {
     }
   }, [uiState.contactToDelete, fetchContacts]);
 
+  /**
+   * @function handleCloseModal
+   * @description Cierra el modal de contacto.
+   */
   const handleCloseModal = useCallback(() => {
     setUiState((prev) => ({
       ...prev,
@@ -114,11 +184,20 @@ const ContactView = () => {
     }));
   }, []);
 
+  /**
+   * @function handleSubmitContact
+   * @description Maneja la submisión de un contacto (creación o edición).
+   */
   const handleSubmitContact = useCallback(async () => {
     await fetchContacts();
     handleCloseModal();
   }, [fetchContacts, handleCloseModal]);
 
+  /**
+   * @function handleGenerateQR
+   * @description Genera datos vCard y abre el modal de QR.
+   * @param {Contact} contact - Contacto para generar el QR
+   */
   const handleGenerateQR = useCallback((contact) => {
     const vCardData = generateVCardData(contact);
     setUiState((prev) => ({
@@ -127,6 +206,11 @@ const ContactView = () => {
       vCardData: vCardData,
     }));
   }, []);
+
+  /**
+   * @function handleCloseQRModal
+   * @description Cierra el modal de QR.
+   */
   const handleCloseQRModal = useCallback(() => {
     setUiState((prev) => ({ ...prev, qrModalOpen: false, vCardData: "" }));
   }, []);

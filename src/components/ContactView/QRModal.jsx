@@ -1,3 +1,8 @@
+/**
+ * @file QRModal.jsx
+ * @description Componente modal para mostrar un código QR con datos de contacto o permitir la descarga directa en dispositivos móviles.
+ */
+
 import React from "react";
 import PropTypes from "prop-types";
 import {
@@ -11,10 +16,27 @@ import {
 } from "@mui/material";
 import QRCode from "qrcode.react";
 
+/**
+ * @function QRModal
+ * @description Componente que muestra un modal con un código QR o un botón para descargar el contacto.
+ * @param {Object} props - Propiedades del componente
+ * @param {boolean} props.open - Indica si el modal está abierto
+ * @param {function} props.onClose - Función para cerrar el modal
+ * @param {string} props.vCardData - Datos del contacto en formato vCard
+ * @returns {JSX.Element} Elemento JSX que representa el modal de QR
+ */
 const QRModal = ({ open, onClose, vCardData }) => {
   const theme = useTheme();
+  /**
+   * @type {boolean}
+   * @description Indica si el dispositivo es móvil
+   */
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  /**
+   * @function handleAddContact
+   * @description Maneja la descarga del archivo vCard
+   */
   const handleAddContact = () => {
     const blob = new Blob([vCardData], { type: "text/vcard" });
     const url = window.URL.createObjectURL(blob);
