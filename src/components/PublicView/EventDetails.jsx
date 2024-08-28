@@ -183,9 +183,11 @@ const EventDetails = ({ userId }) => {
               </ul>
             </div>
           )}
-          <button className="confirmation" onClick={openConfirmationModal}>
+          {/* <button className="confirmation" onClick={openConfirmationModal}>
             Confirmar asistencia
-          </button>
+          </button> */}
+          <h4>Gracias por tu interés en participar.</h4>
+          <h4>Te informamos que el aforo ya se ha completado.</h4>
         </div>
         <ConfirmationModal
           isOpen={isModalOpen}
