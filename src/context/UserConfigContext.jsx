@@ -5,7 +5,7 @@ import { defaultConfig } from "../config/Config";
 const UserConfigContext = createContext();
 
 export const UserConfigProvider = ({ children }) => {
-  const [userConfig, setUserConfig] = useState(defaultConfig);
+  const [userConfig, setUserConfig] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -13,9 +13,21 @@ export const UserConfigProvider = ({ children }) => {
       try {
         setIsLoading(true);
         const config = await api.userConfig.getUserConfig();
-        setUserConfig(config);
+        console.log("Fetched user config:", config);
+
+        if (!config || typeof config.userId === "undefined") {
+          console.warn("API response does not include userId, using default");
+          setUserConfig({
+            ...defaultConfig,
+            ...config,
+            userId: defaultConfig.userId,
+          });
+        } else {
+          setUserConfig(config);
+        }
       } catch (error) {
         console.error("Error fetching user config:", error);
+        setUserConfig(defaultConfig);
       } finally {
         setIsLoading(false);
       }
@@ -32,6 +44,8 @@ export const UserConfigProvider = ({ children }) => {
     }
   };
 
+  console.log("UserConfigProvider - current userConfig:", userConfig);
+
   return (
     <UserConfigContext.Provider
       value={{ userConfig, updateUserConfig, isLoading }}
@@ -41,4 +55,26 @@ export const UserConfigProvider = ({ children }) => {
   );
 };
 
-export const useUserConfig = () => useContext(UserConfigContext);
+export const useUserConfig = () => {
+  const context = useContext(UserConfigContext);
+  if (!context) {
+    throw new Error("useUserConfig must be used within a UserConfigProvider");
+  }
+  return context;
+};
+
+export default () => {
+  const { userConfig, isLoading } = useUserConfig();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <h1>User Configuration</h1>
+      <p>User ID: {userConfig?.userId || "Not available"}</p>
+      <pre>{JSON.stringify(userConfig, null, 2)}</pre>
+    </div>
+  );
+};

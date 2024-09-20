@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box } from "@mui/material";
 import PropTypes from "prop-types";
+import {
+  StyledCountdown,
+  TimeUnit,
+  TimeValue,
+  TimeLabel,
+} from "./ConfirmationModalStyles";
 
 const CountdownTimer = ({ eventDate }) => {
   const [timeLeft, setTimeLeft] = useState(null);
@@ -27,22 +32,18 @@ const CountdownTimer = ({ eventDate }) => {
   }, [eventDate]);
 
   if (!timeLeft || Object.keys(timeLeft).length === 0) {
-    return (
-      <Typography variant="h5" sx={{ mb: 2, textAlign: "center" }}>
-        Hoy es el día
-      </Typography>
-    );
+    return <TimeValue variant="h5">Hoy es el día</TimeValue>;
   }
 
   return (
-    <Box sx={{ mb: 2, textAlign: "center" }}>
-      <Typography variant="h5">Quedan</Typography>
-      <Typography variant="h6">
-        {Object.entries(timeLeft).map(
-          ([interval, value]) => `${value} ${interval} `
-        )}
-      </Typography>
-    </Box>
+    <StyledCountdown>
+      {Object.entries(timeLeft).map(([interval, value]) => (
+        <TimeUnit key={interval}>
+          <TimeValue>{value}</TimeValue>
+          <TimeLabel>{interval}</TimeLabel>
+        </TimeUnit>
+      ))}
+    </StyledCountdown>
   );
 };
 

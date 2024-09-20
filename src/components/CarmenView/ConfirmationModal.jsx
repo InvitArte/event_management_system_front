@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
-import { DialogActions } from "@mui/material";
+import { DialogActions, useMediaQuery, useTheme } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ConfirmationForm from "./ConfirmationForm";
 import { publicService } from "../../services/Api";
@@ -10,13 +10,13 @@ import {
   CustomDialog,
   CustomDialogTitle,
   CustomDialogContent,
-  CustomButton,
   CloseButton,
   ImageContainer,
   StyledImage,
   SuccessMessage,
   ErrorMessage,
-} from "../CarmenView/ConfirmationModalStyles";
+  EventButton,
+} from "./ConfirmationModalStyles";
 
 const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   const [formData, setFormData] = useState(null);
@@ -24,6 +24,9 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     if (!isOpen) {
@@ -39,10 +42,12 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   }, [isOpen]);
 
   const handleFormChange = useCallback((data) => {
+    console.log("Form data changed:", data);
     setFormData(data);
   }, []);
 
   const handleValidationChange = useCallback((isValid) => {
+    console.log("Form validation changed:", isValid);
     setIsFormValid(isValid);
   }, []);
 
@@ -50,66 +55,81 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
     const errors = {};
     if (!formData) return false;
 
-    const { guest, plus_one, hasPlusOne } = formData;
-    const requiredFields = ["first_name", "last_name", "phone", "email"];
-
-    requiredFields.forEach((field) => {
-      if (!guest[field]) {
-        errors[`guest.${field}`] = `El campo "${getFieldName(
-          field
-        )}" es obligatorio.`;
+    const validateField = (section, field, message) => {
+      if (!formData[section][field]) {
+        errors[`${section}.${field}`] = message;
       }
-    });
+    };
 
-    if (hasPlusOne === "yes") {
-      ["first_name", "last_name"].forEach((field) => {
-        if (!plus_one[field]) {
-          errors[`plus_one.${field}`] = `El campo "${getFieldName(
-            field
-          )}" del acompañante es obligatorio.`;
-        }
-      });
+    validateField("guest", "first_name", "El nombre es requerido");
+    validateField("guest", "last_name", "El apellido es requerido");
+    validateField("guest", "phone", "El teléfono es requerido");
+    validateField("guest", "email", "El email es requerido");
+    validateField("guest", "menu_id", "El menú es requerido");
+
+    if (formData.hasPlusOne === "yes") {
+      validateField(
+        "plus_one",
+        "first_name",
+        "El nombre del acompañante es requerido"
+      );
+      validateField(
+        "plus_one",
+        "last_name",
+        "El apellido del acompañante es requerido"
+      );
+      validateField(
+        "plus_one",
+        "menu_id",
+        "El menú del acompañante es requerido"
+      );
     }
 
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   }, [formData]);
 
-  const getFieldName = useCallback((field) => {
-    const fieldNames = {
-      first_name: "Nombre",
-      last_name: "Apellido",
-      phone: "Teléfono",
-      email: "Email",
-    };
-    return fieldNames[field] || field;
-  }, []);
-
   const handleSubmit = useCallback(async () => {
-    if (!validateForm() || isSubmitting) {
-      return;
-    }
+    if (isSubmitting) return;
+
+    const isValid = validateForm();
+    if (!isValid) return;
 
     setIsSubmitting(true);
-
-    const guestData = {
-      ...formData.guest,
-      user_id: userId,
-    };
-
-    const plusOneData =
-      formData.hasPlusOne === "yes" ? formData.plus_one : null;
-
     try {
+      const guestData = {
+        ...formData.guest,
+        user_id: userId,
+      };
+
+      const plusOneData =
+        formData.hasPlusOne === "yes" ? formData.plus_one : null;
+
       await publicService.createGuestWithPlusOne(guestData, plusOneData);
       setIsSubmitted(true);
-      setFormErrors({});
     } catch (error) {
-      console.error("Error creating guest:", error);
-      setFormErrors({
-        submit:
-          "Hubo un error al enviar tu confirmación. Por favor, inténtalo de nuevo.",
-      });
+      console.error("Error al enviar el formulario:", error);
+
+      // Manejo de errores más específico
+      if (error.response && error.response.data && error.response.data.errors) {
+        const serverErrors = error.response.data.errors;
+        const newErrors = {};
+
+        Object.keys(serverErrors).forEach((key) => {
+          if (key.startsWith("guest.") || key.startsWith("plus_one.")) {
+            newErrors[key] = serverErrors[key][0]; // Asumiendo que el servidor devuelve un array de errores por campo
+          } else {
+            newErrors[`guest.${key}`] = serverErrors[key][0];
+          }
+        });
+
+        setFormErrors(newErrors);
+      } else {
+        setFormErrors({
+          submit:
+            "Hubo un error al enviar el formulario. Por favor, intente nuevamente.",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -125,6 +145,7 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
       onClose={handleClose}
       fullWidth
       maxWidth="sm"
+      fullScreen={isMobile}
       disableScrollLock
       aria-labelledby="confirmation-dialog-title"
     >
@@ -139,7 +160,7 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
       </CustomDialogTitle>
       <CustomDialogContent>
         {isSubmitted ? (
-          <SuccessMessage>¡Nos vemos en el desfile!</SuccessMessage>
+          <SuccessMessage>¡Nos vemos en la boda!</SuccessMessage>
         ) : (
           <ConfirmationForm
             onFormChange={handleFormChange}
@@ -149,17 +170,25 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
         )}
         {formErrors.submit && <ErrorMessage>{formErrors.submit}</ErrorMessage>}
       </CustomDialogContent>
-      <DialogActions style={{ justifyContent: "center" }}>
+      <DialogActions
+        style={{
+          justifyContent: "center",
+          padding: isMobile ? "16px" : "8px 0",
+        }}
+      >
         {isSubmitted ? (
-          <CustomButton onClick={handleClose}>Cerrar</CustomButton>
+          <EventButton onClick={handleClose} fullWidth={isMobile}>
+            Cerrar
+          </EventButton>
         ) : (
-          <CustomButton
+          <EventButton
             onClick={handleSubmit}
             disabled={!isFormValid || isSubmitting}
             aria-label="confirmar asistencia"
+            fullWidth={isMobile}
           >
             {isSubmitting ? "Enviando..." : "Confirmar"}
-          </CustomButton>
+          </EventButton>
         )}
       </DialogActions>
     </CustomDialog>
