@@ -1,46 +1,57 @@
-import React, { useCallback } from "react";
-import { Typography, Button, Box } from "@mui/material";
+import React from "react";
 import PropTypes from "prop-types";
+import { Typography, Box, Link } from "@mui/material";
+import { EventButton, EventInfo } from "./ConfirmationModalStyles";
 
 const EventLocations = ({ eventLocations }) => {
-  const openGoogleMaps = useCallback((url) => {
-    if (url) {
-      window.open(url, "_blank", "noopener,noreferrer");
-    } else {
-      console.error("No URL provided for this location");
-    }
-  }, []);
-
-  if (eventLocations.length === 0) return null;
+  if (!eventLocations || eventLocations.length === 0) return null;
 
   return (
-    <Box sx={{ mb: 2 }}>
-      <Typography variant="h6" align="center">
+    <EventInfo>
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
+        sx={{ fontFamily: "'Parisienne', regular", fontSize: "1.5rem" }}
+      >
         {eventLocations.length > 1 ? "Ubicaciones:" : "Ubicación:"}
       </Typography>
-      {eventLocations.map((location) => (
-        <Box key={location.id} sx={{ mb: 1, textAlign: "center" }}>
-          <Typography>{location.name}</Typography>
-          <Button
-            variant="outlined"
-            onClick={() => openGoogleMaps(location.url)}
+      {eventLocations.map((location, index) => (
+        <Box key={location.id || index} sx={{ mb: 2, textAlign: "center" }}>
+          <Typography
+            variant="body1"
+            gutterBottom
+            sx={{ fontFamily: "'Prata', serif", fontSize: "1rem" }}
           >
-            Cómo llegar
-          </Button>
+            {location.direccion || location.name}
+          </Typography>
+          {location.url && (
+            <Link
+              href={location.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ textDecoration: "none" }}
+            >
+              <EventButton variant="outlined" size="small">
+                Cómo llegar
+              </EventButton>
+            </Link>
+          )}
         </Box>
       ))}
-    </Box>
+    </EventInfo>
   );
 };
 
 EventLocations.propTypes = {
   eventLocations: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-      name: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      name: PropTypes.string,
+      direccion: PropTypes.string,
+      url: PropTypes.string,
     })
-  ).isRequired,
+  ),
 };
 
 export default EventLocations;
