@@ -100,24 +100,28 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
       const guestData = {
         ...formData.guest,
         user_id: userId,
+        allergies: formData.guest.allergies.map(allergy => allergy.id),
       };
 
-      const plusOneData =
-        formData.hasPlusOne === "yes" ? formData.plus_one : null;
+      const plusOneData = formData.hasPlusOne === "yes" 
+        ? {
+            ...formData.plus_one,
+            allergies: formData.plus_one.allergies.map(allergy => allergy.id),
+          }
+        : null;
 
       await publicService.createGuestWithPlusOne(guestData, plusOneData);
       setIsSubmitted(true);
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
 
-      // Manejo de errores más específico
       if (error.response && error.response.data && error.response.data.errors) {
         const serverErrors = error.response.data.errors;
         const newErrors = {};
 
         Object.keys(serverErrors).forEach((key) => {
           if (key.startsWith("guest.") || key.startsWith("plus_one.")) {
-            newErrors[key] = serverErrors[key][0]; // Asumiendo que el servidor devuelve un array de errores por campo
+            newErrors[key] = serverErrors[key][0];
           } else {
             newErrors[`guest.${key}`] = serverErrors[key][0];
           }

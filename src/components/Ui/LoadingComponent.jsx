@@ -52,7 +52,7 @@ const LoadingComponent = ({ isLoading, type = "bar" }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#153e87", // El color azul específico que solicitaste
+          backgroundColor: "#153e87",
           zIndex: 1000,
           opacity: isLoading ? 1 : 0,
           pointerEvents: isLoading ? "auto" : "none",
@@ -69,7 +69,7 @@ const LoadingComponent = ({ isLoading, type = "bar" }) => {
             transform: "translate(-50%, -50%)",
             zIndex: 1001,
             animation: isLoading
-              ? `${fadeInAndGrow} 0.5s ease-in-out`
+              ? `${fadeInAndGrow} 0.5s ease-in-out, ${shine} 3s linear infinite`
               : `${moveToCorner} 0.5s ease-in-out forwards`,
             opacity: 1,
             background: `
@@ -84,7 +84,6 @@ const LoadingComponent = ({ isLoading, type = "bar" }) => {
               )
             `,
             backgroundSize: "400% 400%",
-            animation: `${shine} 3s linear infinite`,
             maskImage: `url(${CSvg})`,
             maskSize: "contain",
             maskRepeat: "no-repeat",

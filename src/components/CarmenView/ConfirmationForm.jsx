@@ -6,7 +6,6 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
-  Checkbox,
   MenuItem,
   Autocomplete,
 } from "@mui/material";
@@ -18,6 +17,7 @@ import {
 } from "./ConfirmationModalStyles";
 import "../../styles/fonts.css";
 import services from "../../services/Api";
+import { defaultConfig } from "../../config/Config";
 
 const initialFormData = {
   guest: {
@@ -26,9 +26,10 @@ const initialFormData = {
     phone: "",
     email: "",
     needs_transport: false,
+    needs_transport_back: false,
     needs_hotel: false,
     menu_id: "",
-    allergy_ids: [],
+    allergies: [],
     accommodation_plan: "",
     honeypot: false,
   },
@@ -36,7 +37,7 @@ const initialFormData = {
     first_name: "",
     last_name: "",
     menu_id: "",
-    allergy_ids: [],
+    allergies: [],
   },
   hasPlusOne: "no",
 };
@@ -55,26 +56,37 @@ const ConfirmationForm = ({
   useEffect(() => {
     const loadMenusAndAllergies = async () => {
       try {
+        const userId = defaultConfig.userId;
         const [menusData, allergiesData] = await Promise.all([
-          services.public.getPublicMenus(),
+          services.public.getPublicMenus(userId),
           services.public.getPublicAllergies(),
         ]);
-        setMenus(menusData);
+        
+        if (Array.isArray(menusData)) {
+          setMenus(menusData);
+        } else {
+          console.error("Unexpected menus data format:", menusData);
+          setMenus([]);
+        }
 
-        // Validate and deduplicate allergies
-        const uniqueAllergies = allergiesData.reduce((acc, allergy) => {
-          if (!acc.some((a) => a.id === allergy.id)) {
-            acc.push(allergy);
-          } else {
-            console.warn(`Duplicate allergy ID found: ${allergy.id}`);
-          }
-          return acc;
-        }, []);
-
-        setAllergies(uniqueAllergies);
-        console.log("Allergies data:", uniqueAllergies);
+        if (Array.isArray(allergiesData)) {
+          const uniqueAllergies = allergiesData.reduce((acc, allergy) => {
+            if (!acc.some((a) => a.id === allergy.id)) {
+              acc.push(allergy);
+            } else {
+              console.warn(`Duplicate allergy ID found: ${allergy.id}`);
+            }
+            return acc;
+          }, []);
+          setAllergies(uniqueAllergies);
+        } else {
+          console.error("Unexpected allergies data format:", allergiesData);
+          setAllergies([]);
+        }
       } catch (error) {
         console.error("Error loading menus or allergies:", error);
+        setMenus([]);
+        setAllergies([]);
       }
     };
 
@@ -148,7 +160,7 @@ const ConfirmationForm = ({
       ...prevData,
       [section]: {
         ...prevData[section],
-        allergy_ids: newValue.map((allergy) => allergy.id),
+        allergies: newValue,
       },
     }));
   }, []);
@@ -227,10 +239,6 @@ const ConfirmationForm = ({
 
   const renderAllergySelect = useCallback(
     (section) => {
-      console.log(`Rendering allergy select for ${section}:`, {
-        allergies,
-        selectedAllergies: formData[section].allergy_ids,
-      });
       return (
         <Grid item xs={12} key={`${section}-allergies`}>
           <Autocomplete
@@ -238,9 +246,7 @@ const ConfirmationForm = ({
             id={`${section}-allergies-select`}
             options={allergies}
             getOptionLabel={(option) => option.name}
-            value={allergies.filter((allergy) =>
-              formData[section].allergy_ids.includes(allergy.id)
-            )}
+            value={formData[section].allergies}
             onChange={(event, newValue) =>
               handleAllergyChange(event, newValue, section)
             }
@@ -251,8 +257,8 @@ const ConfirmationForm = ({
                   section === "plus_one" ? "del acompañante" : ""
                 }`}
                 variant="standard"
-                error={!!formErrors[`${section}.allergy_ids`]}
-                helperText={formErrors[`${section}.allergy_ids`]}
+                error={!!formErrors[`${section}.allergies`]}
+                helperText={formErrors[`${section}.allergies`]}
               />
             )}
             renderOption={(props, option) => (
@@ -309,7 +315,10 @@ const ConfirmationForm = ({
   );
 
   const guestCheckboxFields = useMemo(
-    () => [{ name: "needs_transport", label: "¿Necesitas autobús?" }],
+    () => [
+      { name: "needs_transport", label: "¿Necesitas autobús de ida?" },
+      { name: "needs_transport_back", label: "¿Necesitas autobús de vuelta?" },
+    ],
     []
   );
 
@@ -385,7 +394,7 @@ const ConfirmationForm = ({
       <Grid item xs={12} sx={{ display: "none" }}>
         <FormControlLabel
           control={
-            <Checkbox
+            <CustomCheck
               checked={formData.guest.honeypot}
               onChange={(e) => handleInputChange(e, "guest")}
               name="honeypot"

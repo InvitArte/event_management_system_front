@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import PublicView from "./views/PublicView";
 import CarmenView from "./views/CarmenView";
 import LoginView from "./views/LoginView";
 import GuestView from "./views/GuestView";
@@ -16,43 +15,33 @@ import LoadingComponent from "./components/Ui/LoadingComponent";
 const AppContent = () => {
   const { userConfig, isLoading: isConfigLoading } = useUserConfig();
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
-    if (!isConfigLoading) {
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
-      return () => clearTimeout(timer);
+    if (!isConfigLoading && userConfig) {
+      setIsInitialLoad(false);
     }
-  }, [isConfigLoading]);
+  }, [isConfigLoading, userConfig]);
 
   console.log(
     "AppContent - userConfig:",
     userConfig,
-    "isLoading:",
-    isLoading,
+    "isInitialLoad:",
+    isInitialLoad,
     "isConfigLoading:",
     isConfigLoading
   );
 
-  const loadingType = location.pathname === "/carmen" ? "svg" : "bar";
-
-  if (isLoading || isConfigLoading || !userConfig) {
-    return <LoadingComponent isLoading={true} type={loadingType} />;
+  // Show loading only during initial load
+  if (isInitialLoad) {
+    return <LoadingComponent isLoading={true} type="bar" />;
   }
 
   return (
     <>
-      <LoadingComponent isLoading={isLoading} type={loadingType} />
+      {/* Remove LoadingComponent from here */}
       <Routes>
-        <Route
-          path="/carmen"
-          element={
-            <CarmenView userId={userConfig.userId} isLoading={isLoading} />
-          }
-        />
-        <Route path="/" element={<PublicView userId={userConfig.userId} />} />
+        <Route path="/" element={<CarmenView userId={userConfig?.userId} />} />
         <Route path="/login" element={<LoginView />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>
@@ -60,9 +49,9 @@ const AppContent = () => {
               path="/guests"
               element={
                 <GuestView
-                  visibleColumns={userConfig.guestViewColumns}
-                  visibleFilters={userConfig.guestViewFilters}
-                  visibleFormFields={userConfig.guestFormFields}
+                  visibleColumns={userConfig?.guestViewColumns}
+                  visibleFilters={userConfig?.guestViewFilters}
+                  visibleFormFields={userConfig?.guestFormFields}
                 />
               }
             />
@@ -71,7 +60,7 @@ const AppContent = () => {
             <Route
               path="/profile"
               element={
-                <ProfileView visibleFields={userConfig.profileViewFields} />
+                <ProfileView visibleFields={userConfig?.profileViewFields} />
               }
             />
             <Route path="/settings" element={<SettingsView />} />
