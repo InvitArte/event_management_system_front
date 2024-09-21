@@ -126,6 +126,16 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           isOptionEqualToValue={(option, value) => option === value}
         />
       )}
+      {visibleFilters.needs_transport_back && (
+        <FilterAutocomplete 
+          label="Necesita Transporte de Vuelta"
+          options={["Sí", "No"]}
+          onChange={(_, value) => handleFilterChange("needs_transport_back", value)}
+          width={200}
+          getOptionLabel={(option) => option}
+          isOptionEqualToValue={(option, value) => option === value}
+        />
+      )}
       {visibleFilters.tags && (
         <FilterAutocomplete
           label="Filtrar por Etiquetas"

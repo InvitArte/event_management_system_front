@@ -9,9 +9,23 @@ import {
 } from "./ConfirmationModalStyles";
 import { Box } from "@mui/material";
 
+/**
+ * Componente CalendarButton
+ * 
+ * Este componente muestra la fecha del evento, una cuenta regresiva y un botón
+ * para añadir el evento al calendario de Google.
+ * 
+ * @param {Object} props - Propiedades del componente
+ * @param {Date} props.eventDate - Fecha y hora del evento
+ * @param {string} props.eventDateString - Fecha del evento formateada como string
+ * @param {Array} props.eventLocations - Array de ubicaciones del evento
+ */
 const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
   const [timeLeft, setTimeLeft] = useState(null);
 
+  /**
+   * Efecto para calcular y actualizar el tiempo restante hasta el evento
+   */
   useEffect(() => {
     const calculateTimeLeft = () => {
       if (!eventDate) return null;
@@ -34,17 +48,14 @@ const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
     }
   }, [eventDate]);
 
+  /**
+   * Función para añadir el evento al calendario de Google
+   */
   const addToGoogleCalendar = useCallback(() => {
     if (!eventDate) return;
 
-    const startDate =
-      eventDate.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-    const endDate =
-      new Date(eventDate.getTime() + 2 * 60 * 60 * 1000)
-        .toISOString()
-        .replace(/[-:]/g, "")
-        .split(".")[0] + "Z";
-
+    const startDate = formatDateForCalendar(eventDate);
+    const endDate = formatDateForCalendar(new Date(eventDate.getTime() + 2 * 60 * 60 * 1000));
     const locationString = eventLocations
       .map((location) => location.direccion)
       .join(", ");
@@ -65,18 +76,7 @@ const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
       <EventDateTypography>{eventDateString}</EventDateTypography>
-      {timeLeft && Object.keys(timeLeft).length > 0 ? (
-        <Box display="flex" justifyContent="center" gap={2} mb={3}>
-          {Object.entries(timeLeft).map(([interval, value]) => (
-            <TimeUnit key={interval}>
-              <TimeValue>{value}</TimeValue>
-              <TimeLabel>{interval}</TimeLabel>
-            </TimeUnit>
-          ))}
-        </Box>
-      ) : (
-        <EventDateTypography>¡El gran día ha llegado!</EventDateTypography>
-      )}
+      {renderCountdown(timeLeft)}
       <Box mt={2}>
         <EventButton onClick={addToGoogleCalendar}>
           Añadir a calendario
@@ -84,6 +84,36 @@ const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
       </Box>
     </Box>
   );
+};
+
+/**
+ * Formatea una fecha para su uso en la URL del calendario de Google
+ * @param {Date} date - Fecha a formatear
+ * @returns {string} Fecha formateada
+ */
+const formatDateForCalendar = (date) =>
+  date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+
+/**
+ * Renderiza la cuenta regresiva o un mensaje si el evento ya ha pasado
+ * @param {Object|null} timeLeft - Objeto con el tiempo restante
+ * @returns {React.ReactNode}
+ */
+const renderCountdown = (timeLeft) => {
+  if (timeLeft && Object.keys(timeLeft).length > 0) {
+    return (
+      <Box display="flex" justifyContent="center" gap={2} mb={3}>
+        {Object.entries(timeLeft).map(([interval, value]) => (
+          <TimeUnit key={interval}>
+            <TimeValue>{value}</TimeValue>
+            <TimeLabel>{interval}</TimeLabel>
+          </TimeUnit>
+        ))}
+      </Box>
+    );
+  } else {
+    return <EventDateTypography>¡El gran día ha llegado!</EventDateTypography>;
+  }
 };
 
 CalendarButton.propTypes = {

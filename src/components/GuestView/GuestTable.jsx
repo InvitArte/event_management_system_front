@@ -120,7 +120,18 @@ const GuestTable = ({
       { field: "email", headerName: "Correo", width: 200 },
       { field: "phone", headerName: "Teléfono", width: 150 },
       { field: "menu", headerName: "Menú", width: 150 },
-      { field: "allergy", headerName: "Alergias", width: 150 },
+      {
+        field: "allergies",
+        headerName: "Alergias",
+        width: 200,
+        renderCell: (params) => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {params.value?.map((allergy) => (
+              <Chip key={allergy.id} label={allergy.name} size="small" />
+            ))}
+          </Box>
+        ),
+      },
       {
         field: "needs_hotel",
         headerName: "Necesita hotel",
@@ -130,6 +141,12 @@ const GuestTable = ({
       {
         field: "needs_transport",
         headerName: "Necesita transporte",
+        width: 150,
+        type: "boolean",
+      },
+      {
+        field: "needs_transport_back",
+        headerName: "Necesita transporte de vuelta",
         width: 150,
         type: "boolean",
       },
