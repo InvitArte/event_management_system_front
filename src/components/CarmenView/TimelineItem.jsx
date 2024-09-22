@@ -14,7 +14,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
 import EventLocations from "./EventLocations";
 
-
 const mainBlue = "#153e87";
 
 const TimelineItem = ({
@@ -90,13 +89,12 @@ const TimelineItem = ({
           p: { xs: 1.5, sm: 2 },
           borderRadius: 2,
           backgroundColor: fillPercentage > 0 ? `${mainBlue}1A` : "white",
-          transition: "all 0.3s ease-in-out",
           width: "calc(100% - 60px)",
           position: "relative",
           cursor: isExpandable ? "pointer" : "default",
           opacity: fillPercentage > 0 ? 1 : 0.5,
           transform: fillPercentage > 0 ? "translateX(0)" : "translateX(20px)",
-          transition: "opacity 0.5s ease-out, transform 0.5s ease-out",
+          transition: "all 0.3s ease-in-out, opacity 0.5s ease-out, transform 0.5s ease-out",
           "&:hover": isExpandable
             ? {
                 transform: "translateY(-5px)",
