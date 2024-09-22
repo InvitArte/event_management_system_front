@@ -29,7 +29,7 @@ const EventTimeline = ({ scrollProgress, eventLocations }) => {
     },
     {
       icon: <DirectionsBusIcon />,
-      time: "23:00",
+      time: "Por concretar",
       description: "Regreso autobuses",
       isExpandable: false,
     },
