@@ -75,6 +75,7 @@ const GuestView = ({
     }
   
     const uniqueTags = new Set();
+    const uniqueAllergies = new Map();
   
     const processedGuests = guestsData.flatMap((guest) => {
       guest.tags?.forEach((tag) => {
@@ -83,6 +84,9 @@ const GuestView = ({
   
       const guestMenu = userMenus.find(m => m.id === guest.menu_id);
       const guestAllergies = guest.allergies || [];
+      guestAllergies.forEach(allergy => {
+        uniqueAllergies.set(allergy.id, allergy);
+      });
   
       const mainGuest = {
         id: guest.id,
@@ -109,6 +113,9 @@ const GuestView = ({
       const plusOnes = guest.plus_ones?.map((plusOne) => {
         const plusOneMenu = userMenus.find(m => m.id === plusOne.menu_id);
         const plusOneAllergies = plusOne.allergies || [];
+        plusOneAllergies.forEach(allergy => {
+          uniqueAllergies.set(allergy.id, allergy);
+        });
   
         return {
           id: plusOne.id,
@@ -139,7 +146,7 @@ const GuestView = ({
     return {
       guests: processedGuests,
       menus: userMenus,
-      allergies: allergies,
+      allergies: Array.from(uniqueAllergies.values()),
       tags: Array.from(uniqueTags).map((tag) => JSON.parse(tag)),
     };
   }, []);
@@ -175,6 +182,10 @@ const GuestView = ({
   }, [fetchGuests]);
 
   const filteredGuests = useMemo(() => {
+    if (Object.keys(uiState.filters).length === 0) {
+      return guestData.guests;
+    }
+    
     return guestData.guests.filter((guest) => {
       return Object.entries(uiState.filters).every(([key, value]) => {
         if (value === null || value === undefined || value === "") return true;
@@ -186,9 +197,14 @@ const GuestView = ({
           case "validated":
             return guest[key] === (value === "Sí");
           case "allergies":
-            return guest.allergies.some(allergy => 
-              allergy.name.toLowerCase().includes(value.toLowerCase())
-            );
+            if (Array.isArray(value) && value.length > 0) {
+              return value.every(filterAllergy =>
+                guest.allergies.some(guestAllergy => 
+                  guestAllergy.id === filterAllergy.id
+                )
+              );
+            }
+            return true;
           case "tags":
             return value.every((tag) =>
               guest.tags?.some(
@@ -198,16 +214,22 @@ const GuestView = ({
           case "accommodation_plan":
             return guest[key]?.toLowerCase() === value.toLowerCase();
           case "full_name":
-            return normalizeText(guest.fullName).includes(value);
+            return normalizeText(guest.fullName).includes(normalizeText(value));
           default:
-            return guest[key]?.toLowerCase().includes(value.toLowerCase());
+            return guest[key]?.toString().toLowerCase().includes(value.toLowerCase());
         }
       });
     });
   }, [guestData.guests, uiState.filters]);
 
   const handleFilterChange = useCallback((newFilters) => {
-    setUiState((prev) => ({ ...prev, filters: newFilters }));
+    setUiState((prev) => ({
+      ...prev,
+      filters: Object.keys(newFilters).length === 0 ? {} : {
+        ...prev.filters,
+        ...newFilters
+      }
+    }));
   }, []);
 
   const handleCreateGuest = useCallback(() => {
@@ -375,7 +397,7 @@ const GuestView = ({
         </Box>
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-      <GuestFilters
+        <GuestFilters
           guests={guestData.guests}
           onFilterChange={handleFilterChange}
           tags={guestData.tags}
