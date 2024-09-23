@@ -313,7 +313,7 @@ const GuestView = ({
     { field: "email", headerName: "Email" },
     { field: "phone", headerName: "Teléfono" },
     { field: "menu", headerName: "Menú" },
-    { field: "allergies", headerName: "Alergias" },
+    { field: "allergy", headerName: "Alergias" },
     { field: "needs_hotel", headerName: "Necesita Hotel" },
     { field: "needs_transport", headerName: "Necesita Transporte" },
     { field: "needs_transport_back", headerName: "Necesita Transporte de Vuelta" },
@@ -326,6 +326,7 @@ const GuestView = ({
 
   const excelData = useMemo(() => {
     let sortedGuests = [...filteredGuests];
+    console.log("Sorted Guests:", sortedGuests);
     if (uiState.sortModel.length > 0) {
       const { field, sort } = uiState.sortModel[0];
       sortedGuests.sort((a, b) => {
@@ -334,8 +335,8 @@ const GuestView = ({
         return 0;
       });
     }
-
-    return sortedGuests.map((guest) => {
+  
+    const processedData = sortedGuests.map((guest) => {
       const rowData = {
         ID: guest.id,
         "Nombre Completo": guest.fullName,
@@ -343,7 +344,9 @@ const GuestView = ({
         Teléfono: guest.phone,
         Validado: guest.validated ? "Sí" : "No",
         Menú: guest.menu,
-        Alergias: guest.allergies.map(allergy => allergy.name).join(", "),
+        Alergias: guest.allergies && Array.isArray(guest.allergies) 
+          ? guest.allergies.map(allergy => allergy.name).join(", ")
+          : "",
         "Necesita Hotel": guest.needs_hotel ? "Sí" : "No",
         "Necesita Transporte": guest.needs_transport ? "Sí" : "No",
         "Necesita Transporte de Vuelta": guest.needs_transport_back ? "Sí" : "No",
@@ -351,12 +354,14 @@ const GuestView = ({
         Observaciones: guest.observations,
         "Plan de Alojamiento": guest.accommodation_plan,
         Tipo: guest.isMainGuest ? "Invitado Principal" : "Acompañante",
-        Etiquetas: guest.tags.map((tag) => tag.name).join(", "),
+        Etiquetas: guest.tags && Array.isArray(guest.tags)
+          ? guest.tags.map((tag) => tag.name).join(", ")
+          : "",
       };
-
+  
       return Object.keys(rowData).reduce((acc, key) => {
         const columnField = columns.find(
-          (col) => col.headerName === key
+          (col) => col.headerName === key || (key === "Alergias" && col.field === "allergy")
         )?.field;
         if (columnField && uiState.visibleColumns[columnField]) {
           acc[key] = rowData[key];
@@ -364,6 +369,9 @@ const GuestView = ({
         return acc;
       }, {});
     });
+  
+    console.log("Processed Excel Data:", processedData);
+    return processedData;
   }, [filteredGuests, uiState.visibleColumns, uiState.sortModel, columns]);
 
   if (uiState.error) {
