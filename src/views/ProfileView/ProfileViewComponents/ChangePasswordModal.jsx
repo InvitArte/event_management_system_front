@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
 import ChangePasswordForm from "./ChangePasswordForm";
-import { authService } from "../../services/Api";
+import { authService } from "../../../services/Api";
 
 const ChangePasswordModal = ({ open, handleClose }) => {
   const handleUpdatePassword = async (

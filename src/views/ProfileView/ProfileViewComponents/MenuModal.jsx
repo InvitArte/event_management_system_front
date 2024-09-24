@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
-import useMenus from "../../hooks/UseMenus";
+import useMenus from "../../../hooks/UseMenus";
 import MenuList from "./MenuList";
 import MenuForm from "./MenuForm";
 

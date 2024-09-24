@@ -5,7 +5,7 @@ import LoginView from "./views/LoginView/LoginView";
 import GuestView from "./views/GuestView/GuestView";
 import ContactView from "./views/CoctactView/ContactView";
 import TagView from "./views/TagView";
-import ProfileView from "./views/ProfileView";
+import ProfileView from "./views/ProfileView/ProfileView";
 import SettingsView from "./views/SettingsView";
 import NotFoundView from "./views/NotFoundView/NotFoundView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";

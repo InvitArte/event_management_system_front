@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
-import useLocations from "../../hooks/UseLocations";
+import useLocations from "../../../hooks/UseLocations";
 import LocationList from "./LocationList";
 import LocationForm from "./LocationForm";
 
