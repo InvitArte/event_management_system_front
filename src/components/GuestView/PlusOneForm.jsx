@@ -75,27 +75,40 @@ const PlusOneForm = ({
               InputLabelProps={{ shrink: true }}
             />
           )}
+          renderOption={(props, option) => (
+            <li {...props} key={option.id}>
+              {option.name}
+            </li>
+          )}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
         />
       </Grid>
     )}
     {visibleFormFields.plus_one_allergy && (
       <Grid item xs={12} sm={4}>
         <Autocomplete
+          multiple
           options={allergies}
           getOptionLabel={(option) => option.name}
-          value={plusOne.allergy}
+          value={plusOne.allergies || []}
           onChange={(event, newValue) =>
-            handlePlusOneChange(index, "allergy", newValue)
+            handlePlusOneChange(index, "allergies", newValue)
           }
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Alergia"
+              label="Alergias"
               variant="outlined"
               margin="normal"
               InputLabelProps={{ shrink: true }}
             />
           )}
+          renderOption={(props, option) => (
+            <li {...props} key={option.id}>
+              {option.name}
+            </li>
+          )}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
         />
       </Grid>
     )}
@@ -136,10 +149,12 @@ PlusOneForm.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
     }),
-    allergy: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    }),
+    allergies: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+      })
+    ),
     disability: PropTypes.bool,
   }).isRequired,
   index: PropTypes.number.isRequired,

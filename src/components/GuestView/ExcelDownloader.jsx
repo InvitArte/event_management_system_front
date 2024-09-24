@@ -19,6 +19,9 @@ const ExcelDownloader = ({ data, fileName }) => {
       return;
     }
 
+    console.log("Data to export:", data);
+    console.log("Columns:", columns);
+
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Invitados");
 

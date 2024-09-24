@@ -1,18 +1,18 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
 import { normalizeText } from "../Utils/TextUtils";
 import { stringToColor } from "../Utils/TagColors";
 import TagChip from "../Ui/TagChip";
 import FilterAutocomplete from "../Ui/FilterAutocomplete";
 
-const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
+const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters }) => {
   const [filters, setFilters] = useState({});
 
   const uniqueValues = useMemo(
     () => ({
       menus: [...new Set(guests.map((guest) => guest.menu))],
-      allergies: [...new Set(guests.map((guest) => guest.allergy))],
+      allergies: allergies,
       accommodationPlans: [
         ...new Set(guests.map((guest) => guest.accommodation_plan)),
       ],
@@ -21,7 +21,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
         color: stringToColor(tagName),
       })),
     }),
-    [guests, tags]
+    [guests, tags, allergies]
   );
 
   const handleFilterChange = useCallback((filterName, value) => {
@@ -36,9 +36,22 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
       } else {
         newFilters[filterName] = value;
       }
+      
+      // Si no quedan filtros, asegúrate de pasar un objeto vacío
+      if (Object.keys(newFilters).length === 0) {
+        onFilterChange({});
+      } else {
+        onFilterChange(newFilters);
+      }
+      
       return newFilters;
     });
-  }, []);
+  }, [onFilterChange]);
+
+  const handleClearFilters = useCallback(() => {
+    setFilters({});
+    onFilterChange({});
+  }, [onFilterChange]);
 
   useEffect(() => {
     const normalizedFilters = { ...filters };
@@ -73,11 +86,12 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap" }}>
+    <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap", alignItems: "flex-start" }}>
       {visibleFilters.full_name && (
         <TextField
           label="Buscar por nombre"
           onChange={(e) => handleFilterChange("full_name", e.target.value)}
+          value={filters.full_name || ""}
           sx={{ width: 300 }}
         />
       )}
@@ -85,6 +99,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
         <TextField
           label="Buscar por teléfono"
           onChange={(e) => handleFilterChange("phone", e.target.value)}
+          value={filters.phone || ""}
           sx={{ width: 300 }}
         />
       )}
@@ -95,15 +110,18 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           onChange={(_, value) => handleFilterChange("menu", value)}
           getOptionLabel={(option) => option || ""}
           isOptionEqualToValue={(option, value) => option === value}
+          value={filters.menu || null}
         />
       )}
       {visibleFilters.allergy && (
         <FilterAutocomplete
           label="Filtrar por Alergia"
           options={uniqueValues.allergies}
-          onChange={(_, value) => handleFilterChange("allergy", value)}
-          getOptionLabel={(option) => option || ""}
-          isOptionEqualToValue={(option, value) => option === value}
+          onChange={(_, value) => handleFilterChange("allergies", value)}
+          getOptionLabel={(option) => option.name || ""}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          multiple
+          value={filters.allergies || []}
         />
       )}
       {visibleFilters.needs_hotel && (
@@ -114,6 +132,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           width={200}
           getOptionLabel={(option) => option}
           isOptionEqualToValue={(option, value) => option === value}
+          value={filters.needs_hotel || null}
         />
       )}
       {visibleFilters.needs_transport && (
@@ -124,6 +143,18 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           width={200}
           getOptionLabel={(option) => option}
           isOptionEqualToValue={(option, value) => option === value}
+          value={filters.needs_transport || null}
+        />
+      )}
+      {visibleFilters.needs_transport_back && (
+        <FilterAutocomplete 
+          label="Necesita Transporte de Vuelta"
+          options={["Sí", "No"]}
+          onChange={(_, value) => handleFilterChange("needs_transport_back", value)}
+          width={200}
+          getOptionLabel={(option) => option}
+          isOptionEqualToValue={(option, value) => option === value}
+          value={filters.needs_transport_back || null}
         />
       )}
       {visibleFilters.tags && (
@@ -141,6 +172,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           renderOption={renderTagOption}
           getOptionLabel={(option) => option.name}
           isOptionEqualToValue={(option, value) => option.name === value.name}
+          value={filters.tags ? filters.tags.map(tagName => uniqueValues.tags.find(t => t.name === tagName)) : []}
         />
       )}
       {visibleFilters.validated && (
@@ -151,6 +183,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           width={200}
           getOptionLabel={(option) => option}
           isOptionEqualToValue={(option, value) => option === value}
+          value={filters.validated || null}
         />
       )}
       {visibleFilters.accommodation_plan && (
@@ -162,8 +195,16 @@ const GuestFilters = ({ guests, onFilterChange, tags, visibleFilters }) => {
           }
           getOptionLabel={(option) => option || ""}
           isOptionEqualToValue={(option, value) => option === value}
+          value={filters.accommodation_plan || null}
         />
       )}
+      <Button 
+        variant="outlined" 
+        onClick={handleClearFilters}
+        sx={{ height: 56 }} // Para alinear con los demás elementos del formulario
+      >
+        Limpiar filtros
+      </Button>
     </Box>
   );
 };
@@ -172,7 +213,6 @@ GuestFilters.propTypes = {
   guests: PropTypes.arrayOf(
     PropTypes.shape({
       menu: PropTypes.string,
-      allergy: PropTypes.string,
       accommodation_plan: PropTypes.string,
     })
   ).isRequired,
@@ -182,13 +222,20 @@ GuestFilters.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
+  allergies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   visibleFilters: PropTypes.shape({
     full_name: PropTypes.bool,
     phone: PropTypes.bool,
     menu: PropTypes.bool,
-    allergy: PropTypes.bool,
+    allergies: PropTypes.bool,
     needs_hotel: PropTypes.bool,
     needs_transport: PropTypes.bool,
+    needs_transport_back: PropTypes.bool,
     validated: PropTypes.bool,
     tags: PropTypes.bool,
     accommodation_plan: PropTypes.bool,
