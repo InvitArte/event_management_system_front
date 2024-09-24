@@ -32,10 +32,16 @@ const LocationModal = ({ open, handleClose }) => {
     setIsCreating,
     setNewLocation,
     handleAddLocation,
+    resetState,
   } = useLocations(open);
 
+  const handleCloseAndReset = () => {
+    resetState();
+    handleClose();
+  };
+
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleCloseAndReset}>
       <Box sx={style}>
         <Typography variant="h5" component="h2" gutterBottom align="center">
           Gestionar Ubicaciones de la Boda
