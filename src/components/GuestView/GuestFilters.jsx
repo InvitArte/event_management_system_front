@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
-import { Box, TextField, Button } from "@mui/material";
+import { Box, TextField, Button, Grid, Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { normalizeText } from "../Utils/TextUtils";
 import { stringToColor } from "../Utils/TagColors";
 import TagChip from "../Ui/TagChip";
@@ -8,14 +9,13 @@ import FilterAutocomplete from "../Ui/FilterAutocomplete";
 
 const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters }) => {
   const [filters, setFilters] = useState({});
+  const [expandedAccordion, setExpandedAccordion] = useState(false);
 
   const uniqueValues = useMemo(
     () => ({
       menus: [...new Set(guests.map((guest) => guest.menu))],
       allergies: allergies,
-      accommodationPlans: [
-        ...new Set(guests.map((guest) => guest.accommodation_plan)),
-      ],
+      accommodationPlans: [...new Set(guests.map((guest) => guest.accommodation_plan))],
       tags: Array.from(new Set(tags.map((tag) => tag.name))).map((tagName) => ({
         name: tagName,
         color: stringToColor(tagName),
@@ -37,7 +37,6 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
         newFilters[filterName] = value;
       }
       
-      // Si no quedan filtros, asegúrate de pasar un objeto vacío
       if (Object.keys(newFilters).length === 0) {
         onFilterChange({});
       } else {
@@ -85,126 +84,163 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
     );
   }, []);
 
+  const renderFilter = (filterName, component) => {
+    return visibleFilters[filterName] ? component : null;
+  };
+
   return (
-    <Box sx={{ display: "flex", gap: 2, mb: 2, flexWrap: "wrap", alignItems: "flex-start" }}>
-      {visibleFilters.full_name && (
-        <TextField
-          label="Buscar por nombre"
-          onChange={(e) => handleFilterChange("full_name", e.target.value)}
-          value={filters.full_name || ""}
-          sx={{ width: 300 }}
-        />
-      )}
-      {visibleFilters.phone && (
-        <TextField
-          label="Buscar por teléfono"
-          onChange={(e) => handleFilterChange("phone", e.target.value)}
-          value={filters.phone || ""}
-          sx={{ width: 300 }}
-        />
-      )}
-      {visibleFilters.menu && (
-        <FilterAutocomplete
-          label="Filtrar por Menú"
-          options={uniqueValues.menus}
-          onChange={(_, value) => handleFilterChange("menu", value)}
-          getOptionLabel={(option) => option || ""}
-          isOptionEqualToValue={(option, value) => option === value}
-          value={filters.menu || null}
-        />
-      )}
-      {visibleFilters.allergy && (
-        <FilterAutocomplete
-          label="Filtrar por Alergia"
-          options={uniqueValues.allergies}
-          onChange={(_, value) => handleFilterChange("allergies", value)}
-          getOptionLabel={(option) => option.name || ""}
-          isOptionEqualToValue={(option, value) => option.id === value.id}
-          multiple
-          value={filters.allergies || []}
-        />
-      )}
-      {visibleFilters.needs_hotel && (
-        <FilterAutocomplete
-          label="Necesita Hotel"
-          options={["Sí", "No"]}
-          onChange={(_, value) => handleFilterChange("needs_hotel", value)}
-          width={200}
-          getOptionLabel={(option) => option}
-          isOptionEqualToValue={(option, value) => option === value}
-          value={filters.needs_hotel || null}
-        />
-      )}
-      {visibleFilters.needs_transport && (
-        <FilterAutocomplete
-          label="Necesita Transporte"
-          options={["Sí", "No"]}
-          onChange={(_, value) => handleFilterChange("needs_transport", value)}
-          width={200}
-          getOptionLabel={(option) => option}
-          isOptionEqualToValue={(option, value) => option === value}
-          value={filters.needs_transport || null}
-        />
-      )}
-      {visibleFilters.needs_transport_back && (
-        <FilterAutocomplete 
-          label="Necesita Transporte de Vuelta"
-          options={["Sí", "No"]}
-          onChange={(_, value) => handleFilterChange("needs_transport_back", value)}
-          width={200}
-          getOptionLabel={(option) => option}
-          isOptionEqualToValue={(option, value) => option === value}
-          value={filters.needs_transport_back || null}
-        />
-      )}
-      {visibleFilters.tags && (
-        <FilterAutocomplete
-          label="Filtrar por Etiquetas"
-          options={uniqueValues.tags}
-          onChange={(_, value) =>
-            handleFilterChange(
-              "tags",
-              value.map((v) => v.name)
-            )
-          }
-          multiple={true}
-          renderTags={renderTagChips}
-          renderOption={renderTagOption}
-          getOptionLabel={(option) => option.name}
-          isOptionEqualToValue={(option, value) => option.name === value.name}
-          value={filters.tags ? filters.tags.map(tagName => uniqueValues.tags.find(t => t.name === tagName)) : []}
-        />
-      )}
-      {visibleFilters.validated && (
-        <FilterAutocomplete
-          label="Verificado"
-          options={["Sí", "No"]}
-          onChange={(_, value) => handleFilterChange("validated", value)}
-          width={200}
-          getOptionLabel={(option) => option}
-          isOptionEqualToValue={(option, value) => option === value}
-          value={filters.validated || null}
-        />
-      )}
-      {visibleFilters.accommodation_plan && (
-        <FilterAutocomplete
-          label="Filtrar por Plan de Alojamiento"
-          options={uniqueValues.accommodationPlans}
-          onChange={(_, value) =>
-            handleFilterChange("accommodation_plan", value)
-          }
-          getOptionLabel={(option) => option || ""}
-          isOptionEqualToValue={(option, value) => option === value}
-          value={filters.accommodation_plan || null}
-        />
-      )}
-      <Button 
-        variant="outlined" 
-        onClick={handleClearFilters}
-        sx={{ height: 56 }} // Para alinear con los demás elementos del formulario
-      >
-        Limpiar filtros
-      </Button>
+    <Box sx={{ width: '100%', mb: 2 }}>
+        <Typography variant="h4">Filtros</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={4}>
+          {renderFilter('full_name', 
+            <TextField
+              fullWidth
+              label="Buscar por nombre"
+              onChange={(e) => handleFilterChange("full_name", e.target.value)}
+              value={filters.full_name || ""}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          {renderFilter('phone', 
+            <TextField
+              fullWidth
+              label="Buscar por teléfono"
+              onChange={(e) => handleFilterChange("phone", e.target.value)}
+              value={filters.phone || ""}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          {renderFilter('validated', 
+            <FilterAutocomplete
+              fullWidth
+              label="Verificado"
+              options={["Sí", "No"]}
+              onChange={(_, value) => handleFilterChange("validated", value)}
+              getOptionLabel={(option) => option}
+              isOptionEqualToValue={(option, value) => option === value}
+              value={filters.validated || null}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          <Accordion expanded={expandedAccordion} onChange={() => setExpandedAccordion(!expandedAccordion)}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="h5">Filtros adicionales</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} md={4}>
+                  {renderFilter('menu', 
+                    <FilterAutocomplete
+                      fullWidth
+                      label="Filtrar por Menú"
+                      options={uniqueValues.menus}
+                      onChange={(_, value) => handleFilterChange("menu", value)}
+                      getOptionLabel={(option) => option || ""}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      value={filters.menu || null}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {renderFilter('allergy', 
+                    <FilterAutocomplete
+                      fullWidth
+                      label="Filtrar por Alergia"
+                      options={uniqueValues.allergies}
+                      onChange={(_, value) => handleFilterChange("allergies", value)}
+                      getOptionLabel={(option) => option.name || ""}
+                      isOptionEqualToValue={(option, value) => option.id === value.id}
+                      multiple
+                      value={filters.allergies || []}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {renderFilter('needs_hotel', 
+                    <FilterAutocomplete
+                      fullWidth
+                      label="Necesita Hotel"
+                      options={["Sí", "No"]}
+                      onChange={(_, value) => handleFilterChange("needs_hotel", value)}
+                      getOptionLabel={(option) => option}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      value={filters.needs_hotel || null}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {renderFilter('needs_transport', 
+                    <FilterAutocomplete
+                      fullWidth
+                      label="Necesita Transporte"
+                      options={["Sí", "No"]}
+                      onChange={(_, value) => handleFilterChange("needs_transport", value)}
+                      getOptionLabel={(option) => option}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      value={filters.needs_transport || null}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {renderFilter('needs_transport_back', 
+                    <FilterAutocomplete 
+                      fullWidth
+                      label="Necesita Transporte de Vuelta"
+                      options={["Sí", "No"]}
+                      onChange={(_, value) => handleFilterChange("needs_transport_back", value)}
+                      getOptionLabel={(option) => option}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      value={filters.needs_transport_back || null}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {renderFilter('tags', 
+                    <FilterAutocomplete
+                      fullWidth
+                      label="Filtrar por Etiquetas"
+                      options={uniqueValues.tags}
+                      onChange={(_, value) => handleFilterChange("tags", value.map((v) => v.name))}
+                      multiple={true}
+                      renderTags={renderTagChips}
+                      renderOption={renderTagOption}
+                      getOptionLabel={(option) => option.name}
+                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      value={filters.tags ? filters.tags.map(tagName => uniqueValues.tags.find(t => t.name === tagName)) : []}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {renderFilter('accommodation_plan', 
+                    <FilterAutocomplete
+                      fullWidth
+                      label="Filtrar por Plan de Alojamiento"
+                      options={uniqueValues.accommodationPlans}
+                      onChange={(_, value) => handleFilterChange("accommodation_plan", value)}
+                      getOptionLabel={(option) => option || ""}
+                      isOptionEqualToValue={(option, value) => option === value}
+                      value={filters.accommodation_plan || null}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+        </Grid>
+        <Grid item xs={12}>
+          <Button 
+            variant="outlined" 
+            onClick={handleClearFilters}
+            fullWidth
+          >
+            Limpiar filtros
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

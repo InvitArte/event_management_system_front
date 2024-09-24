@@ -412,6 +412,8 @@ const GuestView = ({
           allergies={guestData.allergies}
           visibleFilters={visibleFilters}
         />
+      </Paper>
+      <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
         <Box
           display="flex"
           justifyContent="space-between"
