@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import CarmenView from "./views/CarmenView/CarmenView";
-import LoginView from "./views/LoginView";
+import LoginView from "./views/LoginView/LoginView";
 import GuestView from "./views/GuestView/GuestView";
 import ContactView from "./views/CoctactView/ContactView";
 import TagView from "./views/TagView";
