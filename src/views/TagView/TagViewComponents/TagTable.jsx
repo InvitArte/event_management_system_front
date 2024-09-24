@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { dataGridLocaleText } from "../../config/DataGridLocaleText";
+import { dataGridLocaleText } from "../../../config/DataGridLocaleText";
 
 const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
   const columns = useMemo(

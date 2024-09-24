@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import GuestTransferList from "./GuestTransferList";
-import { tagService } from "../../services/Api";
+import { tagService } from "../../../services/Api";
 
 const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);

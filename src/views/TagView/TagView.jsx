@@ -9,11 +9,11 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
-import { tagService, guestService } from "../services/Api";
-import TagTable from "../components/TagView/TagTable";
-import TagModal from "../components/TagView/TagModal";
-import SkeletonTable from "../components/Ui/SkeletonTable";
-import { translateError } from "../config/ErrorMessages";
+import { tagService, guestService } from "../../services/Api";
+import TagTable from "./TagViewComponents/TagTable";
+import TagModal from "./TagViewComponents/TagModal";
+import SkeletonTable from "../../components/Ui/SkeletonTable";
+import { translateError } from "../../config/ErrorMessages";
 
 const TagView = () => {
   const [tags, setTags] = useState([]);
