@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Container, Paper, Typography, Box, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import LoginForm from "../components/LoginView/LoginForm";
-import { authService } from "../services/Api";
-import { translateError } from "../config/ErrorMessages";
+import LoginForm from "./LoginViewComponents/LoginForm";
+import { authService } from "../../services/Api";
+import { translateError } from "../../config/ErrorMessages";
 
 const LoginView = () => {
   const [error, setError] = useState("");
