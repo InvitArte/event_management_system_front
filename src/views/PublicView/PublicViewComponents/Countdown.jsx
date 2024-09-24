@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
-import { publicService } from "../../services/Api";
+import { publicService } from "../../../services/Api";
 import logo from "../../assets/imgs/aguja.svg";
 import "../../styles/PublicView/Countdown.css";
-import { useBackgroundImage } from "../../context/BackgroundImageContext";
-import { defaultConfig } from "../../config/Config";
+import { useBackgroundImage } from "../../../context/BackgroundImageContext";
+import { defaultConfig } from "../../../config/Config";
 
 const Countdown = ({ userId }) => {
   const [timeLeft, setTimeLeft] = useState(null);
