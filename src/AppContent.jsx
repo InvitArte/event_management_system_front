@@ -7,6 +7,7 @@ import ContactView from "./views/ContactView";
 import TagView from "./views/TagView";
 import ProfileView from "./views/ProfileView";
 import SettingsView from "./views/SettingsView";
+import NotFoundView from "./views/NotFoundView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import ProtectedLayout from "./components/Utils/ProtectedLayout";
 import { useUserConfig } from "./context/UserConfigContext";
@@ -23,14 +24,6 @@ const AppContent = () => {
     }
   }, [isConfigLoading, userConfig]);
 
-  console.log(
-    "AppContent - userConfig:",
-    userConfig,
-    "isInitialLoad:",
-    isInitialLoad,
-    "isConfigLoading:",
-    isConfigLoading
-  );
 
   // Show loading only during initial load
   if (isInitialLoad) {
@@ -66,6 +59,7 @@ const AppContent = () => {
             <Route path="/settings" element={<SettingsView />} />
           </Route>
         </Route>
+        <Route path="*" element={<NotFoundView />} />
       </Routes>
     </>
   );
