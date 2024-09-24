@@ -4,7 +4,7 @@ import CarmenView from "./views/CarmenView/CarmenView";
 import LoginView from "./views/LoginView/LoginView";
 import GuestView from "./views/GuestView/GuestView";
 import ContactView from "./views/CoctactView/ContactView";
-import TagView from "./views/TagView";
+import TagView from "./views/TagView/TagView";
 import ProfileView from "./views/ProfileView/ProfileView";
 import SettingsView from "./views/SettingsView/SettingsView";
 import NotFoundView from "./views/NotFoundView/NotFoundView";
