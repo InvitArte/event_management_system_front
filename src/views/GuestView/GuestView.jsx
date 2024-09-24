@@ -9,14 +9,14 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import { guestService, tagService, menuService, allergyService } from "../services/Api";
-import GuestTable from "../components/GuestView/GuestTable";
-import GuestFilters from "../components/GuestView/GuestFilters";
-import ExcelDownloader from "../components/GuestView/ExcelDownloader";
-import GuestModal from "../components/GuestView/GuestModal";
-import SkeletonTable from "../components/Ui/SkeletonTable";
-import DeleteConfirmationDialog from "../components/Ui/DeleteConfirmationDialog";
-import { normalizeText } from "../components/Utils/TextUtils";
+import { guestService, tagService, menuService, allergyService } from "../../services/Api";
+import GuestTable from "./GuestViewComponents/GuestTable";
+import GuestFilters from "./GuestViewComponents/GuestFilters";
+import ExcelDownloader from "./GuestViewComponents/ExcelDownloader";
+import GuestModal from "./GuestViewComponents/GuestModal";
+import SkeletonTable from "../../components/Ui/SkeletonTable";
+import DeleteConfirmationDialog from "../../components/Ui/DeleteConfirmationDialog";
+import { normalizeText } from "../../components/Utils/TextUtils";
 
 const GuestView = ({
   visibleColumns: initialVisibleColumns,

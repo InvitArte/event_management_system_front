@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import { Button, Box } from "@mui/material";
-import { guestService } from "../../services/Api";
+import { guestService } from "../../../services/Api";
 
 const BulkActions = ({
   selectedGuests,
