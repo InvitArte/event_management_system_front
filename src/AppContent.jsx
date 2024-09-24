@@ -3,7 +3,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import CarmenView from "./views/CarmenView/CarmenView";
 import LoginView from "./views/LoginView";
 import GuestView from "./views/GuestView";
-import ContactView from "./views/ContactView";
+import ContactView from "./views/CoctactView/ContactView";
 import TagView from "./views/TagView";
 import ProfileView from "./views/ProfileView";
 import SettingsView from "./views/SettingsView";

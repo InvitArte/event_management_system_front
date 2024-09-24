@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Box, TextField } from "@mui/material";
-import { normalizeText } from "../Utils/TextUtils";
+import { normalizeText } from "../../../components/Utils/TextUtils";
 
 const ContactFilters = ({ onFilterChange }) => {
   const [filters, setFilters] = useState({});

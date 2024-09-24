@@ -8,15 +8,15 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import { contactService } from "../services/Api";
-import ContactTable from "../components/ContactView/ContactTable";
-import ContactFilters from "../components/ContactView/ContactFilters";
-import ContactModal from "../components/ContactView/ContactModal";
-import QRModal from "../components/ContactView/QRModal";
-import SkeletonTable from "../components/Ui/SkeletonTable";
-import DeleteConfirmationDialog from "../components/Ui/DeleteConfirmationDialog";
-import { normalizeText } from "../components/Utils/TextUtils";
-import { generateVCardData } from "../components/Utils/vCardUtils";
+import { contactService } from "../../services/Api";
+import ContactTable from "./ContactViewComponents/ContactTable";
+import ContactFilters from "./ContactViewComponents/ContactFilters";
+import ContactModal from "./ContactViewComponents/ContactModal";
+import QRModal from "./ContactViewComponents/QRModal";
+import SkeletonTable from "../../components/Ui/SkeletonTable";
+import DeleteConfirmationDialog from "../../components/Ui/DeleteConfirmationDialog";
+import { normalizeText } from "../../components/Utils/TextUtils";
+import { generateVCardData } from "../../components/Utils/vCardUtils";
 
 const ContactView = () => {
   const [contactData, setContactData] = useState([]);

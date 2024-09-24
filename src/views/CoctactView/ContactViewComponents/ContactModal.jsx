@@ -9,7 +9,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { contactService } from "../../services/Api";
+import { contactService } from "../../../services/Api";
 import ContactForm from "./ContactForm";
 
 const ContactModal = ({ open, onClose, contact, onSubmit }) => {
