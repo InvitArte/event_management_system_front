@@ -15,9 +15,9 @@ import {
   CustomRadio,
   CustomCheck,
 } from "./ConfirmationModalStyles";
-import "../../styles/fonts.css";
-import services from "../../services/Api";
-import { defaultConfig } from "../../config/Config";
+import "../../../styles/fonts.css";
+import services from "../../../services/Api";
+import { defaultConfig } from "../../../config/Config";
 
 const initialFormData = {
   guest: {

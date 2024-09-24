@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import HeaderImage from "../../assets/imgs/TODO_COLOR.jpg";
+import HeaderImage from "../../../assets/imgs/TODO_COLOR.jpg";
 import { mainBlue } from "./ConfirmationModalStyles";
 
 /**

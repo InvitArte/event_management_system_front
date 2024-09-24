@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import { DialogActions, useMediaQuery, useTheme } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ConfirmationForm from "./ConfirmationForm";
-import { publicService } from "../../services/Api";
-import "../../styles/fonts.css";
-import aguja from "../../assets/imgs/aguja.svg";
+import { publicService } from "../../../services/Api";
+import "../../../styles/fonts.css";
 import {
   CustomDialog,
   CustomDialogTitle,
@@ -156,9 +155,6 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
       <CloseButton onClick={handleClose} aria-label="cerrar">
         <CloseIcon />
       </CloseButton>
-      <ImageContainer>
-        <StyledImage src={aguja} alt="Imagen de aguja" />
-      </ImageContainer>
       <CustomDialogTitle id="confirmation-dialog-title">
         {isSubmitted ? "¡Gracias por confirmar!" : "¿Te gustaría acompañarnos?"}
       </CustomDialogTitle>
