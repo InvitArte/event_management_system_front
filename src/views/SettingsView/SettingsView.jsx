@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useUserConfig } from "../context/UserConfigContext";
-import defaultConfig from "../config/Config";
+import { useUserConfig } from "../../context/UserConfigContext";
+import defaultConfig from "../../config/Config";
 import {
   Container,
   Paper,
@@ -10,9 +10,9 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import ConfigSection from "../components/SettingsView/ConfigSection";
-import ConfigSectionSkeleton from "../components/SettingsView/ConfigSectionSkeleton";
-import translations from "../components/SettingsView/Translations";
+import ConfigSection from "./SettingsViewComponents/ConfigSection";
+import ConfigSectionSkeleton from "./SettingsViewComponents/ConfigSectionSkeleton";
+import translations from "./SettingsViewComponents/Translations";
 
 const SettingsView = () => {
   const theme = useTheme();
