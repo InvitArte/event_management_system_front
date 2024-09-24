@@ -9,7 +9,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import { guestService } from "../../services/Api";
+import { guestService } from "../../../services/Api";
 import GuestForm from "./GuestForm";
 
 const GuestModal = ({

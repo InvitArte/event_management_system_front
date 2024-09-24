@@ -9,7 +9,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import PlusOneForm from "./PlusOneForm";
-import TagChip from "../Ui/TagChip";
+import TagChip from "../../../components/Ui/TagChip";
 
 const GuestForm = ({
   guest,
