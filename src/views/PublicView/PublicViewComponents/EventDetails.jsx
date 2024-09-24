@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
-import { publicService } from "../../services/Api";
+import { publicService } from "../../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
 import "../../styles/PublicView/EventDetails.css";
 import logo from "../../assets/imgs/maniqui.svg";
-import { useBackgroundImage } from "../../context/BackgroundImageContext";
+import { useBackgroundImage } from "../../../context/BackgroundImageContext";
 
 const EventDetails = ({ userId }) => {
   const [eventDate, setEventDate] = useState(null);

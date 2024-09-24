@@ -1,11 +1,11 @@
 import React, { useRef, useEffect } from "react";
-import FrontPage from "../components/PublicView/FrontPage.jsx";
-import Countdown from "../components/PublicView/Countdown.jsx";
-import EventDetails from "../components/PublicView/EventDetails.jsx";
-import Collaboration from "../components/PublicView/Collaboration.jsx";
+import FrontPage from "./PublicViewComponents/FrontPage.jsx";
+import Countdown from "./PublicViewComponents/Countdown.jsx";
+import EventDetails from "./PublicViewComponents/EventDetails.jsx";
+import Collaboration from "./PublicViewComponents/Collaboration.jsx";
 import "../styles/PublicView/Footer.css";
-import { useUserConfig } from "../context/UserConfigContext";
-import { defaultConfig } from "../config/Config";
+import { useUserConfig } from "../../context/UserConfigContext.jsx";
+import { defaultConfig } from "../../config/Config.js";
 
 const PublicView = () => {
   const containerRef = useRef(null);
