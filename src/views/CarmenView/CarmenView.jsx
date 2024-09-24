@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Grid, Box, useMediaQuery, useTheme } from "@mui/material";
-import Azulejo from "../assets/imgs/Azulejo1.jpeg";
-import CarmenHeader from "../components/CarmenView/CarmenHeader";
-import CarmenEventCard from "../components/CarmenView/CarmenEventCard";
-import CSvg from "../assets/imgs/CC.svg";
-import LoadingComponent from "../components/Ui/LoadingComponent";
-import { publicService } from "../services/Api";
+import Azulejo from "../../assets/imgs/Azulejo1.jpeg";
+import CarmenHeader from "./CarmenViewComponents/CarmenHeader";
+import CarmenEventCard from "./CarmenViewComponents/CarmenEventCard";
+import CSvg from "../../assets/imgs/CC.svg";
+import LoadingComponent from "../../components/Ui/LoadingComponent";
+import { publicService } from "../../services/Api";
 
 /**
  * Componente CarmenView
