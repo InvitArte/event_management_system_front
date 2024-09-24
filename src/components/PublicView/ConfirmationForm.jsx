@@ -11,7 +11,7 @@ import {
   CustomFormControl,
   CustomTextField,
   CustomRadio,
-} from "./ConfirmationModalStyles";
+} from "../CarmenView/ConfirmationModalStyles";
 import "../../styles/fonts.css";
 
 const initialFormData = {

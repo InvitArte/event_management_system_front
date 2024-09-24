@@ -9,7 +9,7 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import { guestService, tagService } from "../services/Api";
+import { guestService, tagService, menuService, allergyService } from "../services/Api";
 import GuestTable from "../components/GuestView/GuestTable";
 import GuestFilters from "../components/GuestView/GuestFilters";
 import ExcelDownloader from "../components/GuestView/ExcelDownloader";
@@ -48,38 +48,46 @@ const GuestView = ({
 
   const fetchData = useCallback(async () => {
     try {
-      const [guestsResponse, tagsResponse] = await Promise.all([
+      const [guestsResponse, tagsResponse, menusResponse, allergiesResponse] = await Promise.all([
         guestService.getAllGuests(),
         tagService.getAllTags(),
+        menuService.getUserMenus(),
+        allergyService.getAllAllergies(),
       ]);
-      return { guests: guestsResponse, tags: tagsResponse };
+      console.log("Guests Response:", guestsResponse);
+
+      return { 
+        guests: guestsResponse, 
+        tags: tagsResponse, 
+        menus: menusResponse, 
+        allergies: allergiesResponse 
+      };
     } catch (error) {
       console.error("Error fetching data:", error);
       throw error;
     }
   }, []);
-
-  const processGuests = useCallback((guestsData) => {
+ 
+  const processGuests = useCallback((guestsData, userMenus, allergies) => {
     if (!Array.isArray(guestsData)) {
       console.error("guestsData is not an array:", guestsData);
-      return { guests: [], menus: [], allergies: [], tags: [] };
+      return { guests: [], menus: userMenus, allergies: allergies, tags: [] };
     }
-
-    const uniqueMenus = new Set();
-    const uniqueAllergies = new Set();
+  
     const uniqueTags = new Set();
-
+    const uniqueAllergies = new Map();
+  
     const processedGuests = guestsData.flatMap((guest) => {
-      if (guest.menu) {
-        uniqueMenus.add(JSON.stringify(guest.menu));
-      }
-      if (guest.allergy) {
-        uniqueAllergies.add(JSON.stringify(guest.allergy));
-      }
       guest.tags?.forEach((tag) => {
         uniqueTags.add(JSON.stringify(tag));
       });
-
+  
+      const guestMenu = userMenus.find(m => m.id === guest.menu_id);
+      const guestAllergies = guest.allergies || [];
+      guestAllergies.forEach(allergy => {
+        uniqueAllergies.set(allergy.id, allergy);
+      });
+  
       const mainGuest = {
         id: guest.id,
         fullName: `${guest.first_name} ${guest.last_name}`.trim(),
@@ -88,12 +96,12 @@ const GuestView = ({
         email: guest.email || "",
         phone: guest.phone || "",
         validated: Boolean(guest.validated),
-        menu: guest.menu?.name || "No ha especificado",
-        menu_id: guest.menu_id,
-        allergy: guest.allergy?.name || "No",
-        allergy_id: guest.allergy_id,
+        menu: guestMenu ? guestMenu.name : "No ha especificado",
+        menu_id: guestMenu ? guestMenu.id : null,
+        allergies: guestAllergies,
         needs_hotel: Boolean(guest.needs_hotel),
         needs_transport: Boolean(guest.needs_transport),
+        needs_transport_back: Boolean(guest.needs_transport_back),
         disability: Boolean(guest.disability),
         observations: guest.observations || "",
         accommodation_plan: guest.accommodation_plan || "No ha especificado",
@@ -101,9 +109,15 @@ const GuestView = ({
         plus_ones: guest.plus_ones || [],
         tags: guest.tags || [],
       };
-
-      const plusOnes =
-        guest.plus_ones?.map((plusOne) => ({
+  
+      const plusOnes = guest.plus_ones?.map((plusOne) => {
+        const plusOneMenu = userMenus.find(m => m.id === plusOne.menu_id);
+        const plusOneAllergies = plusOne.allergies || [];
+        plusOneAllergies.forEach(allergy => {
+          uniqueAllergies.set(allergy.id, allergy);
+        });
+  
+        return {
           id: plusOne.id,
           fullName: `${plusOne.first_name} ${plusOne.last_name}`.trim(),
           first_name: plusOne.first_name,
@@ -111,36 +125,35 @@ const GuestView = ({
           email: plusOne.email || "",
           phone: plusOne.phone || "",
           validated: Boolean(guest.validated),
-          menu: plusOne.menu?.name || "No ha especificado",
-          menu_id: plusOne.menu_id,
-          allergy: plusOne.allergy?.name || "No",
-          allergy_id: plusOne.allergy_id,
+          menu: plusOneMenu ? plusOneMenu.name : "No ha especificado",
+          menu_id: plusOneMenu ? plusOneMenu.id : null,
+          allergies: plusOneAllergies,
           needs_hotel: Boolean(guest.needs_hotel),
           needs_transport: Boolean(guest.needs_transport),
+          needs_transport_back: Boolean(guest.needs_transport_back),
           disability: Boolean(plusOne.disability),
           observations: plusOne.observations || "",
           accommodation_plan: guest.accommodation_plan || "No ha especificado",
           isMainGuest: false,
           parentId: guest.id,
           tags: [],
-        })) || [];
-
+        };
+      }) || [];
+  
       return [mainGuest, ...plusOnes];
     });
-
+  
     return {
       guests: processedGuests,
-      menus: Array.from(uniqueMenus).map((menu) => JSON.parse(menu)),
-      allergies: Array.from(uniqueAllergies).map((allergy) =>
-        JSON.parse(allergy)
-      ),
+      menus: userMenus,
+      allergies: Array.from(uniqueAllergies.values()),
       tags: Array.from(uniqueTags).map((tag) => JSON.parse(tag)),
     };
   }, []);
 
   const processData = useCallback(
     (data) => {
-      const processedGuests = processGuests(data.guests);
+      const processedGuests = processGuests(data.guests, data.menus, data.allergies);
       return {
         ...processedGuests,
         allTags: data.tags,
@@ -169,6 +182,10 @@ const GuestView = ({
   }, [fetchGuests]);
 
   const filteredGuests = useMemo(() => {
+    if (Object.keys(uiState.filters).length === 0) {
+      return guestData.guests;
+    }
+    
     return guestData.guests.filter((guest) => {
       return Object.entries(uiState.filters).every(([key, value]) => {
         if (value === null || value === undefined || value === "") return true;
@@ -176,10 +193,18 @@ const GuestView = ({
         switch (key) {
           case "needs_hotel":
           case "needs_transport":
+          case "needs_transport_back":
           case "validated":
             return guest[key] === (value === "Sí");
-          case "allergy":
-            return guest[key]?.toLowerCase().includes(value.toLowerCase());
+          case "allergies":
+            if (Array.isArray(value) && value.length > 0) {
+              return value.every(filterAllergy =>
+                guest.allergies.some(guestAllergy => 
+                  guestAllergy.id === filterAllergy.id
+                )
+              );
+            }
+            return true;
           case "tags":
             return value.every((tag) =>
               guest.tags?.some(
@@ -189,16 +214,22 @@ const GuestView = ({
           case "accommodation_plan":
             return guest[key]?.toLowerCase() === value.toLowerCase();
           case "full_name":
-            return normalizeText(guest.fullName).includes(value);
+            return normalizeText(guest.fullName).includes(normalizeText(value));
           default:
-            return guest[key]?.toLowerCase().includes(value.toLowerCase());
+            return guest[key]?.toString().toLowerCase().includes(value.toLowerCase());
         }
       });
     });
   }, [guestData.guests, uiState.filters]);
 
   const handleFilterChange = useCallback((newFilters) => {
-    setUiState((prev) => ({ ...prev, filters: newFilters }));
+    setUiState((prev) => ({
+      ...prev,
+      filters: Object.keys(newFilters).length === 0 ? {} : {
+        ...prev.filters,
+        ...newFilters
+      }
+    }));
   }, []);
 
   const handleCreateGuest = useCallback(() => {
@@ -282,9 +313,10 @@ const GuestView = ({
     { field: "email", headerName: "Email" },
     { field: "phone", headerName: "Teléfono" },
     { field: "menu", headerName: "Menú" },
-    { field: "allergy", headerName: "Alergia" },
+    { field: "allergy", headerName: "Alergias" },
     { field: "needs_hotel", headerName: "Necesita Hotel" },
     { field: "needs_transport", headerName: "Necesita Transporte" },
+    { field: "needs_transport_back", headerName: "Necesita Transporte de Vuelta" },
     { field: "disability", headerName: "Discapacidad" },
     { field: "observations", headerName: "Observaciones" },
     { field: "accommodation_plan", headerName: "Plan de Alojamiento" },
@@ -294,6 +326,7 @@ const GuestView = ({
 
   const excelData = useMemo(() => {
     let sortedGuests = [...filteredGuests];
+    console.log("Sorted Guests:", sortedGuests);
     if (uiState.sortModel.length > 0) {
       const { field, sort } = uiState.sortModel[0];
       sortedGuests.sort((a, b) => {
@@ -302,8 +335,8 @@ const GuestView = ({
         return 0;
       });
     }
-
-    return sortedGuests.map((guest) => {
+  
+    const processedData = sortedGuests.map((guest) => {
       const rowData = {
         ID: guest.id,
         "Nombre Completo": guest.fullName,
@@ -311,19 +344,24 @@ const GuestView = ({
         Teléfono: guest.phone,
         Validado: guest.validated ? "Sí" : "No",
         Menú: guest.menu,
-        Alergia: guest.allergy,
+        Alergias: guest.allergies && Array.isArray(guest.allergies) 
+          ? guest.allergies.map(allergy => allergy.name).join(", ")
+          : "",
         "Necesita Hotel": guest.needs_hotel ? "Sí" : "No",
         "Necesita Transporte": guest.needs_transport ? "Sí" : "No",
+        "Necesita Transporte de Vuelta": guest.needs_transport_back ? "Sí" : "No",
         Discapacidad: guest.disability ? "Sí" : "No",
         Observaciones: guest.observations,
         "Plan de Alojamiento": guest.accommodation_plan,
         Tipo: guest.isMainGuest ? "Invitado Principal" : "Acompañante",
-        Etiquetas: guest.tags.map((tag) => tag.name).join(", "),
+        Etiquetas: guest.tags && Array.isArray(guest.tags)
+          ? guest.tags.map((tag) => tag.name).join(", ")
+          : "",
       };
-
+  
       return Object.keys(rowData).reduce((acc, key) => {
         const columnField = columns.find(
-          (col) => col.headerName === key
+          (col) => col.headerName === key || (key === "Alergias" && col.field === "allergy")
         )?.field;
         if (columnField && uiState.visibleColumns[columnField]) {
           acc[key] = rowData[key];
@@ -331,6 +369,9 @@ const GuestView = ({
         return acc;
       }, {});
     });
+  
+    console.log("Processed Excel Data:", processedData);
+    return processedData;
   }, [filteredGuests, uiState.visibleColumns, uiState.sortModel, columns]);
 
   if (uiState.error) {
@@ -368,6 +409,7 @@ const GuestView = ({
           guests={guestData.guests}
           onFilterChange={handleFilterChange}
           tags={guestData.tags}
+          allergies={guestData.allergies}
           visibleFilters={visibleFilters}
         />
         <Box
@@ -381,7 +423,7 @@ const GuestView = ({
         {uiState.loading ? (
           <SkeletonTable
             rowsNum={10}
-            columnsNum={13}
+            columnsNum={14}
             height={600}
             showCheckbox={true}
             showActions={true}
@@ -398,6 +440,7 @@ const GuestView = ({
             }
             visibleColumns={uiState.visibleColumns}
             onDeleteGuest={handleDeleteGuest}
+            allergies={guestData.allergies}
           />
         )}
         <GuestModal

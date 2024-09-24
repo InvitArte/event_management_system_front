@@ -40,24 +40,24 @@ const GuestModal = ({
             needs_hotel: formData.needs_hotel,
             disability: formData.disability,
             menu_id: formData.menu_id,
-            allergy_id: formData.allergy_id,
             observations: formData.observations,
             accommodation_plan: formData.accommodation_plan,
           },
+          allergies: formData.allergies, // Añadimos las alergias aquí
           plus_ones: formData.plus_ones.map((plusOne) => ({
             first_name: plusOne.first_name,
             last_name: plusOne.last_name,
             menu_id: plusOne.menu_id,
-            allergy_id: plusOne.allergy_id,
             disability: plusOne.disability,
+            allergies: plusOne.allergies, // Añadimos las alergias para cada acompañante
           })),
           tags: formData.tags,
         };
-
+  
         const response = guest
           ? await guestService.updateGuest(guest.id, guestData)
           : await guestService.createGuest(guestData);
-
+  
         onSubmit();
         onClose();
       } catch (err) {

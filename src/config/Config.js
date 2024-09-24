@@ -1,6 +1,6 @@
 // Configuración por defecto en caso de que falle la carga desde el backend
 export const defaultConfig = {
-  userId: 7,
+  userId: 1,
   numPlusOne: 1,
   guestViewColumns: {
     id: true,
@@ -12,6 +12,7 @@ export const defaultConfig = {
     allergy: true,
     needs_hotel: true,
     needs_transport: true,
+    needs_transport_back: true,
     disability: true,
     observations: true,
     accommodation_plan: true,
@@ -25,6 +26,7 @@ export const defaultConfig = {
     allergy: true,
     needs_hotel: true,
     needs_transport: true,
+    needs_transport_back: true,
     validated: true,
     tags: true,
     accommodation_plan: true,
@@ -35,6 +37,7 @@ export const defaultConfig = {
     phone: true,
     email: true,
     needs_transport: true,
+    needs_transport_back: true,
     needs_hotel: true,
     disability: true,
     menu: true,

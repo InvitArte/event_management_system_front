@@ -16,7 +16,7 @@ import {
   StyledImage,
   SuccessMessage,
   ErrorMessage,
-} from "./ConfirmationModalStyles";
+} from "../CarmenView/ConfirmationModalStyles";
 
 const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   const [formData, setFormData] = useState(null);
