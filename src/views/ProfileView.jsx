@@ -12,12 +12,14 @@ import {
 import ProfileForm from "../components/ProfileView/ProfileForm";
 import LocationModal from "../components/ProfileView/LocationModal";
 import ChangePasswordModal from "../components/ProfileView/ChangePasswordModal";
+import MenuModal from "../components/ProfileView/MenuModal";
 
 const ProfileView = ({ visibleFields }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [menuModalOpen, setMenuModalOpen] = useState(false); 
 
   const toggleModal = (setter) => () => setter((prev) => !prev);
 
@@ -56,8 +58,19 @@ const ProfileView = ({ visibleFields }) => {
               variant="contained"
               color="primary"
               onClick={toggleModal(setPasswordModalOpen)}
+              sx={{
+                marginRight: 2,
+                marginBottom: isSmallScreen ? theme.spacing(2) : 0,
+              }}
             >
               Cambiar Contraseña
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={toggleModal(setMenuModalOpen)}
+            >
+              Gestionar Menús
             </Button>
           </Box>
         </Box>
@@ -72,6 +85,10 @@ const ProfileView = ({ visibleFields }) => {
       <ChangePasswordModal
         open={passwordModalOpen}
         handleClose={toggleModal(setPasswordModalOpen)}
+      />
+      <MenuModal
+        open={menuModalOpen}
+        handleClose={toggleModal(setMenuModalOpen)}
       />
     </Container>
   );

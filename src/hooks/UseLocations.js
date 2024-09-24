@@ -86,6 +86,13 @@ const useLocations = (open) => {
     setExpandedLocation(expandedLocation === id ? null : id);
   };
 
+  const resetState = () => {
+    setNewLocation({ name: "", direccion: "", url: "", capacity: "" });
+    setEditingLocation(null);
+    setExpandedLocation(null);
+    setIsCreating(false);
+  };
+
   return {
     locations,
     newLocation,
@@ -99,6 +106,7 @@ const useLocations = (open) => {
     handleUpdateLocation,
     handleDeleteLocation,
     handleExpandLocation,
+    resetState,
   };
 };
 
