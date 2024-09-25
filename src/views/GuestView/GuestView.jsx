@@ -78,7 +78,9 @@ const GuestView = ({
     const uniqueAllergies = new Map();
   
     const capitalizeFirstLetter = (string) => {
-      return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+      return string.split(' ').map((word, index) => 
+        index === 0 ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word.toLowerCase()
+      ).join(' ');
     };
   
     const processedGuests = guestsData.flatMap((guest) => {
