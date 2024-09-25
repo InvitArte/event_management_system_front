@@ -77,6 +77,10 @@ const GuestView = ({
     const uniqueTags = new Set();
     const uniqueAllergies = new Map();
   
+    const capitalizeFirstLetter = (string) => {
+      return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    };
+  
     const processedGuests = guestsData.flatMap((guest) => {
       guest.tags?.forEach((tag) => {
         uniqueTags.add(JSON.stringify(tag));
@@ -90,9 +94,9 @@ const GuestView = ({
   
       const mainGuest = {
         id: guest.id,
-        fullName: `${guest.first_name} ${guest.last_name}`.trim(),
-        first_name: guest.first_name,
-        last_name: guest.last_name,
+        first_name: capitalizeFirstLetter(guest.first_name),
+        last_name: capitalizeFirstLetter(guest.last_name),
+        fullName: `${capitalizeFirstLetter(guest.first_name)} ${capitalizeFirstLetter(guest.last_name)}`.trim(),
         email: guest.email || "",
         phone: guest.phone || "",
         validated: Boolean(guest.validated),
@@ -119,9 +123,9 @@ const GuestView = ({
   
         return {
           id: plusOne.id,
-          fullName: `${plusOne.first_name} ${plusOne.last_name}`.trim(),
-          first_name: plusOne.first_name,
-          last_name: plusOne.last_name,
+          first_name: capitalizeFirstLetter(plusOne.first_name),
+          last_name: capitalizeFirstLetter(plusOne.last_name),
+          fullName: `${capitalizeFirstLetter(plusOne.first_name)} ${capitalizeFirstLetter(plusOne.last_name)}`.trim(),
           email: plusOne.email || "",
           phone: plusOne.phone || "",
           validated: Boolean(guest.validated),
@@ -150,6 +154,7 @@ const GuestView = ({
       tags: Array.from(uniqueTags).map((tag) => JSON.parse(tag)),
     };
   }, []);
+   
 
   const processData = useCallback(
     (data) => {
