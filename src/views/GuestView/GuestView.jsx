@@ -78,7 +78,9 @@ const GuestView = ({
     const uniqueAllergies = new Map();
   
     const capitalizeFirstLetter = (string) => {
-      return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+      return string.split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      ).join(' ');
     };
   
     const processedGuests = guestsData.flatMap((guest) => {
@@ -154,7 +156,6 @@ const GuestView = ({
       tags: Array.from(uniqueTags).map((tag) => JSON.parse(tag)),
     };
   }, []);
-   
 
   const processData = useCallback(
     (data) => {

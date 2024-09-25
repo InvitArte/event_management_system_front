@@ -1,6 +1,6 @@
 // Configuración por defecto en caso de que falle la carga desde el backend
 export const defaultConfig = {
-  userId: 5,
+  userId: 1,
   numPlusOne: 1,
   guestViewColumns: {
     id: true,
