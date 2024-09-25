@@ -78,8 +78,8 @@ const GuestView = ({
     const uniqueAllergies = new Map();
   
     const capitalizeFirstLetter = (string) => {
-      return string.split(' ').map((word, index) => 
-        index === 0 ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : word.toLowerCase()
+      return string.split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       ).join(' ');
     };
   
@@ -156,7 +156,6 @@ const GuestView = ({
       tags: Array.from(uniqueTags).map((tag) => JSON.parse(tag)),
     };
   }, []);
-   
 
   const processData = useCallback(
     (data) => {
