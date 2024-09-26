@@ -10,6 +10,7 @@ import FilterAutocomplete from "../../../components/Ui/FilterAutocomplete";
 const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters }) => {
   const [filters, setFilters] = useState({});
   const [expandedAccordion, setExpandedAccordion] = useState(false);
+  const [clearTrigger, setClearTrigger] = useState(0);
 
   const uniqueValues = useMemo(
     () => ({
@@ -36,21 +37,9 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
       } else {
         newFilters[filterName] = value;
       }
-      
-      if (Object.keys(newFilters).length === 0) {
-        onFilterChange({});
-      } else {
-        onFilterChange(newFilters);
-      }
-      
       return newFilters;
     });
-  }, [onFilterChange]);
-
-  const handleClearFilters = useCallback(() => {
-    setFilters({});
-    onFilterChange({});
-  }, [onFilterChange]);
+  }, []);
 
   useEffect(() => {
     const normalizedFilters = { ...filters };
@@ -59,6 +48,14 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
     }
     onFilterChange(normalizedFilters);
   }, [filters, onFilterChange]);
+
+  const handleClearFilters = useCallback(() => {
+    setFilters({});
+    onFilterChange({});
+    setClearTrigger(prev => prev + 1); // Incrementa el clearTrigger para forzar la actualización de los componentes
+  }, [onFilterChange]);
+
+  const hasActiveFilters = Object.keys(filters).length > 0;
 
   const renderTagChips = useCallback(
     (value, getTagProps) =>
@@ -90,7 +87,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
 
   return (
     <Box sx={{ width: '100%', mb: 2 }}>
-        <Typography variant="h4">Filtros</Typography>
+      <Typography variant="h4">Filtros</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4}>
           {renderFilter('full_name', 
@@ -99,6 +96,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
               label="Buscar por nombre"
               onChange={(e) => handleFilterChange("full_name", e.target.value)}
               value={filters.full_name || ""}
+              key={`full_name-${clearTrigger}`}
             />
           )}
         </Grid>
@@ -109,6 +107,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
               label="Buscar por teléfono"
               onChange={(e) => handleFilterChange("phone", e.target.value)}
               value={filters.phone || ""}
+              key={`phone-${clearTrigger}`}
             />
           )}
         </Grid>
@@ -122,6 +121,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
               getOptionLabel={(option) => option}
               isOptionEqualToValue={(option, value) => option === value}
               value={filters.validated || null}
+              key={`validated-${clearTrigger}`}
             />
           )}
         </Grid>
@@ -142,6 +142,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                       getOptionLabel={(option) => option || ""}
                       isOptionEqualToValue={(option, value) => option === value}
                       value={filters.menu || null}
+                      key={`menu-${clearTrigger}`}
                     />
                   )}
                 </Grid>
@@ -156,6 +157,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                       isOptionEqualToValue={(option, value) => option.id === value.id}
                       multiple
                       value={filters.allergies || []}
+                      key={`allergy-${clearTrigger}`}
                     />
                   )}
                 </Grid>
@@ -169,6 +171,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                       getOptionLabel={(option) => option}
                       isOptionEqualToValue={(option, value) => option === value}
                       value={filters.needs_hotel || null}
+                      key={`needs_hotel-${clearTrigger}`}
                     />
                   )}
                 </Grid>
@@ -182,6 +185,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                       getOptionLabel={(option) => option}
                       isOptionEqualToValue={(option, value) => option === value}
                       value={filters.needs_transport || null}
+                      key={`needs_transport-${clearTrigger}`}
                     />
                   )}
                 </Grid>
@@ -195,6 +199,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                       getOptionLabel={(option) => option}
                       isOptionEqualToValue={(option, value) => option === value}
                       value={filters.needs_transport_back || null}
+                      key={`needs_transport_back-${clearTrigger}`}
                     />
                   )}
                 </Grid>
@@ -204,13 +209,14 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                       fullWidth
                       label="Filtrar por Etiquetas"
                       options={uniqueValues.tags}
-                      onChange={(_, value) => handleFilterChange("tags", value.map((v) => v.name))}
+                      onChange={(_, value) => handleFilterChange("tags", value)}
                       multiple={true}
                       renderTags={renderTagChips}
                       renderOption={renderTagOption}
                       getOptionLabel={(option) => option.name}
                       isOptionEqualToValue={(option, value) => option.name === value.name}
-                      value={filters.tags ? filters.tags.map(tagName => uniqueValues.tags.find(t => t.name === tagName)) : []}
+                      value={filters.tags || []}
+                      key={`tags-${clearTrigger}`}
                     />
                   )}
                 </Grid>
@@ -224,6 +230,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                       getOptionLabel={(option) => option || ""}
                       isOptionEqualToValue={(option, value) => option === value}
                       value={filters.accommodation_plan || null}
+                      key={`accommodation_plan-${clearTrigger}`}
                     />
                   )}
                 </Grid>
@@ -233,7 +240,8 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
         </Grid>
         <Grid item xs={12}>
           <Button 
-            variant="outlined" 
+            variant={hasActiveFilters ? "contained" : "outlined"}
+            color={hasActiveFilters ? "secondary" : "primary"}
             onClick={handleClearFilters}
             fullWidth
           >

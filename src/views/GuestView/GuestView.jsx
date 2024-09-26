@@ -211,12 +211,12 @@ const GuestView = ({
               );
             }
             return true;
-          case "tags":
-            return value.every((tag) =>
-              guest.tags?.some(
-                (guestTag) => guestTag.name.toLowerCase() === tag.toLowerCase()
-              )
-            );
+            case "tags":
+              return value.every((filterTag) =>
+                guest.tags?.some(
+                  (guestTag) => guestTag.name.toLowerCase() === filterTag.name.toLowerCase()
+                )
+              );
           case "accommodation_plan":
             return guest[key]?.toLowerCase() === value.toLowerCase();
           case "full_name":
