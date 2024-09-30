@@ -14,7 +14,8 @@ import { Box, useMediaQuery, useTheme } from "@mui/material";
  * 
  * Este componente muestra una cuenta regresiva para un evento, la fecha del evento,
  * y un botón para añadir el evento al calendario de Google. Se adapta a dispositivos
- * móviles y de escritorio.
+ * móviles y de escritorio, usa singular o plural según corresponda, y muestra meses
+ * cuando el tiempo restante es superior a 30 días.
  *
  * @param {Object} props - Propiedades del componente
  * @param {Date} props.eventDate - Fecha y hora del evento
@@ -116,19 +117,34 @@ const renderCountdown = (timeLeft, isMobile) => {
           '& > *': { flexShrink: 0 }
         }}
       >
-        {Object.entries(timeLeft).map(([interval, value]) => (
-          value > 0 && (
-            <TimeUnit key={interval} sx={{ padding: isMobile ? '4px' : '8px' }}>
-              <TimeValue sx={{ fontSize: isMobile ? '2.10rem' : '2.8rem' }}>{value}</TimeValue>
-              <TimeLabel sx={{ fontSize: isMobile ? '1rem' : '1.8rem' }}>{interval}</TimeLabel>
-            </TimeUnit>
-          )
-        ))}
+        {Object.entries(timeLeft).map(([interval, value]) => {
+          if (value > 0) {
+            const label = value === 1 ? singularLabels[interval] : interval;
+            return (
+              <TimeUnit key={interval} sx={{ padding: isMobile ? '4px' : '8px' }}>
+                <TimeValue sx={{ fontSize: isMobile ? '2.10rem' : '2.8rem' }}>{value}</TimeValue>
+                <TimeLabel sx={{ fontSize: isMobile ? '1rem' : '1.8rem' }}>{label}</TimeLabel>
+              </TimeUnit>
+            );
+          }
+          return null;
+        })}
       </Box>
     );
   } else {
     return <EventDateTypography>¡El gran día ha llegado!</EventDateTypography>;
   }
+};
+
+/**
+ * Objeto que contiene las etiquetas en singular para cada unidad de tiempo
+ */
+const singularLabels = {
+  meses: 'mes',
+  días: 'día',
+  horas: 'hora',
+  minutos: 'minuto',
+  segundos: 'segundo'
 };
 
 CalendarButton.propTypes = {
