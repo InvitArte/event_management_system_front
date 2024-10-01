@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { contactService } from "../../../services/Api";
 import ContactForm from "./ContactForm";
+import CloseButton from "../../../components/Ui/CloseButton";
 
 const ContactModal = ({ open, onClose, contact, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -70,8 +71,11 @@ const ContactModal = ({ open, onClose, contact, onSubmit }) => {
   );
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>{modalTitle}</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { overflow: 'visible' } }}>
+      <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
+        {modalTitle}
+        <CloseButton onClose={onClose} /> 
+      </DialogTitle>
       <DialogContent>
         <ContactForm contact={contact} onSubmit={handleSubmit} />
         {error && (
