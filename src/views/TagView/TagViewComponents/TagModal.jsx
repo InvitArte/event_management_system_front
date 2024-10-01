@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import GuestTransferList from "./GuestTransferList";
 import { tagService } from "../../../services/Api";
+import CloseButton from "../../../components/Ui/CloseButton"; 
 
 const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
@@ -68,7 +69,7 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
         if (updatedTag) {
           onTagUpdate({ ...updatedTag, guests: [] });
         } else {
-          throw new Error("Failed to create tag");
+          throw new Error("Error al crear la etiqueta");
         }
       }
       handleClose();
@@ -107,8 +108,11 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-      <DialogTitle>{tag ? "Editar Etiqueta" : "Crear Etiqueta"}</DialogTitle>
+    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth PaperProps={{ sx: { overflow: 'visible' } }}>
+      <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
+        {tag ? "Editar Etiqueta" : "Crear Etiqueta"}
+        <CloseButton onClose={handleClose} /> 
+      </DialogTitle>
       <DialogContent>
         <Box mb={2}>
           <TextField
