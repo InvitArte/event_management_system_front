@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   List,
@@ -16,7 +16,7 @@ import {
   Menu,
   MenuItem,
   Pagination,
-    Grid,
+  Grid,
   Tooltip,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -37,59 +37,92 @@ const MobileGuestList = ({
   setSelectedGuests,
   visibleColumns,
 }) => {
+  const [page, setPage] = useState(1);
   const [expandedGuest, setExpandedGuest] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedGuestForMenu, setSelectedGuestForMenu] = useState(null);
-  const [page, setPage] = useState(1);
-  const [paginatedGuests, setPaginatedGuests] = useState([]);
 
+  const flattenedGuests = useMemo(() => {
+    const flattened = guests.flatMap(guest => [
+      guest,
+      ...(guest.companions || []).map(companion => ({
+        ...companion,
+        isCompanion: true,
+        mainGuestId: guest.id
+      }))
+    ]);
+    console.log('[MobileGuestList] Flattened guests:', flattened.length);
+    return flattened;
+  }, [guests]);
 
-  useEffect(() => {
+  const paginatedGuests = useMemo(() => {
     const startIndex = (page - 1) * GUESTS_PER_PAGE;
     const endIndex = startIndex + GUESTS_PER_PAGE;
-    setPaginatedGuests(guests.slice(startIndex, endIndex));
-  }, [guests, page]);
+    const paginated = flattenedGuests.slice(startIndex, endIndex);
+    console.log('[MobileGuestList] Paginated guests:', paginated.length, 'for page:', page);
+    return paginated;
+  }, [flattenedGuests, page]);
+
+  useEffect(() => {
+    console.log('[MobileGuestList] Guests updated:', guests.length);
+    console.log('[MobileGuestList] Flattened guests:', flattenedGuests.length);
+    console.log('[MobileGuestList] Paginated guests:', paginatedGuests.length, 'for page:', page);
+  }, [guests, flattenedGuests, paginatedGuests, page]);
 
   const handleAccordionChange = (guestId) => (event, isExpanded) => {
+    console.log('[MobileGuestList] Accordion changed for guest:', guestId, 'Expanded:', isExpanded);
     setExpandedGuest(isExpanded ? guestId : null);
   };
 
   const handleSelectGuest = useCallback((guest) => {
+    console.log('[MobileGuestList] Selecting guest:', guest.id, guest.fullName);
     setSelectedGuests((prev) => {
       const isSelected = prev.some((g) => g.id === guest.id);
-      return isSelected
-        ? prev.filter((g) => g.id !== guest.id)
-        : [...prev, guest];
+      if (isSelected) {
+        return prev.filter((g) => g.id !== guest.id && g.mainGuestId !== guest.id);
+      } else {
+        const newSelection = [...prev, guest];
+        if (!guest.isCompanion && guest.companions) {
+          newSelection.push(...guest.companions);
+        }
+        return newSelection;
+      }
     });
   }, [setSelectedGuests]);
 
   const handleBulkValidate = useCallback(() => {
+    console.log('[MobileGuestList] Bulk validating', selectedGuests.length, 'guests');
     onBulkActionComplete('validate', selectedGuests.map(guest => guest.id));
     setSelectedGuests([]);
   }, [selectedGuests, onBulkActionComplete, setSelectedGuests]);
 
   const handleMenuOpen = (event, guest) => {
+    console.log('[MobileGuestList] Opening menu for guest:', guest.id);
     setAnchorEl(event.currentTarget);
     setSelectedGuestForMenu(guest);
   };
 
   const handleMenuClose = () => {
+    console.log('[MobileGuestList] Closing menu');
     setAnchorEl(null);
     setSelectedGuestForMenu(null);
   };
 
   const handleEditClick = () => {
+    console.log('[MobileGuestList] Editing guest:', selectedGuestForMenu.id);
     onEditGuest(selectedGuestForMenu);
     handleMenuClose();
   };
 
   const handleDeleteClick = () => {
+    console.log('[MobileGuestList] Deleting guest:', selectedGuestForMenu.id);
     onDeleteGuest(selectedGuestForMenu);
     handleMenuClose();
   };
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
+  const handlePageChange = (event, newPage) => {
+    console.log('[MobileGuestList] Changing to page:', newPage);
+    setPage(newPage);
     setExpandedGuest(null);
   };
 
@@ -137,7 +170,7 @@ const MobileGuestList = ({
         }}
       >
         <Grid container alignItems="center" spacing={1}>
-          {guest.isMainGuest && (
+          {!guest.isCompanion && (
             <Grid item>
               <Checkbox
                 checked={selectedGuests.some(g => g.id === guest.id)}
@@ -154,13 +187,14 @@ const MobileGuestList = ({
                 sx={{ 
                   overflow: 'hidden', 
                   textOverflow: 'ellipsis',
+                  paddingLeft: guest.isCompanion ? 2 : 0,
                 }}
               >
-                {guest.isMainGuest ? truncatedName : `  ↳ ${truncatedName}`}
+                {guest.isCompanion ? `↳ ${truncatedName}` : truncatedName}
               </Typography>
             </Tooltip>
           </Grid>
-          {guest.isMainGuest && visibleColumns.validated && (
+          {!guest.isCompanion && visibleColumns.validated && (
             <Grid item>
               {guest.validated ? (
                 <CheckCircleIcon color="primary" fontSize="small" />
@@ -169,7 +203,7 @@ const MobileGuestList = ({
               )}
             </Grid>
           )}
-          {guest.isMainGuest && (
+          {!guest.isCompanion && (
             <Grid item>
               <IconButton
                 onClick={(event) => {
@@ -195,12 +229,12 @@ const MobileGuestList = ({
           <ListItemText primary="Nombre Completo" secondary={guest.fullName} />
         </ListItem>
       )}
-      {guest.isMainGuest && visibleColumns.email && (
+      {!guest.isCompanion && visibleColumns.email && (
         <ListItem>
           <ListItemText primary="Email" secondary={guest.email} />
         </ListItem>
       )}
-      {guest.isMainGuest && visibleColumns.phone && (
+      {!guest.isCompanion && visibleColumns.phone && (
         <ListItem>
           <ListItemText primary="Teléfono" secondary={guest.phone} />
         </ListItem>
@@ -238,7 +272,7 @@ const MobileGuestList = ({
           <ListItemText primary="Discapacidad" secondary={guest.disability ? 'Sí' : 'No'} />
         </ListItem>
       )}
-       {guest.isMainGuest && visibleColumns.tags && (
+      {!guest.isCompanion && visibleColumns.tags && (
         <ListItem>
           <Box>
             <Typography variant="body2">Etiquetas</Typography>
@@ -249,13 +283,15 @@ const MobileGuestList = ({
     </List>
   );
 
-
   return (
     <Box>
       <Button
         variant="contained"
         color="primary"
-        onClick={handleBulkValidate}
+        onClick={() => {
+          console.log('[MobileGuestList] Bulk validate clicked for', selectedGuests.length, 'guests');
+          handleBulkValidate();
+        }}
         disabled={selectedGuests.length === 0}
         fullWidth
         sx={{ mb: 2, textTransform: 'uppercase' }}
@@ -265,7 +301,7 @@ const MobileGuestList = ({
       <List disablePadding>
         {paginatedGuests.map((guest) => (
           <Accordion
-            key={guest.id}
+            key={`${guest.id}-${guest.isCompanion ? 'companion' : 'main'}`}
             expanded={expandedGuest === guest.id}
             onChange={handleAccordionChange(guest.id)}
             sx={{
@@ -288,7 +324,7 @@ const MobileGuestList = ({
       </List>
       <Box display="flex" justifyContent="center" mt={2}>
         <Pagination
-          count={Math.ceil(guests.length / GUESTS_PER_PAGE)}
+          count={Math.ceil(flattenedGuests.length / GUESTS_PER_PAGE)}
           page={page}
           onChange={handlePageChange}
           color="primary"
@@ -328,6 +364,7 @@ MobileGuestList.propTypes = {
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
     })),
+    companions: PropTypes.arrayOf(PropTypes.object),
   })).isRequired,
   onEditGuest: PropTypes.func.isRequired,
   onDeleteGuest: PropTypes.func.isRequired,

@@ -112,7 +112,6 @@ const GuestView = ({
         observations: guest.observations || "",
         accommodation_plan: guest.accommodation_plan || "No ha especificado",
         isMainGuest: true,
-        plus_ones: guest.plus_ones || [],
         tags: guest.tags || [],
       };
   
@@ -227,6 +226,16 @@ const GuestView = ({
       });
     });
   }, [guestData.guests, uiState.filters]);
+
+  const mobileGuestList = useMemo(() => {
+    return filteredGuests.reduce((acc, guest) => {
+      if (guest.isMainGuest) {
+        const companions = filteredGuests.filter(g => !g.isMainGuest && g.parentId === guest.id);
+        acc.push({...guest, companions});
+      }
+      return acc;
+    }, []);
+  }, [filteredGuests]);
 
   const handleFilterChange = useCallback((newFilters) => {
     setUiState((prev) => ({
@@ -408,7 +417,6 @@ const GuestView = ({
               padding: isMobile ?  "6px 12px" : "8px 16px",
               margin: isMobile ? "0 8px" : "0 16px",
             }}
-
           >
             Crear Nuevo Invitado
           </Button>
@@ -435,7 +443,7 @@ const GuestView = ({
           <ExcelDownloader data={excelData} fileName="Invitados" />
           {isMobile && (
             <Typography variant="body2" style={{ marginTop: '0.5rem' }}>
-              {filteredGuests.length} invitados encontrados
+              {mobileGuestList.length} invitados encontrados
             </Typography>
           )}
         </Box>
@@ -449,7 +457,7 @@ const GuestView = ({
           />
         ) : isMobile ? (
           <MobileGuestList
-            guests={filteredGuests}
+            guests={mobileGuestList}
             onEditGuest={handleEditGuest}
             onDeleteGuest={handleDeleteGuest}
             onBulkActionComplete={handleBulkActionComplete}
