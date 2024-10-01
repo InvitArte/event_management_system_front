@@ -443,7 +443,7 @@ const GuestView = ({
           <ExcelDownloader data={excelData} fileName="Invitados" />
           {isMobile && (
             <Typography variant="body2" style={{ marginTop: '0.5rem' }}>
-              {mobileGuestList.length} invitados encontrados
+              {filteredGuests.length} invitados encontrados
             </Typography>
           )}
         </Box>
