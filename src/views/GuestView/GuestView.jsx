@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { guestService, tagService, menuService, allergyService } from "../../services/Api";
 import GuestTable from "./GuestViewComponents/GuestTable";
+import MobileGuestList from "./GuestViewComponents/MobileGuestList";
 import GuestFilters from "./GuestViewComponents/GuestFilters";
 import ExcelDownloader from "./GuestViewComponents/ExcelDownloader";
 import GuestModal from "./GuestViewComponents/GuestModal";
@@ -42,9 +43,10 @@ const GuestView = ({
     guestToDelete: null,
     selectedTagId: null,
   });
+  const [selectedGuests, setSelectedGuests] = useState([]);
 
   const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const fetchData = useCallback(async () => {
     try {
@@ -54,8 +56,6 @@ const GuestView = ({
         menuService.getUserMenus(),
         allergyService.getAllAllergies(),
       ]);
-      console.log("Guests Response:", guestsResponse);
-
       return { 
         guests: guestsResponse, 
         tags: tagsResponse, 
@@ -67,7 +67,7 @@ const GuestView = ({
       throw error;
     }
   }, []);
- 
+
   const processGuests = useCallback((guestsData, userMenus, allergies) => {
     if (!Array.isArray(guestsData)) {
       console.error("guestsData is not an array:", guestsData);
@@ -211,12 +211,12 @@ const GuestView = ({
               );
             }
             return true;
-            case "tags":
-              return value.every((filterTag) =>
-                guest.tags?.some(
-                  (guestTag) => guestTag.name.toLowerCase() === filterTag.name.toLowerCase()
-                )
-              );
+          case "tags":
+            return value.every((filterTag) =>
+              guest.tags?.some(
+                (guestTag) => guestTag.name.toLowerCase() === filterTag.name.toLowerCase()
+              )
+            );
           case "accommodation_plan":
             return guest[key]?.toLowerCase() === value.toLowerCase();
           case "full_name":
@@ -332,7 +332,6 @@ const GuestView = ({
 
   const excelData = useMemo(() => {
     let sortedGuests = [...filteredGuests];
-    console.log("Sorted Guests:", sortedGuests);
     if (uiState.sortModel.length > 0) {
       const { field, sort } = uiState.sortModel[0];
       sortedGuests.sort((a, b) => {
@@ -376,7 +375,6 @@ const GuestView = ({
       }, {});
     });
   
-    console.log("Processed Excel Data:", processedData);
     return processedData;
   }, [filteredGuests, uiState.visibleColumns, uiState.sortModel, columns]);
 
@@ -391,13 +389,13 @@ const GuestView = ({
   }
 
   return (
-    <Container maxWidth={isSmallScreen ? "sm" : "xl"}>
+    <Container maxWidth={isMobile ? "sm" : "xl"}>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
           <Typography
-            variant={isSmallScreen ? "h5" : "h4"}
+            variant={isMobile ? "h5" : "h4"}
             component="h1"
-            style={{ color: "black" }}
+            style={{ color: "black", marginBottom: isMobile ? '1rem' : 0 }}
           >
             Invitados
           </Typography>
@@ -405,6 +403,7 @@ const GuestView = ({
             variant="contained"
             color="primary"
             onClick={handleCreateGuest}
+            fullWidth={isMobile}
           >
             Crear Nuevo Invitado
           </Button>
@@ -417,6 +416,7 @@ const GuestView = ({
           tags={guestData.tags}
           allergies={guestData.allergies}
           visibleFilters={visibleFilters}
+          isMobile={isMobile}
         />
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
@@ -425,16 +425,32 @@ const GuestView = ({
           justifyContent="space-between"
           alignItems="center"
           mb={2}
+          flexDirection={isMobile ? 'column' : 'row'}
         >
           <ExcelDownloader data={excelData} fileName="Invitados" />
+          {isMobile && (
+            <Typography variant="body2" style={{ marginTop: '0.5rem' }}>
+              {filteredGuests.length} invitados encontrados
+            </Typography>
+          )}
         </Box>
         {uiState.loading ? (
           <SkeletonTable
             rowsNum={10}
-            columnsNum={14}
+            columnsNum={isMobile ? 3 : 14}
             height={600}
-            showCheckbox={true}
-            showActions={true}
+            showCheckbox={!isMobile}
+            showActions={!isMobile}
+          />
+        ) : isMobile ? (
+          <MobileGuestList
+            guests={filteredGuests}
+            onEditGuest={handleEditGuest}
+            onDeleteGuest={handleDeleteGuest}
+            onBulkActionComplete={handleBulkActionComplete}
+            selectedGuests={selectedGuests}
+            setSelectedGuests={setSelectedGuests}
+            visibleColumns={uiState.visibleColumns} 
           />
         ) : (
           <GuestTable
@@ -449,6 +465,8 @@ const GuestView = ({
             visibleColumns={uiState.visibleColumns}
             onDeleteGuest={handleDeleteGuest}
             allergies={guestData.allergies}
+            selectedGuests={selectedGuests}
+            setSelectedGuests={setSelectedGuests}
           />
         )}
         <GuestModal
