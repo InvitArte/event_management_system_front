@@ -395,7 +395,7 @@ const GuestView = ({
           <Typography
             variant={isMobile ? "h5" : "h4"}
             component="h1"
-            style={{ color: "black", marginBottom: isMobile ? '1rem' : 0 }}
+            style={{ color: "black"}}
           >
             Invitados
           </Typography>
@@ -403,7 +403,12 @@ const GuestView = ({
             variant="contained"
             color="primary"
             onClick={handleCreateGuest}
-            fullWidth={isMobile}
+            sx={{
+              fontSize: isMobile ? "0.75rem" : "1rem",
+              padding: isMobile ?  "6px 12px" : "8px 16px",
+              margin: isMobile ? "0 8px" : "0 16px",
+            }}
+
           >
             Crear Nuevo Invitado
           </Button>
