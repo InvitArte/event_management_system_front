@@ -9,6 +9,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
+import CloseButton from "../../../components/Ui/CloseButton";
 import { guestService } from "../../../services/Api";
 import GuestForm from "./GuestForm";
 
@@ -95,8 +96,21 @@ const GuestModal = ({
   );
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>{modalTitle}</DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="md" 
+      fullWidth
+      PaperProps={{
+        sx: {
+          overflow: 'visible', // Permite que el botón se muestre fuera del modal
+        },
+      }}
+    >
+      <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
+        {modalTitle}
+        <CloseButton onClose={onClose} /> 
+      </DialogTitle>
       <DialogContent>
         <GuestForm
           guest={guest}
