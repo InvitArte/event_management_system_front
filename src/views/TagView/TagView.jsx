@@ -26,6 +26,12 @@ const TagView = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const capitalizeFirstLetter = (string) => {
+    return string.split(' ').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    ).join(' ');
+  };
+
   const fetchData = useCallback(async () => {
     try {
       const [tagsResponse, guestsResponse] = await Promise.all([
@@ -33,7 +39,15 @@ const TagView = () => {
         guestService.getAllGuests(),
       ]);
       setTags(tagsResponse);
-      setGuests(guestsResponse);
+      
+      // Nombres de invitados normalizados 
+      const normalizedGuests = guestsResponse.map(guest => ({
+        ...guest,
+        first_name: capitalizeFirstLetter(guest.first_name),
+        last_name: capitalizeFirstLetter(guest.last_name),
+        fullName: `${capitalizeFirstLetter(guest.first_name)} ${capitalizeFirstLetter(guest.last_name)}`.trim()
+      }));
+      setGuests(normalizedGuests);
     } catch (err) {
       console.error("Error fetching data:", err);
       setError(translateError(err));
@@ -102,11 +116,16 @@ const TagView = () => {
           >
             Etiquetas
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleCreateTag}   sx={{
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={handleCreateTag}
+            sx={{
               fontSize: isSmallScreen ? "0.75rem" : "1rem",
               padding: isSmallScreen ? "6px 12px" : "8px 16px",
               margin: isSmallScreen ? "0 8px" : "0 16px",
-            }}>
+            }}
+          >
             Crear Nueva Etiqueta
           </Button>
         </Box>
