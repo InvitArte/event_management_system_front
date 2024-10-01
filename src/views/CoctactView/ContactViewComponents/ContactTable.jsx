@@ -1,16 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  TableSortLabel,
-} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QrCodeIcon from "@mui/icons-material/QrCode";
 
@@ -23,81 +14,52 @@ const ContactTable = ({
   onGenerateQR,
 }) => {
   const columns = [
-    { field: "name", headerName: "Nombre" },
-    { field: "email", headerName: "Email" },
-    { field: "phone", headerName: "Teléfono" },
-    { field: "description", headerName: "Descripción" },
+    { field: "name", headerName: "Nombre", flex: 1 },
+    { field: "email", headerName: "Email", flex: 1 },
+    { field: "phone", headerName: "Teléfono", flex: 1 },
+    { field: "description", headerName: "Descripción", flex: 1 },
+    {
+      field: "actions",
+      headerName: "Acciones",
+      sortable: false,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onGenerateQR(params.row);
+            }}
+            size="small"
+          >
+            <QrCodeIcon />
+          </IconButton>
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteContact(params.row);
+            }}
+            size="small"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+      flex: 1,
+    },
   ];
 
-  const handleSort = (field) => {
-    const isAsc = sortModel[0]?.field === field && sortModel[0]?.sort === "asc";
-    onSortModelChange([{ field, sort: isAsc ? "desc" : "asc" }]);
-  };
-
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="contact table">
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.field}>
-                <TableSortLabel
-                  active={sortModel[0]?.field === column.field}
-                  direction={
-                    sortModel[0]?.field === column.field
-                      ? sortModel[0].sort
-                      : "asc"
-                  }
-                  onClick={() => handleSort(column.field)}
-                >
-                  {column.headerName}
-                </TableSortLabel>
-              </TableCell>
-            ))}
-            <TableCell align="center">Acciones</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {contacts.map((contact) => (
-            <TableRow
-              key={contact.id}
-              sx={{
-                "&:last-child td, &:last-child th": { border: 0 },
-                cursor: "pointer",
-              }}
-              hover
-              onClick={() => onRowClick(contact)}
-            >
-              {columns.map((column) => (
-                <TableCell key={`${contact.id}-${column.field}`}>
-                  {contact[column.field]}
-                </TableCell>
-              ))}
-              <TableCell align="center">
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onGenerateQR(contact);
-                  }}
-                  size="small"
-                >
-                  <QrCodeIcon />
-                </IconButton>
-                <IconButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteContact(contact);
-                  }}
-                  size="small"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <div style={{ height: 400, width: "100%" }}>
+      <DataGrid
+        rows={contacts}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        sortModel={sortModel}
+        onSortModelChange={onSortModelChange}
+        onRowClick={(params) => onRowClick(params.row)}
+      />
+    </div>
   );
 };
 

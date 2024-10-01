@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { contactService } from "../../services/Api";
 import ContactTable from "./ContactViewComponents/ContactTable";
+import MobileContactList from "./ContactViewComponents/MobileContactList"; 
 import ContactFilters from "./ContactViewComponents/ContactFilters";
 import ContactModal from "./ContactViewComponents/ContactModal";
 import QRModal from "./ContactViewComponents/QRModal";
@@ -42,11 +43,11 @@ const ContactView = () => {
       setContactData(contacts);
       setUiState((prev) => ({ ...prev, loading: false, error: "" }));
     } catch (error) {
-      console.error("Error fetching contacts:", error);
+      console.error("Error al cargar los contactos:", error);
       setUiState((prev) => ({
         ...prev,
         loading: false,
-        error: "Failed to fetch contacts. Please try again later.",
+        error: "Erorr al cargar los contactos, por favor intentelo de nuevo.",
       }));
     }
   }, []);
@@ -95,7 +96,7 @@ const ContactView = () => {
         await contactService.deleteContact(uiState.contactToDelete.id);
         await fetchContacts();
       } catch (error) {
-        console.error("Error deleting contact:", error);
+        console.error("Error borrando el contacto:", error);
       } finally {
         setUiState((prev) => ({
           ...prev,
@@ -144,7 +145,7 @@ const ContactView = () => {
   return (
     <Container maxWidth={isSmallScreen ? "sm" : "xl"}>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box display="flex" justifyContent="space-between" alignItems="center" flexWrap="wrap">
           <Typography
             variant={isSmallScreen ? "h5" : "h4"}
             component="h1"
@@ -156,6 +157,11 @@ const ContactView = () => {
             variant="contained"
             color="primary"
             onClick={handleCreateContact}
+            sx={{
+              fontSize: isSmallScreen ? "0.75rem" : "1rem",
+              padding: isSmallScreen ? "6px 12px" : "8px 16px",
+              margin: isSmallScreen ? "0 8px" : "0 16px",
+            }}
           >
             Crear Nuevo Contacto
           </Button>
@@ -163,6 +169,8 @@ const ContactView = () => {
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
         <ContactFilters onFilterChange={handleFilterChange} />
+      </Paper>
+      <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
         {uiState.loading ? (
           <SkeletonTable
             rowsNum={6}
@@ -170,6 +178,13 @@ const ContactView = () => {
             height={405}
             showCheckbox={false}
             showActions={true}
+          />
+        ) : isSmallScreen ? (
+          <MobileContactList
+            contacts={filteredContacts}
+            onEditContact={handleEditContact}
+            onDeleteContact={handleDeleteContact}
+            onGenerateQR={handleGenerateQR}
           />
         ) : (
           <ContactTable
