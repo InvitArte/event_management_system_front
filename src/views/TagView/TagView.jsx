@@ -102,7 +102,11 @@ const TagView = () => {
           >
             Etiquetas
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleCreateTag}>
+          <Button variant="contained" color="primary" onClick={handleCreateTag}   sx={{
+              fontSize: isSmallScreen ? "0.75rem" : "1rem",
+              padding: isSmallScreen ? "6px 12px" : "8px 16px",
+              margin: isSmallScreen ? "0 8px" : "0 16px",
+            }}>
             Crear Nueva Etiqueta
           </Button>
         </Box>
