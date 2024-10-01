@@ -148,7 +148,7 @@ GuestModal.propTypes = {
     allergy_id: PropTypes.number,
     observations: PropTypes.string,
     accommodation_plan: PropTypes.string,
-    tags: PropTypes.arrayOf(PropTypes.string),
+    tags: PropTypes.arrayOf(PropTypes.object),
     plus_ones: PropTypes.arrayOf(
       PropTypes.shape({
         first_name: PropTypes.string,
