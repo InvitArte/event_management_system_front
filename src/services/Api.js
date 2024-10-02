@@ -482,9 +482,7 @@ export const menuService = {
   // Nuevo método para obtener los menús del usuario actual
   getUserMenus: async () => {
     try {
-      console.log('Calling MENUS endpoint:', API_ROUTES.MENUS);
       const response = await axiosInstance.get(API_ROUTES.MENUS);
-      console.log('MENUS response:', response.data);
       return response.data;
     } catch (error) {
       console.error("Error in getUserMenus:", error);
@@ -507,11 +505,9 @@ export const menuService = {
 export const publicService = {
   getPublicMenus: async (userId = defaultConfig.userId) => {
     try {
-      console.log('Calling MENUS_PUBLIC endpoint with userId:', userId);
       const response = await axiosInstance.get(API_ROUTES.MENUS_PUBLIC, {
         params: { user_id: userId },
       });
-      console.log('MENUS_PUBLIC response:', response.data);
       return response.data;
     } catch (error) {
       console.error("Error in getPublicMenus:", error);
