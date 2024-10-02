@@ -13,7 +13,6 @@ export const UserConfigProvider = ({ children }) => {
       try {
         setIsLoading(true);
         const config = await api.userConfig.getUserConfig();
-        console.log("Fetched user config:", config);
 
         if (!config || typeof config.userId === "undefined") {
           console.warn("API response does not include userId, using default");
@@ -44,7 +43,6 @@ export const UserConfigProvider = ({ children }) => {
     }
   };
 
-  console.log("UserConfigProvider - current userConfig:", userConfig);
 
   return (
     <UserConfigContext.Provider
