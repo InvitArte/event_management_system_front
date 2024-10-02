@@ -44,10 +44,13 @@ const GuestForm = ({
         menu: menus.find((m) => m.id === guest.menu_id) || null,
         allergies: guest.allergies || [],
         tags: guest.tags || [],
+        observations: guest.observations || "",
+        accommodation_plan: guest.accommodation_plan || "",
         plus_ones: guest.plus_ones?.map((po) => ({
           ...po,
           menu: menus.find((m) => m.id === po.menu_id) || null,
           allergies: po.allergies || [],
+          observations: po.observations || "",
         })) || [],
       });
       setShowPlusOne(guest.plus_ones && guest.plus_ones.length > 0);
@@ -58,7 +61,7 @@ const GuestForm = ({
     const { name, value, checked, type } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox" ? checked : (value || ""),
     }));
   }, []);
 
@@ -74,7 +77,7 @@ const GuestForm = ({
       const newPlusOnes = [...prevData.plus_ones];
       newPlusOnes[index] = {
         ...newPlusOnes[index],
-        [name]: value,
+        [name]: typeof value === 'string' ? (value || "") : value,
       };
       return { ...prevData, plus_ones: newPlusOnes };
     });
@@ -105,6 +108,7 @@ const GuestForm = ({
           menu: null,
           allergies: [],
           disability: false,
+          observations: "",
         },
       ],
     }));
@@ -141,16 +145,16 @@ const GuestForm = ({
         accommodation_plan: formData.accommodation_plan || "",
         tags: formData.tags.map(tag => tag.id),
         plus_ones: formData.plus_ones.map(plusOne => ({
-          id: plusOne.id, // Incluir el ID si es un acompañante existente
+          id: plusOne.id,
           first_name: plusOne.first_name,
           last_name: plusOne.last_name,
           menu_id: plusOne.menu?.id || null,
           allergies: plusOne.allergies.map(allergy => allergy.id),
           disability: plusOne.disability,
+          observations: plusOne.observations || "",
         })),
       };
   
-      // Si estamos editando un invitado existente, incluimos su ID
       if (guest && guest.id) {
         submitData.id = guest.id;
       }
@@ -159,6 +163,7 @@ const GuestForm = ({
     },
     [formData, guest, onSubmit]
   );
+
   const renderFormField = useCallback(
     (fieldName, component) => {
       return visibleFormFields[fieldName] && component;
@@ -369,7 +374,7 @@ const GuestForm = ({
               fullWidth
               label="Observaciones"
               name="observations"
-              value={formData.observations}
+              value={formData.observations || ""}
               onChange={handleChange}
               multiline
               rows={4}
@@ -386,7 +391,7 @@ const GuestForm = ({
               fullWidth
               label="Desde donde sale"
               name="accommodation_plan"
-              value={formData.accommodation_plan}
+              value={formData.accommodation_plan || ""}
               onChange={handleChange}
               variant="outlined"
               InputLabelProps={{ shrink: true }}
@@ -454,6 +459,7 @@ const GuestForm = ({
     </form>
   );
 };
+
 GuestForm.propTypes = {
   guest: PropTypes.shape({
     first_name: PropTypes.string,
@@ -491,6 +497,7 @@ GuestForm.propTypes = {
           })
         ),
         disability: PropTypes.bool,
+        observations: PropTypes.string,
       })
     ),
   }),
