@@ -52,7 +52,18 @@ const ProfileView = ({ visibleFields }) => {
                 marginBottom: isSmallScreen ? theme.spacing(2) : 0,
               }}
             >
-              Ubicaciones
+              Localizaciones
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={toggleModal(setMenuModalOpen)}
+              sx={{
+                marginRight: 2,
+                marginBottom: isSmallScreen ? theme.spacing(2) : 0,
+              }}
+            >
+              Gestionar Menús
             </Button>
             <Button
               variant="contained"
@@ -64,13 +75,6 @@ const ProfileView = ({ visibleFields }) => {
               }}
             >
               Cambiar Contraseña
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={toggleModal(setMenuModalOpen)}
-            >
-              Gestionar Menús
             </Button>
           </Box>
         </Box>
