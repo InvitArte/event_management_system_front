@@ -113,7 +113,10 @@ const GuestModal = ({
       </DialogTitle>
       <DialogContent>
         <GuestForm
-          guest={guest}
+            guest={{
+              ...guest,
+              plus_ones: guest?.plus_ones || []
+            }}
           onSubmit={handleSubmit}
           menus={menus}
           allergies={allergies}

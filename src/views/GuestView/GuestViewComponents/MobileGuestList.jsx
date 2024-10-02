@@ -110,7 +110,9 @@ const MobileGuestList = ({
 
   const handleEditClick = () => {
     console.log('[MobileGuestList] Editing guest:', selectedGuestForMenu.id);
-    onEditGuest(selectedGuestForMenu);
+    // Asegúrate de pasar el invitado completo, incluyendo sus acompañantes
+    const fullGuest = guests.find(g => g.id === selectedGuestForMenu.id);
+    onEditGuest(fullGuest);
     handleMenuClose();
   };
 

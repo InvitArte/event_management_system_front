@@ -26,6 +26,7 @@ const GuestView = ({
 }) => {
   const [guestData, setGuestData] = useState({
     guests: [],
+    originalGuests: [],
     menus: [],
     allergies: [],
     tags: [],
@@ -161,6 +162,7 @@ const GuestView = ({
       const processedGuests = processGuests(data.guests, data.menus, data.allergies);
       return {
         ...processedGuests,
+        originalGuests: data.guests,
         allTags: data.tags,
       };
     },
@@ -252,9 +254,12 @@ const GuestView = ({
   }, []);
 
   const handleEditGuest = useCallback((guest) => {
-    setUiState((prev) => ({ ...prev, selectedGuest: guest, modalOpen: true }));
-  }, []);
-
+    // Buscamos el invitado completo en los datos originales
+    const fullGuest = guestData.originalGuests.find(g => g.id === guest.id);
+    console.log("fullGuest", fullGuest);
+    setUiState((prev) => ({ ...prev, selectedGuest: fullGuest, modalOpen: true }));
+  }, [guestData.originalGuests]);
+  
   const handleDeleteGuest = useCallback((guest) => {
     setUiState((prev) => ({
       ...prev,
