@@ -51,7 +51,6 @@ const MobileGuestList = ({
         mainGuestId: guest.id
       }))
     ]);
-    console.log('[MobileGuestList] Flattened guests:', flattened.length);
     return flattened;
   }, [guests]);
 
@@ -59,23 +58,14 @@ const MobileGuestList = ({
     const startIndex = (page - 1) * GUESTS_PER_PAGE;
     const endIndex = startIndex + GUESTS_PER_PAGE;
     const paginated = flattenedGuests.slice(startIndex, endIndex);
-    console.log('[MobileGuestList] Paginated guests:', paginated.length, 'for page:', page);
     return paginated;
   }, [flattenedGuests, page]);
 
-  useEffect(() => {
-    console.log('[MobileGuestList] Guests updated:', guests.length);
-    console.log('[MobileGuestList] Flattened guests:', flattenedGuests.length);
-    console.log('[MobileGuestList] Paginated guests:', paginatedGuests.length, 'for page:', page);
-  }, [guests, flattenedGuests, paginatedGuests, page]);
-
   const handleAccordionChange = (guestId) => (event, isExpanded) => {
-    console.log('[MobileGuestList] Accordion changed for guest:', guestId, 'Expanded:', isExpanded);
     setExpandedGuest(isExpanded ? guestId : null);
   };
 
   const handleSelectGuest = useCallback((guest) => {
-    console.log('[MobileGuestList] Selecting guest:', guest.id, guest.fullName);
     setSelectedGuests((prev) => {
       const isSelected = prev.some((g) => g.id === guest.id);
       if (isSelected) {
@@ -91,39 +81,33 @@ const MobileGuestList = ({
   }, [setSelectedGuests]);
 
   const handleBulkValidate = useCallback(() => {
-    console.log('[MobileGuestList] Bulk validating', selectedGuests.length, 'guests');
     onBulkActionComplete('validate', selectedGuests.map(guest => guest.id));
     setSelectedGuests([]);
   }, [selectedGuests, onBulkActionComplete, setSelectedGuests]);
 
   const handleMenuOpen = (event, guest) => {
-    console.log('[MobileGuestList] Opening menu for guest:', guest.id);
     setAnchorEl(event.currentTarget);
     setSelectedGuestForMenu(guest);
   };
 
   const handleMenuClose = () => {
-    console.log('[MobileGuestList] Closing menu');
     setAnchorEl(null);
     setSelectedGuestForMenu(null);
   };
 
   const handleEditClick = () => {
-    console.log('[MobileGuestList] Editing guest:', selectedGuestForMenu.id);
-    // Asegúrate de pasar el invitado completo, incluyendo sus acompañantes
+    // Nos aseguramos de pasar el invitado completo, incluyendo sus acompañantes
     const fullGuest = guests.find(g => g.id === selectedGuestForMenu.id);
     onEditGuest(fullGuest);
     handleMenuClose();
   };
 
   const handleDeleteClick = () => {
-    console.log('[MobileGuestList] Deleting guest:', selectedGuestForMenu.id);
     onDeleteGuest(selectedGuestForMenu);
     handleMenuClose();
   };
 
   const handlePageChange = (event, newPage) => {
-    console.log('[MobileGuestList] Changing to page:', newPage);
     setPage(newPage);
     setExpandedGuest(null);
   };
@@ -291,7 +275,6 @@ const MobileGuestList = ({
         variant="contained"
         color="primary"
         onClick={() => {
-          console.log('[MobileGuestList] Bulk validate clicked for', selectedGuests.length, 'guests');
           handleBulkValidate();
         }}
         disabled={selectedGuests.length === 0}
