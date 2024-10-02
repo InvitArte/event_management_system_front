@@ -41,12 +41,10 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   }, [isOpen]);
 
   const handleFormChange = useCallback((data) => {
-    console.log("Form data changed:", data);
     setFormData(data);
   }, []);
 
   const handleValidationChange = useCallback((isValid) => {
-    console.log("Form validation changed:", isValid);
     setIsFormValid(isValid);
   }, []);
 
