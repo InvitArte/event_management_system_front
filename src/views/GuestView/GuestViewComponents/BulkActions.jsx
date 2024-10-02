@@ -27,7 +27,7 @@ const BulkActions = ({
         onClick={handleBulkValidate}
         disabled={selectedGuests.length === 0}
       >
-        Validar Seleccionados ({selectedGuests.length})
+        Verificar Seleccionados ({selectedGuests.length})
       </Button>
     </Box>
   );
