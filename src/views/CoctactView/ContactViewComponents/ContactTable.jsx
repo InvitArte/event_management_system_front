@@ -4,6 +4,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import QrCodeIcon from "@mui/icons-material/QrCode";
+import { dataGridLocaleText } from "../../../config/DataGridLocaleText";
 
 const ContactTable = ({
   contacts,
@@ -58,6 +59,7 @@ const ContactTable = ({
         sortModel={sortModel}
         onSortModelChange={onSortModelChange}
         onRowClick={(params) => onRowClick(params.row)}
+        localeText={dataGridLocaleText}
       />
     </div>
   );
