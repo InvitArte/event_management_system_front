@@ -8,10 +8,8 @@ import TagView from "./views/TagView/TagView";
 import ProfileView from "./views/ProfileView/ProfileView";
 import SettingsView from "./views/SettingsView/SettingsView";
 import NotFoundView from "./views/NotFoundView/NotFoundView";
-import ProtectedRoute from "./components/Utils/ProtectedRoute";
-import ProtectedLayout from "./components/Utils/ProtectedLayout";
+import { ProtectedRoute, ProtectedLayout, LoadingComponent } from "./components";
 import { useUserConfig } from "./context/UserConfigContext";
-import LoadingComponent from "./components/Ui/LoadingComponent/LoadingComponent";
 
 const AppContent = () => {
   const { userConfig, isLoading: isConfigLoading } = useUserConfig();
@@ -24,15 +22,12 @@ const AppContent = () => {
     }
   }, [isConfigLoading, userConfig]);
 
-
-  // Show loading only during initial load
   if (isInitialLoad) {
     return <LoadingComponent isLoading={true} type="bar" />;
   }
 
   return (
     <>
-      {/* Remove LoadingComponent from here */}
       <Routes>
         <Route path="/" element={<CarmenView userId={userConfig?.userId} />} />
         <Route path="/login" element={<LoginView />} />

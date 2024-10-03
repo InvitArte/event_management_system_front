@@ -5,7 +5,7 @@ import {
   stringToColor,
   adjustColor,
   getContrastColor,
-} from "../../Utils/TagColors";
+} from "../../Utils/TagColors/TagColors";
 
 const TagChip = ({ tag, onDelete, style = {} }) => {
   const backgroundColor = adjustColor(stringToColor(tag.name), 20);

@@ -2,10 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Box, TextField, Button, Grid, Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { normalizeText } from "../../../components/Utils/TextUtils";
-import { stringToColor } from "../../../components/Utils/TagColors";
-import TagChip from "../../../components/Ui/TagChip/TagChip";
-import FilterAutocomplete from "../../../components/Ui/FilterAutocomplete/FilterAutocomplete";
+import { normalizeText, stringToColor, TagChip, FilterAutocomplete } from "../../../components";
 
 const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters }) => {
   const [filters, setFilters] = useState({});

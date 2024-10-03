@@ -9,7 +9,7 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import CloseButton from "../../../components/Ui/CloseButton/CloseButton";
+import {CloseButton} from "../../../components";
 import { guestService } from "../../../services/Api";
 import GuestForm from "./GuestForm";
 

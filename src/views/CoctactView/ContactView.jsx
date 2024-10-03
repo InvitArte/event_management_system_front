@@ -13,9 +13,8 @@ import MobileContactList from "./ContactViewComponents/MobileContactList";
 import ContactFilters from "./ContactViewComponents/ContactFilters";
 import ContactModal from "./ContactViewComponents/ContactModal";
 import QRModal from "./ContactViewComponents/QRModal";
-import SkeletonTable from "../../components/Ui/SkeletonTable/SkeletonTable";
-import DeleteConfirmationDialog from "../../components/Ui/DeleteConfirmationDialog/DeleteConfirmationDialog";
 import useContactView from "../../hooks/useContactView";
+import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
 
 const ContactView = () => {
   const {

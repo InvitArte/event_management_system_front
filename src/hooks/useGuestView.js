@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { guestService, tagService, menuService, allergyService } from "../services/Api";
-import { normalizeText } from "../components/Utils/TextUtils";
+import { normalizeText } from "../components";
 
 const useGuestView = (initialVisibleColumns) => {
   const [guestData, setGuestData] = useState({

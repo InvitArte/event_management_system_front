@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { contactService } from "../services/Api";
-import { normalizeText } from "../components/Utils/TextUtils";
-import { generateVCardData } from "../components/Utils/vCardUtils";
+import { normalizeText, generateVCardData } from "../components";
+
 
 const useContactView = () => {
   const [contactData, setContactData] = useState([]);

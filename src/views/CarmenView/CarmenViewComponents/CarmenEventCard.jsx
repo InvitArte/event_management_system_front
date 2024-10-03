@@ -4,7 +4,7 @@ import { useMediaQuery, useTheme, Box, Typography } from "@mui/material";
 import CalendarButton from "./CalendarButton";
 import ConfirmationModal from "./ConfirmationModal";
 import GiftMessage from "./GiftMessage";
-import CustomCard from "../../../components/Ui/CustomCard/CustomCard";
+import {CustomCard} from "../../../components";
 import EventTimeline from "./EventTimeline";
 import FloralSeparator from "../../../assets/imgs/FloralSeparator.svg";
 import IglesiaCarmen from "../../../assets/imgs/IglesiaCarmen.png";

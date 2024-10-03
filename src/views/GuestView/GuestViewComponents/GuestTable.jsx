@@ -8,7 +8,7 @@ import {
   stringToColor,
   adjustColor,
   getContrastColor,
-} from "../../../components/Utils/TagColors";
+} from "../../../components";
 import { dataGridLocaleText } from "../../../config/DataGridLocaleText";
 import "../../../styles/GuestView/Datatable.css";
 

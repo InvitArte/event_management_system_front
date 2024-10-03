@@ -11,9 +11,8 @@ import {
 } from "@mui/material";
 import TagTable from "./TagViewComponents/TagTable";
 import TagModal from "./TagViewComponents/TagModal";
-import SkeletonTable from "../../components/Ui/SkeletonTable/SkeletonTable";
 import useTagView from "../../hooks/useTagView";
-import DeleteConfirmationDialog from "../../components/Ui/DeleteConfirmationDialog/DeleteConfirmationDialog";
+import {SkeletonTable, DeleteConfirmationDialog} from "../../components";
 
 const TagView = () => {
   const {
