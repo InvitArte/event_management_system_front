@@ -35,7 +35,7 @@ const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
-              onDeleteTag(params.row.id);
+              onDeleteTag(params.row);
             }}
             size="small"
           >

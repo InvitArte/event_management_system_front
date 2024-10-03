@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import GuestTransferList from "./GuestTransferList";
 import { tagService } from "../../../services/Api";
-import CloseButton from "../../../components/Ui/CloseButton"; 
+import CloseButton from "../../../components/Ui/CloseButton/CloseButton"; 
 
-const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
+const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);
   const [tagName, setTagName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -84,6 +84,7 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
       } else {
         setErrors({ general: "Failed to submit tag. Please try again." });
       }
+      setError(error.message || "Error al enviar la etiqueta. Por favor, inténtalo de nuevo.");
     } finally {
       setIsSubmitting(false);
     }
@@ -111,7 +112,7 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests }) => {
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth PaperProps={{ sx: { overflow: 'visible' } }}>
       <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
         {tag ? "Editar Etiqueta" : "Crear Etiqueta"}
-        <CloseButton onClose={handleClose} /> 
+        <CloseButton onClose={handleClose} />
       </DialogTitle>
       <DialogContent>
         <Box mb={2}>
@@ -188,6 +189,7 @@ TagModal.propTypes = {
       ).isRequired,
     })
   ).isRequired,
+  setError: PropTypes.func.isRequired,
 };
 
 export default TagModal;
