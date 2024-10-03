@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   List,
@@ -15,14 +15,19 @@ import {
   Button,
   Menu,
   MenuItem,
-  Pagination,
   Grid,
   Tooltip,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
+import {
+  ExpandMore as ExpandMoreIcon,
+  MoreVert as MoreVertIcon,
+  CheckCircle as CheckCircleIcon,
+  Cancel as CancelIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  FirstPage as FirstPageIcon,
+  LastPage as LastPageIcon
+} from '@mui/icons-material';
 import { stringToColor, adjustColor, getContrastColor } from '../../../components/Utils/TagColors';
 
 const GUESTS_PER_PAGE = 10;
@@ -96,7 +101,6 @@ const MobileGuestList = ({
   };
 
   const handleEditClick = () => {
-    // Nos aseguramos de pasar el invitado completo, incluyendo sus acompañantes
     const fullGuest = guests.find(g => g.id === selectedGuestForMenu.id);
     onEditGuest(fullGuest);
     handleMenuClose();
@@ -107,7 +111,7 @@ const MobileGuestList = ({
     handleMenuClose();
   };
 
-  const handlePageChange = (event, newPage) => {
+  const handlePageChange = (newPage) => {
     setPage(newPage);
     setExpandedGuest(null);
   };
@@ -269,14 +273,14 @@ const MobileGuestList = ({
     </List>
   );
 
+  const totalPages = Math.ceil(flattenedGuests.length / GUESTS_PER_PAGE);
+
   return (
     <Box>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => {
-          handleBulkValidate();
-        }}
+        onClick={handleBulkValidate}
         disabled={selectedGuests.length === 0}
         fullWidth
         sx={{ mb: 2, textTransform: 'uppercase' }}
@@ -307,13 +311,34 @@ const MobileGuestList = ({
           </Accordion>
         ))}
       </List>
-      <Box display="flex" justifyContent="center" mt={2}>
-        <Pagination
-          count={Math.ceil(flattenedGuests.length / GUESTS_PER_PAGE)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+        <IconButton 
+          onClick={() => handlePageChange(1)} 
+          disabled={page === 1}
+        >
+          <FirstPageIcon />
+        </IconButton>
+        <IconButton 
+          onClick={() => handlePageChange(page - 1)} 
+          disabled={page === 1}
+        >
+          <ChevronLeftIcon />
+        </IconButton>
+        <Typography variant="body2">
+          Página {page} de {totalPages}
+        </Typography>
+        <IconButton 
+          onClick={() => handlePageChange(page + 1)} 
+          disabled={page === totalPages}
+        >
+          <ChevronRightIcon />
+        </IconButton>
+        <IconButton 
+          onClick={() => handlePageChange(totalPages)} 
+          disabled={page === totalPages}
+        >
+          <LastPageIcon />
+        </IconButton>
       </Box>
       <Menu
         anchorEl={anchorEl}
