@@ -9,10 +9,7 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import ProfileForm from "./ProfileViewComponents/ProfileForm";
-import LocationModal from "./ProfileViewComponents/LocationModal";
-import ChangePasswordModal from "./ProfileViewComponents/ChangePasswordModal";
-import MenuModal from "./ProfileViewComponents/MenuModal";
+import { ProfileForm, LocationModal, ChangePasswordModal, MenuModal } from "./ProfileViewComponents";
 
 const ProfileView = ({ visibleFields }) => {
   const theme = useTheme();
