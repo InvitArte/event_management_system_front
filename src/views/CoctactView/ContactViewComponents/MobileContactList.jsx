@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
   List,
@@ -14,12 +14,15 @@ import {
   MenuItem,
   Grid,
   Tooltip,
-  Pagination,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import DeleteIcon from "@mui/icons-material/Delete";
-import QrCodeIcon from "@mui/icons-material/QrCode";
+import {
+  ExpandMore as ExpandMoreIcon,
+  MoreVert as MoreVertIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  FirstPage as FirstPageIcon,
+  LastPage as LastPageIcon
+} from '@mui/icons-material';
 
 const CONTACTS_PER_PAGE = 5;
 const MAX_NAME_LENGTH = 20;
@@ -30,16 +33,17 @@ const MobileContactList = ({
   onDeleteContact,
   onGenerateQR,
 }) => {
-  const [expandedContact, setExpandedContact] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [selectedContactForMenu, setSelectedContactForMenu] = React.useState(null);
-  const [page, setPage] = React.useState(1);
-  const [paginatedContacts, setPaginatedContacts] = React.useState([]);
+  const [expandedContact, setExpandedContact] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedContactForMenu, setSelectedContactForMenu] = useState(null);
+  const [page, setPage] = useState(1);
 
-  React.useEffect(() => {
+  const totalPages = useMemo(() => Math.ceil(contacts.length / CONTACTS_PER_PAGE), [contacts]);
+
+  const paginatedContacts = useMemo(() => {
     const startIndex = (page - 1) * CONTACTS_PER_PAGE;
     const endIndex = startIndex + CONTACTS_PER_PAGE;
-    setPaginatedContacts(contacts.slice(startIndex, endIndex));
+    return contacts.slice(startIndex, endIndex);
   }, [contacts, page]);
 
   const handleAccordionChange = (contactId) => (event, isExpanded) => {
@@ -71,8 +75,8 @@ const MobileContactList = ({
     handleMenuClose();
   };
 
-  const handlePageChange = (event, value) => {
-    setPage(value);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
     setExpandedContact(null);
   };
 
@@ -175,13 +179,34 @@ const MobileContactList = ({
           </Accordion>
         ))}
       </List>
-      <Box display="flex" justifyContent="center" mt={2}>
-        <Pagination
-          count={Math.ceil(contacts.length / CONTACTS_PER_PAGE)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+        <IconButton 
+          onClick={() => handlePageChange(1)} 
+          disabled={page === 1}
+        >
+          <FirstPageIcon />
+        </IconButton>
+        <IconButton 
+          onClick={() => handlePageChange(page - 1)} 
+          disabled={page === 1}
+        >
+          <ChevronLeftIcon />
+        </IconButton>
+        <Typography variant="body2">
+          Página {page} de {totalPages}
+        </Typography>
+        <IconButton 
+          onClick={() => handlePageChange(page + 1)} 
+          disabled={page === totalPages}
+        >
+          <ChevronRightIcon />
+        </IconButton>
+        <IconButton 
+          onClick={() => handlePageChange(totalPages)} 
+          disabled={page === totalPages}
+        >
+          <LastPageIcon />
+        </IconButton>
       </Box>
       <Menu
         anchorEl={anchorEl}
