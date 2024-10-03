@@ -11,7 +11,7 @@ import NotFoundView from "./views/NotFoundView/NotFoundView";
 import ProtectedRoute from "./components/Utils/ProtectedRoute";
 import ProtectedLayout from "./components/Utils/ProtectedLayout";
 import { useUserConfig } from "./context/UserConfigContext";
-import LoadingComponent from "./components/Ui/LoadingComponent";
+import LoadingComponent from "./components/Ui/LoadingComponent/LoadingComponent";
 
 const AppContent = () => {
   const { userConfig, isLoading: isConfigLoading } = useUserConfig();

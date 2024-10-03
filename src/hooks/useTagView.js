@@ -5,10 +5,14 @@ import { translateError } from "../config/ErrorMessages";
 const useTagView = () => {
   const [tags, setTags] = useState([]);
   const [guests, setGuests] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedTag, setSelectedTag] = useState(null);
+  const [uiState, setUiState] = useState({
+    loading: true,
+    error: "",
+    modalOpen: false,
+    selectedTag: null,
+    deleteDialogOpen: false,
+    tagToDelete: null,
+  });
 
   const capitalizeFirstLetter = (string) => {
     return string.split(' ').map(word => 
@@ -31,11 +35,10 @@ const useTagView = () => {
         fullName: `${capitalizeFirstLetter(guest.first_name)} ${capitalizeFirstLetter(guest.last_name)}`.trim()
       }));
       setGuests(normalizedGuests);
+      setUiState(prev => ({ ...prev, loading: false, error: "" }));
     } catch (err) {
       console.error("Error fetching data:", err);
-      setError(translateError(err));
-    } finally {
-      setLoading(false);
+      setUiState(prev => ({ ...prev, loading: false, error: translateError(err) }));
     }
   }, []);
 
@@ -44,24 +47,43 @@ const useTagView = () => {
   }, [fetchData]);
 
   const handleCreateTag = useCallback(() => {
-    setSelectedTag(null);
-    setModalOpen(true);
+    setUiState(prev => ({ ...prev, selectedTag: null, modalOpen: true }));
   }, []);
 
   const handleEditTag = useCallback((tag) => {
-    setSelectedTag(tag);
-    setModalOpen(true);
+    setUiState(prev => ({ ...prev, selectedTag: tag, modalOpen: true }));
   }, []);
 
-  const handleDeleteTag = useCallback(async (tagId) => {
-    try {
-      await tagService.deleteTag(tagId);
-      setTags((prevTags) => prevTags.filter((tag) => tag.id !== tagId));
-    } catch (err) {
-      console.error("Error deleting tag:", err);
-      setError(translateError(err));
-    }
+  const handleDeleteTag = useCallback((tag) => {
+    setUiState(prev => ({
+      ...prev,
+      tagToDelete: tag,
+      deleteDialogOpen: true,
+    }));
   }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (uiState.tagToDelete) {
+      try {
+        await tagService.deleteTag(uiState.tagToDelete.id);
+        setTags(prevTags => prevTags.filter(tag => tag.id !== uiState.tagToDelete.id));
+        setUiState(prev => ({
+          ...prev,
+          deleteDialogOpen: false,
+          tagToDelete: null,
+          error: "",
+        }));
+      } catch (err) {
+        console.error("Error deleting tag:", err);
+        setUiState(prev => ({ 
+          ...prev, 
+          error: translateError(err),
+          deleteDialogOpen: false,
+          tagToDelete: null,
+        }));
+      }
+    }
+  }, [uiState.tagToDelete]);
 
   const handleTagUpdate = useCallback((updatedTag) => {
     setTags((prevTags) => {
@@ -75,26 +97,33 @@ const useTagView = () => {
       }
       return [...prevTags, updatedTag];
     });
+    setUiState(prev => ({ ...prev, modalOpen: false, selectedTag: null, error: "" }));
   }, []);
 
   const handleCloseModal = useCallback(() => {
-    setModalOpen(false);
-    setSelectedTag(null);
-    setError("");
+    setUiState(prev => ({
+      ...prev,
+      modalOpen: false,
+      selectedTag: null,
+      error: "",
+    }));
+  }, []);
+
+  const setError = useCallback((error) => {
+    setUiState(prev => ({ ...prev, error }));
   }, []);
 
   return {
     tags,
     guests,
-    loading,
-    error,
-    modalOpen,
-    selectedTag,
+    uiState,
     handleCreateTag,
     handleEditTag,
     handleDeleteTag,
+    handleConfirmDelete,
     handleTagUpdate,
     handleCloseModal,
+    setUiState,
     setError,
   };
 };

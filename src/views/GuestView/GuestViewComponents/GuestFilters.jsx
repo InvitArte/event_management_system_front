@@ -4,8 +4,8 @@ import { Box, TextField, Button, Grid, Accordion, AccordionSummary, AccordionDet
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { normalizeText } from "../../../components/Utils/TextUtils";
 import { stringToColor } from "../../../components/Utils/TagColors";
-import TagChip from "../../../components/Ui/TagChip";
-import FilterAutocomplete from "../../../components/Ui/FilterAutocomplete";
+import TagChip from "../../../components/Ui/TagChip/TagChip";
+import FilterAutocomplete from "../../../components/Ui/FilterAutocomplete/FilterAutocomplete";
 
 const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters }) => {
   const [filters, setFilters] = useState({});

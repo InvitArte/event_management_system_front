@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { contactService } from "../../../services/Api";
 import ContactForm from "./ContactForm";
-import CloseButton from "../../../components/Ui/CloseButton";
+import CloseButton from "../../../components/Ui/CloseButton/CloseButton";
 
 const ContactModal = ({ open, onClose, contact, onSubmit }) => {
   const [loading, setLoading] = useState(false);
