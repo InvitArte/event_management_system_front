@@ -55,25 +55,9 @@ const MobileGuestList = ({
   }, [guests]);
 
   const paginatedGuests = useMemo(() => {
-    let guestCount = 0;
-    let pageStart = 0;
-    let pageEnd = 0;
-
-    for (let i = 0; i < groupedGuests.length; i++) {
-      const guestWithCompanions = groupedGuests[i].companions.length + 1;
-      if (guestCount + guestWithCompanions > (page - 1) * GUESTS_PER_PAGE && pageStart === 0) {
-        pageStart = i;
-      }
-      guestCount += guestWithCompanions;
-      if (guestCount >= page * GUESTS_PER_PAGE && pageEnd === 0) {
-        pageEnd = i + 1;
-        break;
-      }
-    }
-
-    if (pageEnd === 0) pageEnd = groupedGuests.length;
-
-    return groupedGuests.slice(pageStart, pageEnd);
+    const startIndex = (page - 1) * GUESTS_PER_PAGE;
+    const endIndex = Math.min(startIndex + GUESTS_PER_PAGE, groupedGuests.length);
+    return groupedGuests.slice(startIndex, endIndex);
   }, [groupedGuests, page]);
 
   const handleAccordionChange = (guestId) => (event, isExpanded) => {
@@ -282,9 +266,7 @@ const MobileGuestList = ({
     </List>
   );
 
-  const totalPages = Math.ceil(
-    groupedGuests.reduce((count, guest) => count + 1 + guest.companions.length, 0) / GUESTS_PER_PAGE
-  );
+  const totalPages = Math.ceil(groupedGuests.length / GUESTS_PER_PAGE);
 
   return (
     <Box>
