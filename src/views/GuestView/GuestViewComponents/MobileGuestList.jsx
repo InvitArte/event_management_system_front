@@ -47,24 +47,34 @@ const MobileGuestList = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedGuestForMenu, setSelectedGuestForMenu] = useState(null);
 
-  const flattenedGuests = useMemo(() => {
-    const flattened = guests.flatMap(guest => [
-      guest,
-      ...(guest.companions || []).map(companion => ({
-        ...companion,
-        isCompanion: true,
-        mainGuestId: guest.id
-      }))
-    ]);
-    return flattened;
+  const groupedGuests = useMemo(() => {
+    return guests.map(guest => ({
+      ...guest,
+      companions: guest.companions || []
+    }));
   }, [guests]);
 
   const paginatedGuests = useMemo(() => {
-    const startIndex = (page - 1) * GUESTS_PER_PAGE;
-    const endIndex = startIndex + GUESTS_PER_PAGE;
-    const paginated = flattenedGuests.slice(startIndex, endIndex);
-    return paginated;
-  }, [flattenedGuests, page]);
+    let guestCount = 0;
+    let pageStart = 0;
+    let pageEnd = 0;
+
+    for (let i = 0; i < groupedGuests.length; i++) {
+      const guestWithCompanions = groupedGuests[i].companions.length + 1;
+      if (guestCount + guestWithCompanions > (page - 1) * GUESTS_PER_PAGE && pageStart === 0) {
+        pageStart = i;
+      }
+      guestCount += guestWithCompanions;
+      if (guestCount >= page * GUESTS_PER_PAGE && pageEnd === 0) {
+        pageEnd = i + 1;
+        break;
+      }
+    }
+
+    if (pageEnd === 0) pageEnd = groupedGuests.length;
+
+    return groupedGuests.slice(pageStart, pageEnd);
+  }, [groupedGuests, page]);
 
   const handleAccordionChange = (guestId) => (event, isExpanded) => {
     setExpandedGuest(isExpanded ? guestId : null);
@@ -101,8 +111,7 @@ const MobileGuestList = ({
   };
 
   const handleEditClick = () => {
-    const fullGuest = guests.find(g => g.id === selectedGuestForMenu.id);
-    onEditGuest(fullGuest);
+    onEditGuest(selectedGuestForMenu);
     handleMenuClose();
   };
 
@@ -141,7 +150,7 @@ const MobileGuestList = ({
     return { truncatedName: `${name.substring(0, MAX_NAME_LENGTH)}...`, isTruncated: true };
   };
 
-  const renderAccordionSummary = (guest) => {
+  const renderAccordionSummary = (guest, isCompanion = false) => {
     const { truncatedName, isTruncated } = truncateName(guest.fullName);
     guest.isTruncated = isTruncated;
   
@@ -160,7 +169,7 @@ const MobileGuestList = ({
         }}
       >
         <Grid container alignItems="center" spacing={1}>
-          {!guest.isCompanion && (
+          {!isCompanion && (
             <Grid item>
               <Checkbox
                 checked={selectedGuests.some(g => g.id === guest.id)}
@@ -177,14 +186,14 @@ const MobileGuestList = ({
                 sx={{ 
                   overflow: 'hidden', 
                   textOverflow: 'ellipsis',
-                  paddingLeft: guest.isCompanion ? 2 : 0,
+                  paddingLeft: isCompanion ? 2 : 0,
                 }}
               >
-                {guest.isCompanion ? `↳ ${truncatedName}` : truncatedName}
+                {isCompanion ? `↳ ${truncatedName}` : truncatedName}
               </Typography>
             </Tooltip>
           </Grid>
-          {!guest.isCompanion && visibleColumns.validated && (
+          {!isCompanion && visibleColumns.validated && (
             <Grid item>
               {guest.validated ? (
                 <CheckCircleIcon color="primary" fontSize="small" />
@@ -193,7 +202,7 @@ const MobileGuestList = ({
               )}
             </Grid>
           )}
-          {!guest.isCompanion && (
+          {!isCompanion && (
             <Grid item>
               <IconButton
                 onClick={(event) => {
@@ -219,12 +228,12 @@ const MobileGuestList = ({
           <ListItemText primary="Nombre Completo" secondary={guest.fullName} />
         </ListItem>
       )}
-      {!guest.isCompanion && visibleColumns.email && (
+      {visibleColumns.email && (
         <ListItem>
           <ListItemText primary="Email" secondary={guest.email} />
         </ListItem>
       )}
-      {!guest.isCompanion && visibleColumns.phone && (
+      {visibleColumns.phone && (
         <ListItem>
           <ListItemText primary="Teléfono" secondary={guest.phone} />
         </ListItem>
@@ -262,7 +271,7 @@ const MobileGuestList = ({
           <ListItemText primary="Discapacidad" secondary={guest.disability ? 'Sí' : 'No'} />
         </ListItem>
       )}
-      {!guest.isCompanion && visibleColumns.tags && (
+      {visibleColumns.tags && (
         <ListItem>
           <Box>
             <Typography variant="body2">Etiquetas</Typography>
@@ -273,7 +282,9 @@ const MobileGuestList = ({
     </List>
   );
 
-  const totalPages = Math.ceil(flattenedGuests.length / GUESTS_PER_PAGE);
+  const totalPages = Math.ceil(
+    groupedGuests.reduce((count, guest) => count + 1 + guest.companions.length, 0) / GUESTS_PER_PAGE
+  );
 
   return (
     <Box>
@@ -289,26 +300,50 @@ const MobileGuestList = ({
       </Button>
       <List disablePadding>
         {paginatedGuests.map((guest) => (
-          <Accordion
-            key={`${guest.id}-${guest.isCompanion ? 'companion' : 'main'}`}
-            expanded={expandedGuest === guest.id}
-            onChange={handleAccordionChange(guest.id)}
-            sx={{
-              '&:before': {
-                display: 'none',
-              },
-              '&.Mui-expanded': {
-                margin: 0,
-              },
-              boxShadow: 'none',
-              borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-            }}
-          >
-            {renderAccordionSummary(guest)}
-            <AccordionDetails>
-              {renderGuestDetails(guest)}
-            </AccordionDetails>
-          </Accordion>
+          <React.Fragment key={guest.id}>
+            <Accordion
+              expanded={expandedGuest === guest.id}
+              onChange={handleAccordionChange(guest.id)}
+              sx={{
+                '&:before': {
+                  display: 'none',
+                },
+                '&.Mui-expanded': {
+                  margin: 0,
+                },
+                boxShadow: 'none',
+                borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+              }}
+            >
+              {renderAccordionSummary(guest)}
+              <AccordionDetails>
+                {renderGuestDetails(guest)}
+              </AccordionDetails>
+            </Accordion>
+            {guest.companions.map((companion) => (
+              <Accordion
+                key={companion.id}
+                expanded={expandedGuest === companion.id}
+                onChange={handleAccordionChange(companion.id)}
+                sx={{
+                  '&:before': {
+                    display: 'none',
+                  },
+                  '&.Mui-expanded': {
+                    margin: 0,
+                  },
+                  boxShadow: 'none',
+                  borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+                  backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                }}
+              >
+                {renderAccordionSummary(companion, true)}
+                <AccordionDetails>
+                  {renderGuestDetails(companion)}
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </React.Fragment>
         ))}
       </List>
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
@@ -356,7 +391,6 @@ MobileGuestList.propTypes = {
   guests: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
     fullName: PropTypes.string.isRequired,
-    isMainGuest: PropTypes.bool.isRequired,
     validated: PropTypes.bool.isRequired,
     email: PropTypes.string,
     phone: PropTypes.string,
