@@ -2,8 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
 import {useLocations} from "../../../hooks";
-import LocationList from "./LocationList";
-import LocationForm from "./LocationForm";
+import {LocationList, LocationForm} from "./index";
 
 const style = {
   position: "absolute",

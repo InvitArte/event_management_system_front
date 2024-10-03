@@ -8,13 +8,9 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import ContactTable from "./ContactViewComponents/ContactTable";
-import MobileContactList from "./ContactViewComponents/MobileContactList"; 
-import ContactFilters from "./ContactViewComponents/ContactFilters";
-import ContactModal from "./ContactViewComponents/ContactModal";
-import QRModal from "./ContactViewComponents/QRModal";
 import {useContactView} from "../../hooks";
 import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
+import { ContactFilters, ContactTable, MobileContactList, ContactModal, QRModal } from "./ContactViewComponents";
 
 const ContactView = () => {
   const {

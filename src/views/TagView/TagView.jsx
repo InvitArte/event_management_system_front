@@ -9,10 +9,10 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
-import TagTable from "./TagViewComponents/TagTable";
-import TagModal from "./TagViewComponents/TagModal";
 import {useTagView} from "../../hooks";
 import {SkeletonTable, DeleteConfirmationDialog} from "../../components";
+import {TagTable, TagModal} from "./TagViewComponents";
+
 
 const TagView = () => {
   const {
