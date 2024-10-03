@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { locationService } from "../services/Api";
+import { locationService } from "../../services/Api";
 
 const useLocations = (open) => {
   const [locations, setLocations] = useState([]);

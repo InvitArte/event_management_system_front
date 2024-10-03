@@ -14,7 +14,7 @@ import MobileGuestList from "./GuestViewComponents/MobileGuestList";
 import GuestFilters from "./GuestViewComponents/GuestFilters";
 import ExcelDownloader from "./GuestViewComponents/ExcelDownloader";
 import GuestModal from "./GuestViewComponents/GuestModal";
-import useGuestView from "../../hooks/useGuestView";
+import {useGuestView} from "../../hooks";
 import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
 
 const GuestView = ({

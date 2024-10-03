@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Modal, Box, Typography } from "@mui/material";
-import useLocations from "../../../hooks/UseLocations";
+import {useLocations} from "../../../hooks";
 import LocationList from "./LocationList";
 import LocationForm from "./LocationForm";
 
@@ -44,7 +44,7 @@ const LocationModal = ({ open, handleClose }) => {
     <Modal open={open} onClose={handleCloseAndReset}>
       <Box sx={style}>
         <Typography variant="h5" component="h2" gutterBottom align="center">
-          Gestionar Ubicaciones de la Boda
+          Gestionar Ubicaciones del Evento
         </Typography>
         <LocationList
           locations={locations}
