@@ -10,11 +10,13 @@ import {
   ExitToApp as ExitToAppIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { AnimatedAppBar } from "../../config/NavbarStyles";
-import { useNavbar } from "../../hooks/useNavbar";
-import NavbarLink from "./Navbar/NavbarLink";
-import UserMenu from "./Navbar/UserMenu";
-import MobileDrawer from "./Navbar/MobileDrawer";
+import { useNavbar } from "../../../hooks/useNavbar";
+import { 
+  NavbarLink, 
+  UserMenu, 
+  MobileDrawer, 
+  AnimatedAppBar 
+} from './NavBarComponents';
 
 const SCROLL_THRESHOLD = 50;
 

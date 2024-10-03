@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
-import { StyledNavLink } from "../../../config/NavbarStyles";
+import { StyledNavLink } from "./NavbarStyles";
 
 const NavbarLink = ({ to, children }) => (
   <Button color="inherit" component={StyledNavLink} to={to}>
