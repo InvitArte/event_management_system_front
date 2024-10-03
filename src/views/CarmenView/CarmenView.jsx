@@ -5,7 +5,7 @@ import Azulejo from "../../assets/imgs/Azulejo1.jpeg";
 import CarmenHeader from "./CarmenViewComponents/CarmenHeader";
 import CarmenEventCard from "./CarmenViewComponents/CarmenEventCard";
 import CSvg from "../../assets/imgs/CC.svg";
-import LoadingComponent from "../../components/Ui/LoadingComponent/LoadingComponent";
+import {LoadingComponent} from "../../components";
 import { publicService } from "../../services/Api";
 
 /**

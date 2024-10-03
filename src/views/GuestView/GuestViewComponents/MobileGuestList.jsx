@@ -28,7 +28,7 @@ import {
   FirstPage as FirstPageIcon,
   LastPage as LastPageIcon
 } from '@mui/icons-material';
-import { stringToColor, adjustColor, getContrastColor } from '../../../components/Utils/TagColors';
+import { stringToColor, adjustColor, getContrastColor } from '../../../components';
 
 const GUESTS_PER_PAGE = 10;
 const MAX_NAME_LENGTH = 20;

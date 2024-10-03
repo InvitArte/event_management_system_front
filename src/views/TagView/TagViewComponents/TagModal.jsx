@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import GuestTransferList from "./GuestTransferList";
 import { tagService } from "../../../services/Api";
-import CloseButton from "../../../components/Ui/CloseButton/CloseButton"; 
+import {CloseButton} from "../../../components"; 
 
 const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);

@@ -14,9 +14,8 @@ import MobileGuestList from "./GuestViewComponents/MobileGuestList";
 import GuestFilters from "./GuestViewComponents/GuestFilters";
 import ExcelDownloader from "./GuestViewComponents/ExcelDownloader";
 import GuestModal from "./GuestViewComponents/GuestModal";
-import SkeletonTable from "../../components/Ui/SkeletonTable/SkeletonTable";
-import DeleteConfirmationDialog from "../../components/Ui/DeleteConfirmationDialog/DeleteConfirmationDialog";
 import useGuestView from "../../hooks/useGuestView";
+import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
 
 const GuestView = ({
   visibleColumns: initialVisibleColumns,
