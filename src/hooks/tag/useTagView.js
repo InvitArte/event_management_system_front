@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { tagService, guestService } from "../services/Api";
-import { translateError } from "../config/ErrorMessages";
+import { tagService, guestService } from "../../services/Api";
+import { translateError } from "../../config/ErrorMessages";
 
 const useTagView = () => {
   const [tags, setTags] = useState([]);

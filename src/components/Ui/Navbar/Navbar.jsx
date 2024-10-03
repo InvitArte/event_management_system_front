@@ -10,7 +10,7 @@ import {
   ExitToApp as ExitToAppIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useNavbar } from "../../../hooks/useNavbar";
+import { useNavbar } from "../../../hooks";
 import { 
   NavbarLink, 
   UserMenu, 

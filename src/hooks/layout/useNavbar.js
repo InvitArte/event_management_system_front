@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../services/Api";
+import { authService } from "../../services/Api";
 
-export const useNavbar = (threshold) => {
+const useNavbar = (threshold) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
@@ -46,3 +46,5 @@ export const useNavbar = (threshold) => {
     handleLogout,
   };
 };
+
+export default useNavbar;
