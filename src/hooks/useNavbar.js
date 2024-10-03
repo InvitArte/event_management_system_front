@@ -1,22 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { authService } from "../services/Api";
-export const useScrollDetection = (threshold) => {
+
+export const useNavbar = (threshold) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > threshold);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+  const handleScroll = useCallback(() => {
+    setIsScrolled(window.scrollY > threshold);
   }, [threshold]);
 
-  return { isScrolled };
-};
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
-export const useUserMenu = (navigate) => {
-  const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpen = Boolean(anchorEl);
 
   const handleMenuOpen = (event) => {
@@ -38,6 +37,8 @@ export const useUserMenu = (navigate) => {
   };
 
   return {
+    isScrolled,
+    setIsScrolled,
     anchorEl,
     isMenuOpen,
     handleMenuOpen,

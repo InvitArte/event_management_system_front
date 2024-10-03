@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Toolbar, Typography, Container, IconButton, useMediaQuery, useTheme } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import PeopleIcon from "@mui/icons-material/People";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import ContactsIcon from "@mui/icons-material/Contacts";
-import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { 
+  Menu as MenuIcon,
+  People as PeopleIcon,
+  LocalOffer as LocalOfferIcon,
+  Contacts as ContactsIcon,
+  Person as PersonIcon,
+  Settings as SettingsIcon,
+  ExitToApp as ExitToAppIcon
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { AnimatedAppBar } from "../../config/NavbarStyles";
-import { useScrollDetection, useUserMenu } from "../../hooks/NavbarHooks";
+import { useNavbar } from "../../hooks/useNavbar";
 import NavbarLink from "./Navbar/NavbarLink";
 import UserMenu from "./Navbar/UserMenu";
 import MobileDrawer from "./Navbar/MobileDrawer";
@@ -20,15 +22,17 @@ const Navbar = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { isScrolled } = useScrollDetection(SCROLL_THRESHOLD);
   const {
+    isScrolled,
+    setIsScrolled,
     anchorEl,
     isMenuOpen,
     handleMenuOpen,
     handleMenuClose,
     handleLogout,
-  } = useUserMenu(navigate);
+  } = useNavbar(SCROLL_THRESHOLD);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isNavbarExpanded, setIsNavbarExpanded] = useState(false);
 
   const handleProfile = () => {
     handleMenuClose();
@@ -44,6 +48,26 @@ const Navbar = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
 
+  const handleNavbarClick = () => {
+    if (isMobile && isScrolled) {
+      setIsNavbarExpanded(!isNavbarExpanded);
+    }
+  };
+
+  useEffect(() => {
+    if (isMobile && isNavbarExpanded) {
+      const handleScroll = () => {
+        setIsNavbarExpanded(false);
+      };
+
+      window.addEventListener('scroll', handleScroll);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [isMobile, isNavbarExpanded]);
+
   const menuItems = [
     { icon: <PeopleIcon />, to: "/guests", label: "Invitados" },
     { icon: <LocalOfferIcon />, to: "/tags", label: "Etiquetas" },
@@ -54,7 +78,12 @@ const Navbar = () => {
   ];
 
   return (
-    <AnimatedAppBar position="fixed" elevation={3} isScrolled={isScrolled}>
+    <AnimatedAppBar 
+      position="fixed" 
+      elevation={3} 
+      isScrolled={isScrolled && !isNavbarExpanded}
+      onClick={handleNavbarClick}
+    >
       <Container maxWidth="lg" sx={{ height: "100%" }}>
         <Toolbar
           disableGutters
