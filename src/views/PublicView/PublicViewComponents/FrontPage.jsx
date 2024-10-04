@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useBackgroundImage } from "../../../context/BackgroundImageContext";
+import { useBackgroundImage } from "../../../context";
 import "../../../styles/PublicView/FrontPage.css";
 import logo from "../../../assets/imgs/logo.png";
 

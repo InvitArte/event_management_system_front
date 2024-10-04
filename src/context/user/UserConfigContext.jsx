@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import api from "../services/Api";
-import { defaultConfig } from "../config/Config";
+import api from "../../services/Api";
+import { defaultConfig } from "../../config/utils/Config";
 
 const UserConfigContext = createContext();
 

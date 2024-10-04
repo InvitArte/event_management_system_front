@@ -3,7 +3,7 @@ import { Container, Paper, Typography, Box, Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {LoginForm} from "./LoginViewComponents";
 import { authService } from "../../services/Api";
-import { translateError } from "../../config/ErrorMessages";
+import { translateError } from "../../config/utils/ErrorMessages";
 
 const LoginView = () => {
   const [error, setError] = useState("");

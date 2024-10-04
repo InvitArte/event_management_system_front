@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { DataGrid } from "@mui/x-data-grid";
 import { IconButton, Box } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { dataGridLocaleText } from "../../../config/DataGridLocaleText";
+import { DataGridLocaleText } from "../../../config";
 
 const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
   const columns = useMemo(
@@ -56,7 +56,7 @@ const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
         rowsPerPageOptions={[5, 10, 20]}
         onRowClick={(params) => onEditTag(params.row)}
         disableSelectionOnClick
-        localeText={dataGridLocaleText}
+        localeText={DataGridLocaleText}
       />
     </Box>
   );
