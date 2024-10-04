@@ -1,6 +1,9 @@
+// React y hooks
 import React, { createContext, useState, useContext, useEffect } from "react";
+
+// Servicios y configuración
 import api from "../../services/Api";
-import { defaultConfig } from "../../config/utils/Config";
+import { defaultConfig } from "../../config";
 
 const UserConfigContext = createContext();
 
