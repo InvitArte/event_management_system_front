@@ -1,5 +1,11 @@
+// React y hooks
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+import QRCode from "qrcode.react";
+
+// Material-UI
 import {
   Dialog,
   DialogTitle,
@@ -9,7 +15,6 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import QRCode from "qrcode.react";
 
 const QRModal = ({ open, onClose, vCardData }) => {
   const theme = useTheme();

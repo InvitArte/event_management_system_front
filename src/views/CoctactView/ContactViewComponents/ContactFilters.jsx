@@ -1,6 +1,13 @@
+// React y hooks
 import React, { useState, useEffect, useCallback } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI componentes
 import { Box, TextField, Button, Grid, Typography } from "@mui/material";
+
+// Componentes propios
 import { normalizeText } from "../../../components";
 
 const ContactFilters = ({ onFilterChange }) => {
@@ -67,7 +74,7 @@ const ContactFilters = ({ onFilterChange }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button 
+          <Button
             variant={hasActiveFilters ? "contained" : "outlined"}
             color={hasActiveFilters ? "secondary" : "primary"}
             onClick={handleClearFilters}
