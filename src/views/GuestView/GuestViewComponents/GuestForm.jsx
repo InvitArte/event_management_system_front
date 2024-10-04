@@ -9,7 +9,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import PlusOneForm from "./PlusOneForm";
-import TagChip from "../../../components/Ui/TagChip";
+import { TagChip } from "../../../components";
 
 const GuestForm = ({
   guest,
@@ -40,28 +40,35 @@ const GuestForm = ({
   useEffect(() => {
     if (guest) {
       setFormData({
-        ...guest,
-        menu: menus.find((m) => m.id === guest.menu_id) || null,
-        allergies: guest.allergies || [],
-        tags: guest.tags || [],
-        observations: guest.observations || "",
-        accommodation_plan: guest.accommodation_plan || "",
+        first_name: guest.first_name ?? "",
+        last_name: guest.last_name ?? "",
+        phone: guest.phone ?? "",
+        email: guest.email ?? "",
+        needs_transport: guest.needs_transport ?? false,
+        needs_transport_back: guest.needs_transport_back ?? false,
+        needs_hotel: guest.needs_hotel ?? false,
+        disability: guest.disability ?? false,
+        menu: menus.find((m) => m.id === guest.menu_id) ?? null,
+        allergies: guest.allergies ?? [],
+        observations: guest.observations ?? "",
+        accommodation_plan: guest.accommodation_plan ?? "",
+        tags: guest.tags ?? [],
         plus_ones: guest.plus_ones?.map((po) => ({
           ...po,
-          menu: menus.find((m) => m.id === po.menu_id) || null,
-          allergies: po.allergies || [],
-          observations: po.observations || "",
-        })) || [],
+          menu: menus.find((m) => m.id === po.menu_id) ?? null,
+          allergies: po.allergies ?? [],
+          observations: po.observations ?? "",
+        })) ?? [],
       });
       setShowPlusOne(guest.plus_ones && guest.plus_ones.length > 0);
     }
-  }, [guest, menus, allergies]);
+  }, [guest, menus]);
 
   const handleChange = useCallback((e) => {
     const { name, value, checked, type } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === "checkbox" ? checked : (value || ""),
+      [name]: type === "checkbox" ? checked : (value ?? ""),
     }));
   }, []);
 
@@ -77,7 +84,7 @@ const GuestForm = ({
       const newPlusOnes = [...prevData.plus_ones];
       newPlusOnes[index] = {
         ...newPlusOnes[index],
-        [name]: typeof value === 'string' ? (value || "") : value,
+        [name]: value ?? "",
       };
       return { ...prevData, plus_ones: newPlusOnes };
     });
@@ -86,14 +93,14 @@ const GuestForm = ({
   const handleTagChange = useCallback((event, newValue) => {
     setFormData((prevData) => ({
       ...prevData,
-      tags: newValue,
+      tags: newValue ?? [],
     }));
   }, []);
 
   const handleAllergiesChange = useCallback((event, newValue) => {
     setFormData((prevData) => ({
       ...prevData,
-      allergies: newValue,
+      allergies: newValue ?? [],
     }));
   }, []);
 
@@ -139,19 +146,19 @@ const GuestForm = ({
         needs_transport_back: formData.needs_transport_back,
         needs_hotel: formData.needs_hotel,
         disability: formData.disability,
-        menu_id: formData.menu?.id || null,
+        menu_id: formData.menu?.id ?? null,
         allergies: formData.allergies.map(allergy => allergy.id),
-        observations: formData.observations || "",
-        accommodation_plan: formData.accommodation_plan || "",
+        observations: formData.observations,
+        accommodation_plan: formData.accommodation_plan,
         tags: formData.tags.map(tag => tag.id),
         plus_ones: formData.plus_ones.map(plusOne => ({
           id: plusOne.id,
           first_name: plusOne.first_name,
           last_name: plusOne.last_name,
-          menu_id: plusOne.menu?.id || null,
+          menu_id: plusOne.menu?.id ?? null,
           allergies: plusOne.allergies.map(allergy => allergy.id),
           disability: plusOne.disability,
-          observations: plusOne.observations || "",
+          observations: plusOne.observations,
         })),
       };
   
@@ -166,7 +173,7 @@ const GuestForm = ({
 
   const renderFormField = useCallback(
     (fieldName, component) => {
-      return visibleFormFields[fieldName] && component;
+      return visibleFormFields[fieldName] ? component : null;
     },
     [visibleFormFields]
   );
@@ -253,7 +260,7 @@ const GuestForm = ({
           <Grid item xs={12} sm={6}>
             <Autocomplete
               options={menus}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => option?.name ?? ""}
               value={formData.menu}
               onChange={(event, newValue) =>
                 handleAutocompleteChange("menu", newValue)
@@ -272,7 +279,7 @@ const GuestForm = ({
                   {option.name}
                 </li>
               )}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
+              isOptionEqualToValue={(option, value) => option?.id === value?.id}
             />
           </Grid>
         )}
@@ -282,7 +289,7 @@ const GuestForm = ({
             <Autocomplete
               multiple
               options={allergies}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => option?.name ?? ""}
               value={formData.allergies}
               onChange={handleAllergiesChange}
               renderInput={(params) => (
@@ -299,7 +306,7 @@ const GuestForm = ({
                   {option.name}
                 </li>
               )}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
+              isOptionEqualToValue={(option, value) => option?.id === value?.id}
             />
           </Grid>
         )}
@@ -374,7 +381,7 @@ const GuestForm = ({
               fullWidth
               label="Observaciones"
               name="observations"
-              value={formData.observations || ""}
+              value={formData.observations}
               onChange={handleChange}
               multiline
               rows={4}
@@ -391,7 +398,7 @@ const GuestForm = ({
               fullWidth
               label="Desde donde sale"
               name="accommodation_plan"
-              value={formData.accommodation_plan || ""}
+              value={formData.accommodation_plan}
               onChange={handleChange}
               variant="outlined"
               InputLabelProps={{ shrink: true }}
@@ -405,7 +412,7 @@ const GuestForm = ({
             <Autocomplete
               multiple
               options={tags}
-              getOptionLabel={(option) => option.name}
+              getOptionLabel={(option) => option?.name ?? ""}
               value={formData.tags}
               onChange={handleTagChange}
               renderTags={renderTags}
@@ -423,7 +430,7 @@ const GuestForm = ({
                   {option.name}
                 </li>
               )}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
+              isOptionEqualToValue={(option, value) => option?.id === value?.id}
             />
           </Grid>
         )}
@@ -462,6 +469,7 @@ const GuestForm = ({
 
 GuestForm.propTypes = {
   guest: PropTypes.shape({
+    id: PropTypes.number,
     first_name: PropTypes.string,
     last_name: PropTypes.string,
     phone: PropTypes.string,
@@ -487,6 +495,7 @@ GuestForm.propTypes = {
     ),
     plus_ones: PropTypes.arrayOf(
       PropTypes.shape({
+        id: PropTypes.number,
         first_name: PropTypes.string,
         last_name: PropTypes.string,
         menu_id: PropTypes.number,

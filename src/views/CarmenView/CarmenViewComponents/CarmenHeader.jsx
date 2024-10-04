@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import HeaderImage from "../../../assets/imgs/TODO_COLOR.jpg";
-import { mainBlue } from "./ConfirmationModalStyles";
+
 
 /**
  * Componente CarmenHeader
- * 
+ *
  * Este componente muestra un encabezado con una imagen de fondo y, opcionalmente,
  * un título superpuesto. Incluye efectos de desplazamiento para dispositivos móviles.
- * 
+ *
  * @param {Object} props - Propiedades del componente
  * @param {boolean} props.showTitle - Indica si se debe mostrar el título superpuesto
  */
@@ -122,15 +122,15 @@ const getImageStyles = (isMobile, overscrollAmount, scale) => ({
 const getMaskImage = (isMobile) =>
   isMobile
     ? "linear-gradient(to bottom, black 80%, transparent 100%)"
-    : `linear-gradient(to right, 
-         transparent, 
-         black 10%, 
-         black 90%, 
+    : `linear-gradient(to right,
+         transparent,
+         black 10%,
+         black 90%,
          transparent
        ),
-       linear-gradient(to bottom, 
+       linear-gradient(to bottom,
          black 0%,
-         black 80%, 
+         black 80%,
          transparent 100%
        )`;
 

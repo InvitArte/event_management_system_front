@@ -2,8 +2,7 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { BackgroundImageProvider } from "./context/BackgroundImageContext";
-import { UserConfigProvider } from "./context/UserConfigContext";
+import { BackgroundImageProvider ,UserConfigProvider  } from "./context";
 import AppContent from "./AppContent";
 
 const App = () => {

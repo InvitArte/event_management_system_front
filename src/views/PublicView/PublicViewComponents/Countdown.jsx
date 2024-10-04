@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { publicService } from "../../../services/Api";
-import logo from "../../assets/imgs/aguja.svg";
-import "../../styles/PublicView/Countdown.css";
-import { useBackgroundImage } from "../../../context/BackgroundImageContext";
-import { defaultConfig } from "../../../config/Config";
+import logo from "../../../assets/imgs/aguja.svg";
+import "../../../styles/PublicView/Countdown.css";
+import { useBackgroundImage } from "../../../context";
+import { defaultConfig } from "../../../config/utils/Config";
 
 const Countdown = ({ userId }) => {
   const [timeLeft, setTimeLeft] = useState(null);
@@ -46,7 +46,7 @@ const Countdown = ({ userId }) => {
   useEffect(() => {
     const loadBackgroundImage = async () => {
       try {
-        const imageModule = await import("../../assets/imgs/countdown.jpg");
+        const imageModule = await import("../../../assets/imgs/countdown.jpg");
         setBackgroundImage("countdown", imageModule.default);
       } catch (error) {
         console.error("Error loading background image:", error);

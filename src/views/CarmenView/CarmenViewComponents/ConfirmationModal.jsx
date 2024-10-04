@@ -100,7 +100,7 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
         allergies: formData.guest.allergies.map(allergy => allergy.id),
       };
 
-      const plusOneData = formData.hasPlusOne === "yes" 
+      const plusOneData = formData.hasPlusOne === "yes"
         ? {
             ...formData.plus_one,
             allergies: formData.plus_one.allergies.map(allergy => allergy.id),
@@ -199,4 +199,6 @@ ConfirmationModal.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
-export default React.memo(ConfirmationModal);
+const MemoizedConfirmationModal = React.memo(ConfirmationModal);
+
+export default MemoizedConfirmationModal;

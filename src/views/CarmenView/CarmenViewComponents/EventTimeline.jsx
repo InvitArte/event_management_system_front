@@ -1,9 +1,7 @@
 import React from "react";
 import { Box, Container, Typography } from "@mui/material";
-import DirectionsBusIcon from "@mui/icons-material/DirectionsBus";
-import ChurchIcon from "@mui/icons-material/Church";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
 import TimelineItem from "./TimelineItem";
+import { DirectionsBus as DirectionsBusIcon, Church as ChurchIcon, Restaurant as RestaurantIcon } from "@mui/icons-material";
 
 const EventTimeline = ({ scrollProgress, eventLocations }) => {
   const timelineItems = [
@@ -36,7 +34,7 @@ const EventTimeline = ({ scrollProgress, eventLocations }) => {
   ];
 
   const totalItems = timelineItems.length;
-  
+
   // Cada item se activa en una porción igual del scroll
   const itemActivationDuration = 100 / totalItems;
 
@@ -47,7 +45,7 @@ const EventTimeline = ({ scrollProgress, eventLocations }) => {
           {timelineItems.map((item, index) => {
             const itemStartProgress = index * itemActivationDuration;
             const itemEndProgress = (index + 1) * itemActivationDuration;
-            
+
             let itemProgress;
             if (scrollProgress <= itemStartProgress) {
               itemProgress = 0;

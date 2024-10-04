@@ -9,14 +9,9 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import GuestTable from "./GuestViewComponents/GuestTable";
-import MobileGuestList from "./GuestViewComponents/MobileGuestList";
-import GuestFilters from "./GuestViewComponents/GuestFilters";
-import ExcelDownloader from "./GuestViewComponents/ExcelDownloader";
-import GuestModal from "./GuestViewComponents/GuestModal";
-import SkeletonTable from "../../components/Ui/SkeletonTable";
-import DeleteConfirmationDialog from "../../components/Ui/DeleteConfirmationDialog";
-import useGuestView from "../../hooks/useGuestView";
+import {useGuestView} from "../../hooks";
+import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
+import { ExcelDownloader, GuestFilters, GuestModal, GuestTable, MobileGuestList } from "./GuestViewComponents";
 
 const GuestView = ({
   visibleColumns: initialVisibleColumns,

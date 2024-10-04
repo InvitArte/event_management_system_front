@@ -1,9 +1,7 @@
 import axios from "axios";
-import API_ROUTES from "../config/BaseUrl";
 import { toast } from "react-toastify";
-import { translateError } from "../config/ErrorMessages";
-import { defaultConfig } from "../config/Config";
 
+import { API_ROUTES, translateError, defaultConfig } from "../config";
 const axiosInstance = axios.create({
   baseURL: API_ROUTES.BASE_URL,
   headers: {
