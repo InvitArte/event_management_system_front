@@ -1,6 +1,13 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Typography, useMediaQuery, useTheme } from "@mui/material";
+
+// Componentes y estilos personalizados
 import {
   StyledGiftMessage,
   GiftMessageText,
@@ -10,10 +17,10 @@ import {
 
 /**
  * Componente GiftMessage
- * 
+ *
  * Este componente muestra un mensaje para los invitados que deseen hacer un regalo
  * en forma de contribución monetaria, incluyendo un número de cuenta bancaria.
- * 
+ *
  * @param {Object} props - Propiedades del componente
  * @param {string} props.accountNumber - Número de cuenta bancaria
  */

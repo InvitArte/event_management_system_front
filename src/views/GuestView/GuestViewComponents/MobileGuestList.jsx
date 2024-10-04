@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useCallback, useMemo } from 'react';
+
+// Bibliotecas de terceros
 import PropTypes from 'prop-types';
+
+// Material-UI
 import {
   List,
   ListItem,
@@ -28,6 +33,8 @@ import {
   FirstPage as FirstPageIcon,
   LastPage as LastPageIcon
 } from '@mui/icons-material';
+
+// Componentes genericos
 import { stringToColor, adjustColor, getContrastColor } from '../../../components';
 
 const GUESTS_PER_PAGE = 10;
@@ -137,7 +144,7 @@ const MobileGuestList = ({
   const renderAccordionSummary = (guest, isCompanion = false) => {
     const { truncatedName, isTruncated } = truncateName(guest.fullName);
     guest.isTruncated = isTruncated;
-  
+
     return (
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -165,10 +172,10 @@ const MobileGuestList = ({
           )}
           <Grid item xs>
             <Tooltip title={isTruncated ? guest.fullName : ''} arrow>
-              <Typography 
-                noWrap 
-                sx={{ 
-                  overflow: 'hidden', 
+              <Typography
+                noWrap
+                sx={{
+                  overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   paddingLeft: isCompanion ? 2 : 0,
                 }}
@@ -204,7 +211,7 @@ const MobileGuestList = ({
       </AccordionSummary>
     );
   };
-  
+
   const renderGuestDetails = (guest) => (
     <List dense>
       {visibleColumns.fullName && guest.isTruncated && (
@@ -329,14 +336,14 @@ const MobileGuestList = ({
         ))}
       </List>
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-        <IconButton 
-          onClick={() => handlePageChange(1)} 
+        <IconButton
+          onClick={() => handlePageChange(1)}
           disabled={page === 1}
         >
           <FirstPageIcon />
         </IconButton>
-        <IconButton 
-          onClick={() => handlePageChange(page - 1)} 
+        <IconButton
+          onClick={() => handlePageChange(page - 1)}
           disabled={page === 1}
         >
           <ChevronLeftIcon />
@@ -344,14 +351,14 @@ const MobileGuestList = ({
         <Typography variant="body2">
           Página {page} de {totalPages}
         </Typography>
-        <IconButton 
-          onClick={() => handlePageChange(page + 1)} 
+        <IconButton
+          onClick={() => handlePageChange(page + 1)}
           disabled={page === totalPages}
         >
           <ChevronRightIcon />
         </IconButton>
-        <IconButton 
-          onClick={() => handlePageChange(totalPages)} 
+        <IconButton
+          onClick={() => handlePageChange(totalPages)}
           disabled={page === totalPages}
         >
           <LastPageIcon />

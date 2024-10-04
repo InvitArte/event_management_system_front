@@ -1,11 +1,22 @@
+// React y hooks
 import React, { useState, useEffect, useCallback } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Grid, Box, useMediaQuery, useTheme } from "@mui/material";
+
+// Componentes propios
+import { LoadingComponent } from "../../components";
+import { CarmenHeader, CarmenEventCard } from "./CarmenViewComponents";
+
+// Servicios
+import { publicService } from "../../services/Api";
+
+// Imágenes y assets
 import Azulejo from "../../assets/imgs/Azulejo1.jpeg";
 import CSvg from "../../assets/imgs/CC.svg";
-import {LoadingComponent} from "../../components";
-import { publicService } from "../../services/Api";
-import { CarmenHeader, CarmenEventCard } from "./CarmenViewComponents";
 
 /**
  * Componente CarmenView

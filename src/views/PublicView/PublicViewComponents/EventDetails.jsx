@@ -1,10 +1,18 @@
+// React y hooks
 import React, { useState, useEffect, useCallback, useRef } from "react";
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Servicios y contexto
 import { publicService } from "../../../services/Api";
+import { useBackgroundImage } from "../../../context";
+
+// Componentes propios
 import ConfirmationModal from "./ConfirmationModal";
+
+// Estilos y Assets
 import "../../../styles/PublicView/EventDetails.css";
 import logo from "../../../assets/imgs/maniqui.svg";
-import { useBackgroundImage } from "../../../context";
 
 const EventDetails = ({ userId }) => {
   const [eventDate, setEventDate] = useState(null);

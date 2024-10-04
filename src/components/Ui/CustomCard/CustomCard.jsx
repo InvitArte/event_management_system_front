@@ -1,6 +1,12 @@
+// React
 import React from "react";
-import { Card, styled } from "@mui/material";
+
+// Biblioteca de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
+import { Card, styled } from "@mui/material";
+
 
 const StyledCard = styled(Card)(({ theme }) => ({
   boxShadow: "0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)",

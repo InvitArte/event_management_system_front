@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useEffect } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Dialog,
   DialogTitle,
@@ -10,9 +15,15 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
-import GuestTransferList from "./GuestTransferList";
+
+// Servicios
 import { tagService } from "../../../services/Api";
-import {CloseButton} from "../../../components"; 
+
+// Componentes genericos
+import {CloseButton} from "../../../components";
+
+// Componentes propios
+import GuestTransferList from "./GuestTransferList";
 
 const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
   const [selectedGuests, setSelectedGuests] = useState([]);

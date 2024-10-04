@@ -1,9 +1,19 @@
+// React y hooks
 import React, { useState } from "react";
-import { Container, Paper, Typography, Box, Alert } from "@mui/material";
+
+// Bibliotecas de terceros
 import { useNavigate } from "react-router-dom";
-import {LoginForm} from "./LoginViewComponents";
+
+// Material-UI
+import { Container, Paper, Typography, Box, Alert } from "@mui/material";
+
+// Servicios y configuraciones
 import { authService } from "../../services/Api";
-import { translateError } from "../../config/utils/ErrorMessages";
+import { translateError } from "../../config";
+
+// Componentes propios
+import { LoginForm } from "./LoginViewComponents";
+
 
 const LoginView = () => {
   const [error, setError] = useState("");

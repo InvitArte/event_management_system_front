@@ -1,5 +1,13 @@
+// React y hooks
 import React, { useCallback, useEffect, useState } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
+import { Box, useMediaQuery, useTheme } from "@mui/material";
+
+// Componentes y estilos propios
 import {
   EventButton,
   TimeUnit,
@@ -7,11 +15,10 @@ import {
   TimeLabel,
   EventDateTypography,
 } from "./ConfirmationModalStyles";
-import { Box, useMediaQuery, useTheme } from "@mui/material";
 
 /**
  * Componente CalendarButton
- * 
+ *
  * Este componente muestra una cuenta regresiva para un evento, la fecha del evento,
  * y un botón para añadir el evento al calendario de Google. Se adapta a dispositivos
  * móviles y de escritorio, usa singular o plural según corresponda, y muestra meses
@@ -36,7 +43,7 @@ const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
       if (!eventDate) return null;
       const now = new Date();
       const difference = eventDate.getTime() - now.getTime();
-     
+
       if (difference <= 0) return {};
 
       const months = Math.floor(difference / (1000 * 60 * 60 * 24 * 30.44));

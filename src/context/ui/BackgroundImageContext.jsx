@@ -1,4 +1,4 @@
-// src/context/BackgroundImageContext.jsx
+// React y hooks
 import { createContext, useState, useContext } from "react";
 
 // creamos el contexto

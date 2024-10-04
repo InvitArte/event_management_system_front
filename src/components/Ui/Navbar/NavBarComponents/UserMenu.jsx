@@ -1,5 +1,10 @@
+// React
 import React from "react";
+
+// Biblioteca de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Menu, MenuItem } from "@mui/material";
 
 const UserMenu = ({

@@ -1,9 +1,12 @@
+//React
 import React from "react";
+
+//Material-UI
 import { Typography } from "@mui/material";
 
 /**
  * Componente EventTitle
- * 
+ *
  * Este componente renderiza el título del evento.
  * Actualmente muestra un título estático "Titulo", pero podría ser modificado
  * para aceptar un prop con el título como texto dinámico en el futuro.

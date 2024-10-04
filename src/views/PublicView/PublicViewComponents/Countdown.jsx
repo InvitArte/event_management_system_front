@@ -1,10 +1,17 @@
+// React y hooks
 import React, { useState, useEffect, useCallback } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Servicios , contexto y configuración
 import { publicService } from "../../../services/Api";
-import logo from "../../../assets/imgs/aguja.svg";
-import "../../../styles/PublicView/Countdown.css";
 import { useBackgroundImage } from "../../../context";
-import { defaultConfig } from "../../../config/utils/Config";
+import { defaultConfig } from "../../../config";
+
+// Estilos y Assets
+import "../../../styles/PublicView/Countdown.css";
+import logo from "../../../assets/imgs/aguja.svg";
 
 const Countdown = ({ userId }) => {
   const [timeLeft, setTimeLeft] = useState(null);

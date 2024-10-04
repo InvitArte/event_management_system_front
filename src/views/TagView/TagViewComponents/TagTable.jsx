@@ -1,8 +1,15 @@
+// React y hooks
 import React, { useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
-import { DataGrid } from "@mui/x-data-grid";
+
+// Material-UI
 import { IconButton, Box } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+// Configuración
 import { DataGridLocaleText } from "../../../config";
 
 const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {

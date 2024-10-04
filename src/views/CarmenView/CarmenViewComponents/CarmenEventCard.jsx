@@ -1,6 +1,16 @@
+// React y hooks
 import React, { useState, useEffect, useCallback, useRef } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { useMediaQuery, useTheme, Box, Typography } from "@mui/material";
+
+// Componentes propios genéricos
+import { CustomCard } from "../../../components";
+
+// Componentes propios
 import {
   CalendarButton,
   ConfirmationModal,
@@ -12,7 +22,9 @@ import {
   EventSubtitle,
   EventInfo
 } from './index';
-import {CustomCard} from "../../../components";
+
+
+// Imágenes y assets
 import FloralSeparator from "../../../assets/imgs/FloralSeparator.svg";
 import IglesiaCarmen from "../../../assets/imgs/IglesiaCarmen.png";
 
