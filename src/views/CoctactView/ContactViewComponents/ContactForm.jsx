@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useEffect, useCallback } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { TextField, Grid } from "@mui/material";
 
 const ContactForm = ({ contact, onSubmit }) => {

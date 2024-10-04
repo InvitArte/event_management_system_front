@@ -7,7 +7,10 @@ import PropTypes from "prop-types";
 // Material-UI
 import { useMediaQuery, useTheme, Box, Typography } from "@mui/material";
 
-// Componentes propios del mismo directorio
+// Componentes propios genéricos
+import { CustomCard } from "../../../components";
+
+// Componentes propios
 import {
   CalendarButton,
   ConfirmationModal,
@@ -20,8 +23,6 @@ import {
   EventInfo
 } from './index';
 
-// Componentes propios de otros directorios
-import { CustomCard } from "../../../components";
 
 // Imágenes y assets
 import FloralSeparator from "../../../assets/imgs/FloralSeparator.svg";

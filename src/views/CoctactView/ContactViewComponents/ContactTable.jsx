@@ -1,9 +1,15 @@
+// React y hooks
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
-import { DataGrid } from "@mui/x-data-grid";
+
+// Material-UI
 import { IconButton } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import QrCodeIcon from "@mui/icons-material/QrCode";
+import { DataGrid } from "@mui/x-data-grid";
+import { Delete as DeleteIcon, QrCode as QrCodeIcon } from "@mui/icons-material";
+
+// Configuración
 import { DataGridLocaleText } from "../../../config";
 
 const ContactTable = ({
