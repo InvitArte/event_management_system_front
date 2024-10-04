@@ -2,18 +2,17 @@ import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Grid, Box, useMediaQuery, useTheme } from "@mui/material";
 import Azulejo from "../../assets/imgs/Azulejo1.jpeg";
-import CarmenHeader from "./CarmenViewComponents/CarmenHeader";
-import CarmenEventCard from "./CarmenViewComponents/CarmenEventCard";
 import CSvg from "../../assets/imgs/CC.svg";
 import {LoadingComponent} from "../../components";
 import { publicService } from "../../services/Api";
+import { CarmenHeader, CarmenEventCard } from "./CarmenViewComponents";
 
 /**
  * Componente CarmenView
- * 
+ *
  * Este componente muestra información de eventos para un usuario específico.
  * Obtiene datos del evento, incluyendo fecha y ubicaciones, y los renderiza en formato de tarjeta.
- * 
+ *
  * @param {Object} props - Propiedades del componente
  * @param {string|number} props.userId - El ID del usuario para el que se obtendrán los datos del evento
  */
@@ -48,7 +47,7 @@ const CarmenView = ({ userId }) => {
 
   /**
    * Procesa los datos brutos del evento obtenidos de la API
-   * 
+   *
    * @param {Object} dateResponse - Respuesta que contiene la fecha del evento
    * @param {Object} locationsResponse - Respuesta que contiene las ubicaciones del evento
    * @returns {Object} Datos del evento procesados
@@ -69,7 +68,7 @@ const CarmenView = ({ userId }) => {
 
   /**
    * Analiza la cadena de fecha del evento y la convierte en un objeto Date
-   * 
+   *
    * @param {string} dateString - Cadena de fecha de la API
    * @returns {Date|null} Objeto Date analizado o null si es inválido
    */
@@ -81,7 +80,7 @@ const CarmenView = ({ userId }) => {
 
   /**
    * Formatea la fecha del evento para su visualización
-   * 
+   *
    * @param {Date} date - La fecha del evento
    * @returns {string} Cadena de fecha formateada
    */
@@ -126,7 +125,7 @@ const CarmenView = ({ userId }) => {
 
 /**
  * Obtiene los estilos para el contenedor principal
- * 
+ *
  * @param {boolean} isMobile - Indica si el dispositivo es móvil
  * @returns {Object} Objeto de estilos para el contenedor
  */
@@ -145,7 +144,7 @@ const getContainerStyles = (isMobile) => ({
 
 /**
  * Obtiene los estilos para el área de contenido
- * 
+ *
  * @param {boolean} isMobile - Indica si el dispositivo es móvil
  * @returns {Object} Objeto de estilos para el área de contenido
  */
@@ -160,7 +159,7 @@ const getContentStyles = (isMobile) => ({
 
 /**
  * Renderiza el contenido principal del componente
- * 
+ *
  * @param {string|null} error - Mensaje de error, si lo hay
  * @param {Object|null} eventData - Datos del evento procesados
  * @param {string|number} userId - El ID del usuario

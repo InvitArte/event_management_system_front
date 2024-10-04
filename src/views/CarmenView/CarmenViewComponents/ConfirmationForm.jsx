@@ -414,4 +414,6 @@ ConfirmationForm.propTypes = {
   initialData: PropTypes.object,
 };
 
-export default React.memo(ConfirmationForm);
+
+const memoizedConfirmationForm = React.memo(ConfirmationForm);
+export default memoizedConfirmationForm;
