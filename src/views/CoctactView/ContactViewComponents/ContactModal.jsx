@@ -18,9 +18,11 @@ import {
 // Servicios
 import { contactService } from "../../../services/Api";
 
+// Componentes propios genericos
+import { CloseButton } from "../../../components";
+
 // Componentes propios
 import ContactForm from "./ContactForm";
-import { CloseButton } from "../../../components";
 
 const ContactModal = ({ open, onClose, contact, onSubmit }) => {
   const [loading, setLoading] = useState(false);

@@ -1,15 +1,28 @@
+// React y hooks
 import React, { useState, useCallback, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Box, Checkbox, Chip, Tooltip, IconButton } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import BulkActions from "./BulkActions";
+
+// Configuración
+import { DataGridLocaleText } from "../../../config";
+
+// Componentes genericos
 import {
   stringToColor,
   adjustColor,
   getContrastColor,
 } from "../../../components";
-import { DataGridLocaleText } from "../../../config";
+
+//Componentes propios
+import BulkActions from "./BulkActions";
+
+// Assets y estilos
 import "../../../styles/GuestView/Datatable.css";
 
 const GuestTable = ({
