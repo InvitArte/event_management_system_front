@@ -1,5 +1,10 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Paper,
   Typography,
@@ -10,6 +15,8 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+
+// Componentes propios
 import translations from "./Translations";
 
 const ConfigSection = ({

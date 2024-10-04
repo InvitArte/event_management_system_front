@@ -1,6 +1,13 @@
+// React y hooks
 import React, { useState, useEffect } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+
+// Imágenes y assets
 import HeaderImage from "../../../assets/imgs/TODO_COLOR.jpg";
 
 

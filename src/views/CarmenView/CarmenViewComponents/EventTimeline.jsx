@@ -1,7 +1,12 @@
+//React
 import React from "react";
+
+// Material-UI
 import { Box, Container, Typography } from "@mui/material";
-import TimelineItem from "./TimelineItem";
 import { DirectionsBus as DirectionsBusIcon, Church as ChurchIcon, Restaurant as RestaurantIcon } from "@mui/icons-material";
+
+// Componentes propios
+import TimelineItem from "./TimelineItem";
 
 const EventTimeline = ({ scrollProgress, eventLocations }) => {
   const timelineItems = [

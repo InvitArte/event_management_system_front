@@ -1,6 +1,13 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { List, ListItem, ListItemText } from "@mui/material";
+
+// Componentes propios
 import MenuListItem from "./MenuListItem";
 
 const MenuList = ({

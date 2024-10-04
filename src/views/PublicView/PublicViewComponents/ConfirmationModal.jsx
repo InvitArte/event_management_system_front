@@ -1,11 +1,18 @@
+// React y hooks
 import React, { useState, useCallback, useEffect } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { DialogActions } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import ConfirmationForm from "./ConfirmationForm";
+
+// Servicios
 import { publicService } from "../../../services/Api";
-import "../../../styles/fonts.css";
-import aguja from "../../../assets/imgs/aguja.svg";
+
+// Componentes propios
+import ConfirmationForm from "./ConfirmationForm";
 import {
   CustomDialog,
   CustomDialogTitle,
@@ -17,6 +24,10 @@ import {
   SuccessMessage,
   ErrorMessage,
 } from "../../CarmenView/CarmenViewComponents/ConfirmationModalStyles";
+
+// Estilos y Assets
+import "../../../styles/fonts.css";
+import aguja from "../../../assets/imgs/aguja.svg";
 
 const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   const [formData, setFormData] = useState(null);

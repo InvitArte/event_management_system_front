@@ -1,10 +1,15 @@
+// React y hooks
 import React, { useState, useCallback, useEffect } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { DialogActions, useMediaQuery, useTheme } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+
+// Componentes propios y estilos personalizados0
 import ConfirmationForm from "./ConfirmationForm";
-import { publicService } from "../../../services/Api";
-import "../../../styles/fonts.css";
 import {
   CustomDialog,
   CustomDialogTitle,
@@ -16,6 +21,12 @@ import {
   ErrorMessage,
   EventButton,
 } from "./ConfirmationModalStyles";
+
+// Servicios
+import { publicService } from "../../../services/Api";
+
+// Estilos globales
+import "../../../styles/fonts.css";
 
 const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   const [formData, setFormData] = useState(null);

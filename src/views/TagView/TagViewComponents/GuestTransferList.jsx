@@ -1,5 +1,10 @@
+//React y hooks
 import React, { useState, useEffect } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Grid,
   List,
@@ -116,9 +121,9 @@ const GuestTransferList = ({
         dense
         component="div"
         role="list"
-        sx={{ 
-          flexGrow: 1, 
-          overflow: "auto", 
+        sx={{
+          flexGrow: 1,
+          overflow: "auto",
           height: 250, // Altura fija
           '& .MuiListItem-root': {
             py: 0.5, // Reducir el padding vertical de los items

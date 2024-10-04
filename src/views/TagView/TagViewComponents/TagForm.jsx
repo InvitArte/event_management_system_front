@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useEffect } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { TextField, Button, Box } from "@mui/material";
 
 const TagForm = ({ tag, onSubmit }) => {

@@ -1,4 +1,7 @@
+// React y hooks
 import React, { useState } from "react";
+
+// Material-UI
 import {
   Box,
   Typography,
@@ -6,12 +9,13 @@ import {
   IconButton,
   Container,
   Modal,
-  useMediaQuery,
-  useTheme,
   Collapse,
 } from "@mui/material";
-import EventLocations from "./EventLocations";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon, Close as CloseIcon } from "@mui/icons-material";
+
+// Componentes propios
+import EventLocations from "./EventLocations";
 
 const mainBlue = "#153e87";
 

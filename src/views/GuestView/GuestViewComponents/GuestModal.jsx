@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useCallback, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Dialog,
   DialogTitle,
@@ -9,8 +14,14 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
-import {CloseButton} from "../../../components";
+
+// Servicios
 import { guestService } from "../../../services/Api";
+
+// Componentes genericos
+import {CloseButton} from "../../../components";
+
+// Componentes propios
 import GuestForm from "./GuestForm";
 
 const GuestModal = ({
@@ -54,11 +65,11 @@ const GuestModal = ({
           })),
           tags: formData.tags,
         };
-  
+
         const response = guest
           ? await guestService.updateGuest(guest.id, guestData)
           : await guestService.createGuest(guestData);
-  
+
         onSubmit();
         onClose();
       } catch (err) {
@@ -96,10 +107,10 @@ const GuestModal = ({
   );
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="md" 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
       fullWidth
       PaperProps={{
         sx: {
@@ -109,7 +120,7 @@ const GuestModal = ({
     >
       <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
         {modalTitle}
-        <CloseButton onClose={onClose} /> 
+        <CloseButton onClose={onClose} />
       </DialogTitle>
       <DialogContent>
         <GuestForm

@@ -1,5 +1,10 @@
+//React
 import React from "react";
+
+//Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+//Material-UI
 import { Typography, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -17,7 +22,7 @@ const StyledDateTypography = styled(Typography)(({ theme }) => ({
 
 /**
  * Componente EventDate
- * 
+ *
  * Este componente muestra la fecha del evento con un estilo personalizado.
  * Si no se proporciona una fecha, muestra un mensaje predeterminado.
  *

@@ -1,9 +1,12 @@
+//React
 import React from "react";
+
+//Material-UI
 import { Card, CardContent, Skeleton, Box } from "@mui/material";
 
 /**
  * Componente EventCardSkeleton
- * 
+ *
  * Este componente renderiza un esqueleto de carga para la tarjeta de evento.
  * Se utiliza para mostrar un placeholder mientras se cargan los datos reales del evento.
  */

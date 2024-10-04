@@ -1,7 +1,14 @@
+// React y hooks
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Box, TextField, Button, Grid, Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+// Componentes genéricos
 import { normalizeText, stringToColor, TagChip, FilterAutocomplete } from "../../../components";
 
 const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters }) => {
@@ -87,7 +94,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
       <Typography variant="h4">Filtros</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4}>
-          {renderFilter('full_name', 
+          {renderFilter('full_name',
             <TextField
               fullWidth
               label="Buscar por nombre"
@@ -98,7 +105,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
           )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          {renderFilter('phone', 
+          {renderFilter('phone',
             <TextField
               fullWidth
               label="Buscar por teléfono"
@@ -109,7 +116,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
           )}
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
-          {renderFilter('validated', 
+          {renderFilter('validated',
             <FilterAutocomplete
               fullWidth
               label="Verificado"
@@ -130,7 +137,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
             <AccordionDetails>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} md={4}>
-                  {renderFilter('menu', 
+                  {renderFilter('menu',
                     <FilterAutocomplete
                       fullWidth
                       label="Filtrar por Menú"
@@ -144,7 +151,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                   )}
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  {renderFilter('allergy', 
+                  {renderFilter('allergy',
                     <FilterAutocomplete
                       fullWidth
                       label="Filtrar por Alergia"
@@ -159,7 +166,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                   )}
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  {renderFilter('needs_hotel', 
+                  {renderFilter('needs_hotel',
                     <FilterAutocomplete
                       fullWidth
                       label="Necesita Hotel"
@@ -173,7 +180,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                   )}
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  {renderFilter('needs_transport', 
+                  {renderFilter('needs_transport',
                     <FilterAutocomplete
                       fullWidth
                       label="Necesita Transporte"
@@ -187,8 +194,8 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                   )}
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  {renderFilter('needs_transport_back', 
-                    <FilterAutocomplete 
+                  {renderFilter('needs_transport_back',
+                    <FilterAutocomplete
                       fullWidth
                       label="Necesita Transporte de Vuelta"
                       options={["Sí", "No"]}
@@ -201,7 +208,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                   )}
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  {renderFilter('tags', 
+                  {renderFilter('tags',
                     <FilterAutocomplete
                       fullWidth
                       label="Filtrar por Etiquetas"
@@ -218,7 +225,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
                   )}
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  {renderFilter('accommodation_plan', 
+                  {renderFilter('accommodation_plan',
                     <FilterAutocomplete
                       fullWidth
                       label="Filtrar por Plan de Alojamiento"
@@ -236,7 +243,7 @@ const GuestFilters = ({ guests, onFilterChange, tags, allergies, visibleFilters 
           </Accordion>
         </Grid>
         <Grid item xs={12}>
-          <Button 
+          <Button
             variant={hasActiveFilters ? "contained" : "outlined"}
             color={hasActiveFilters ? "secondary" : "primary"}
             onClick={handleClearFilters}

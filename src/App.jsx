@@ -1,9 +1,16 @@
+// React y bibliotecas de terceros
 import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { BackgroundImageProvider ,UserConfigProvider  } from "./context";
+
+// Componentes propios
 import AppContent from "./AppContent";
+
+// Contextos propios
+import { BackgroundImageProvider, UserConfigProvider } from "./context";
+
+// Estilos
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (

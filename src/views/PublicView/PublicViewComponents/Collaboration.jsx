@@ -1,9 +1,13 @@
+// React y hooks
 import React, { useEffect, useState } from "react";
+
+// Contexto
+import { useBackgroundImage } from "../../../context";
+
+// Estilos y Assets
 import logo from "../../../assets/imgs/logo_eslogan.png";
 import sello from "../../../assets/imgs/sello.png";
 import "../../../styles/PublicView/Collaboration.css";
-import { useBackgroundImage } from "../../../context";
-
 const Collaboration = () => {
   const { backgroundImages, setBackgroundImage } = useBackgroundImage();
   const [imagesLoaded, setImagesLoaded] = useState(false);

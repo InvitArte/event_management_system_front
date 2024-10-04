@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useCallback, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI componentes
 import {
   Dialog,
   DialogTitle,
@@ -9,9 +14,15 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
+
+// Servicios
 import { contactService } from "../../../services/Api";
+
+// Componentes propios genericos
+import { CloseButton } from "../../../components";
+
+// Componentes propios
 import ContactForm from "./ContactForm";
-import {CloseButton} from "../../../components";
 
 const ContactModal = ({ open, onClose, contact, onSubmit }) => {
   const [loading, setLoading] = useState(false);
@@ -74,7 +85,7 @@ const ContactModal = ({ open, onClose, contact, onSubmit }) => {
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { overflow: 'visible' } }}>
       <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
         {modalTitle}
-        <CloseButton onClose={onClose} /> 
+        <CloseButton onClose={onClose} />
       </DialogTitle>
       <DialogContent>
         <ContactForm contact={contact} onSubmit={handleSubmit} />

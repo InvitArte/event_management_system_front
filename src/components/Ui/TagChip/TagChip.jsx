@@ -1,11 +1,18 @@
+// React
 import React from "react";
+
+// Biblioteca de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Chip } from "@mui/material";
+
+// Componentes propios
 import {
   stringToColor,
   adjustColor,
   getContrastColor,
-} from "../../Utils/TagColors/TagColors";
+} from "../../index";
 
 const TagChip = ({ tag, onDelete, style = {} }) => {
   const backgroundColor = adjustColor(stringToColor(tag.name), 20);

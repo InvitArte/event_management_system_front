@@ -1,6 +1,12 @@
+// React y hooks
 import React, { useState, useEffect } from "react";
+
+// Bibliotecas de terceros
+import { useNavigate } from "react-router-dom";
+
+// Material-UI
 import { Toolbar, Typography, Container, IconButton, useMediaQuery, useTheme } from "@mui/material";
-import { 
+import {
   Menu as MenuIcon,
   People as PeopleIcon,
   LocalOffer as LocalOfferIcon,
@@ -9,13 +15,17 @@ import {
   Settings as SettingsIcon,
   ExitToApp as ExitToAppIcon
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+
+
+// Hooks propios
 import { useNavbar } from "../../../hooks";
-import { 
-  NavbarLink, 
-  UserMenu, 
-  MobileDrawer, 
-  AnimatedAppBar 
+
+// Componentes propios
+import {
+  NavbarLink,
+  UserMenu,
+  MobileDrawer,
+  AnimatedAppBar
 } from './NavBarComponents';
 
 const SCROLL_THRESHOLD = 50;
@@ -80,9 +90,9 @@ const Navbar = () => {
   ];
 
   return (
-    <AnimatedAppBar 
-      position="fixed" 
-      elevation={3} 
+    <AnimatedAppBar
+      position="fixed"
+      elevation={3}
       isScrolled={isScrolled && !isNavbarExpanded}
       onClick={handleNavbarClick}
     >

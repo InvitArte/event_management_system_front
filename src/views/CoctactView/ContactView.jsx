@@ -1,16 +1,28 @@
+// React
 import React from "react";
+
+// Material-UI
 import {
   Container,
   Typography,
   Box,
-  useMediaQuery,
-  useTheme,
   Button,
   Paper,
 } from "@mui/material";
-import {useContactView} from "../../hooks";
+import { useMediaQuery, useTheme } from "@mui/material";
+
+// Hooks propios
+import { useContactView } from "../../hooks";
+
+// Componentes propios
 import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
-import { ContactFilters, ContactTable, MobileContactList, ContactModal, QRModal } from "./ContactViewComponents";
+import {
+  ContactFilters,
+  ContactTable,
+  MobileContactList,
+  ContactModal,
+  QRModal
+} from "./ContactViewComponents";
 
 const ContactView = () => {
   const {

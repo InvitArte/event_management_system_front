@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useEffect, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   List,
   ListItem,
@@ -106,10 +111,10 @@ const MobileContactList = ({
         <Grid container alignItems="center" spacing={1}>
           <Grid item xs>
             <Tooltip title={isTruncated ? contact.name : ''} arrow>
-              <Typography 
-                noWrap 
-                sx={{ 
-                  overflow: 'hidden', 
+              <Typography
+                noWrap
+                sx={{
+                  overflow: 'hidden',
                   textOverflow: 'ellipsis',
                 }}
               >
@@ -180,14 +185,14 @@ const MobileContactList = ({
         ))}
       </List>
       <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-        <IconButton 
-          onClick={() => handlePageChange(1)} 
+        <IconButton
+          onClick={() => handlePageChange(1)}
           disabled={page === 1}
         >
           <FirstPageIcon />
         </IconButton>
-        <IconButton 
-          onClick={() => handlePageChange(page - 1)} 
+        <IconButton
+          onClick={() => handlePageChange(page - 1)}
           disabled={page === 1}
         >
           <ChevronLeftIcon />
@@ -195,14 +200,14 @@ const MobileContactList = ({
         <Typography variant="body2">
           Página {page} de {totalPages}
         </Typography>
-        <IconButton 
-          onClick={() => handlePageChange(page + 1)} 
+        <IconButton
+          onClick={() => handlePageChange(page + 1)}
           disabled={page === totalPages}
         >
           <ChevronRightIcon />
         </IconButton>
-        <IconButton 
-          onClick={() => handlePageChange(totalPages)} 
+        <IconButton
+          onClick={() => handlePageChange(totalPages)}
           disabled={page === totalPages}
         >
           <LastPageIcon />

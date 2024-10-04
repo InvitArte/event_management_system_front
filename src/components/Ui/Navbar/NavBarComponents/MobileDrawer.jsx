@@ -1,5 +1,11 @@
+// React
 import React from 'react';
+
+// Biblioteca de terceros
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+
+// Material-UI
 import {
   Drawer,
   List,
@@ -12,7 +18,6 @@ import {
   ListItemButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
 
 const MobileDrawer = ({ isOpen, onClose, menuItems }) => {
   // Separar la opción de "Desconectarse" del resto de los ítems

@@ -1,5 +1,10 @@
+// React y hooks
 import { useState } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Container,
   Typography,
@@ -9,6 +14,8 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+
+// Componentes propios
 import { ProfileForm, LocationModal, ChangePasswordModal, MenuModal } from "./ProfileViewComponents";
 
 const ProfileView = ({ visibleFields }) => {
@@ -16,7 +23,7 @@ const ProfileView = ({ visibleFields }) => {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const [locationModalOpen, setLocationModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
-  const [menuModalOpen, setMenuModalOpen] = useState(false); 
+  const [menuModalOpen, setMenuModalOpen] = useState(false);
 
   const toggleModal = (setter) => () => setter((prev) => !prev);
 
