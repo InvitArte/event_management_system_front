@@ -1,8 +1,16 @@
+// React y hooks
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+// Material-UI
 import { Modal, Box, Typography } from "@mui/material";
-import ChangePasswordForm from "./ChangePasswordForm";
+
+// Servicios
 import { authService } from "../../../services/Api";
+
+// Componentes propios
+import ChangePasswordForm from "./ChangePasswordForm";
 
 const ChangePasswordModal = ({ open, handleClose }) => {
   const handleUpdatePassword = async (

@@ -1,7 +1,16 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Modal, Box, Typography } from "@mui/material";
+
+// Hooks propios
 import {useLocations} from "../../../hooks";
+
+// Componentes propios
 import {LocationList, LocationForm} from "./index";
 
 const style = {
