@@ -1,5 +1,10 @@
+// Reac y hooks
 import React, { useEffect } from "react";
+
+// Contexto
 import { useBackgroundImage } from "../../../context";
+
+// Estilos y Assets
 import "../../../styles/PublicView/FrontPage.css";
 import logo from "../../../assets/imgs/logo.png";
 

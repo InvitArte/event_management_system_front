@@ -1,17 +1,25 @@
+// React y hooks
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Grid,
-  FormControl,
   FormLabel,
   RadioGroup,
   FormControlLabel,
 } from "@mui/material";
+
+// Componentes propios
 import {
   CustomFormControl,
   CustomTextField,
   CustomRadio,
 } from "../../CarmenView/CarmenViewComponents/ConfirmationModalStyles";
+
+// Estilos
 import "../../../styles/fonts.css";
 
 const initialFormData = {
