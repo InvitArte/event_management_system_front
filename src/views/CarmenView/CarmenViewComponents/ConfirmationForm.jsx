@@ -17,7 +17,7 @@ import {
 } from "./ConfirmationModalStyles";
 import "../../../styles/fonts.css";
 import services from "../../../services/Api";
-import { defaultConfig } from "../../../config/Config";
+import { defaultConfig } from "../../../config/utils/Config";
 
 const initialFormData = {
   guest: {
@@ -61,7 +61,7 @@ const ConfirmationForm = ({
           services.public.getPublicMenus(userId),
           services.public.getPublicAllergies(),
         ]);
-        
+
         if (Array.isArray(menusData)) {
           setMenus(menusData);
         } else {

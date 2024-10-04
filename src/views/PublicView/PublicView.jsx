@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import "../../styles/PublicView/Footer.css";
-import { useUserConfig } from "../../context/UserConfigContext.jsx";
-import { defaultConfig } from "../../config/Config.js";
+import { useUserConfig } from "../../context";
+import { defaultConfig } from "../../config/utils/Config.js";
 import { FrontPage, Countdown, EventDetails, Collaboration } from "./PublicViewComponents";
 
 const PublicView = () => {

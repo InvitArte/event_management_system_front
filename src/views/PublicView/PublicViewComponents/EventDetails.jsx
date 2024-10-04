@@ -4,7 +4,7 @@ import { publicService } from "../../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
 import "../../../styles/PublicView/EventDetails.css";
 import logo from "../../../assets/imgs/maniqui.svg";
-import { useBackgroundImage } from "../../../context/BackgroundImageContext";
+import { useBackgroundImage } from "../../../context";
 
 const EventDetails = ({ userId }) => {
   const [eventDate, setEventDate] = useState(null);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ProtectedRoute, ProtectedLayout, LoadingComponent } from "./components";
-import { useUserConfig } from "./context/UserConfigContext";
+import { useUserConfig } from "./context";
 import { CarmenView, LoginView, GuestView, TagView, ContactView, ProfileView, SettingsView, NotFoundView, PublicView } from "./views";
 
 const AppContent = () => {

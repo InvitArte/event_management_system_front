@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useUserConfig } from "../../context/UserConfigContext";
-import defaultConfig from "../../config/Config";
+import { useUserConfig } from "../../context";
+import defaultConfig from "../../config/utils/Config";
 import {
   Container,
   Paper,

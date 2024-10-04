@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { tagService, guestService } from "../../services/Api";
-import { translateError } from "../../config/ErrorMessages";
+import { translateError } from "../../config/utils/ErrorMessages";
 
 const useTagView = () => {
   const [tags, setTags] = useState([]);
@@ -15,7 +15,7 @@ const useTagView = () => {
   });
 
   const capitalizeFirstLetter = (string) => {
-    return string.split(' ').map(word => 
+    return string.split(' ').map(word =>
       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     ).join(' ');
   };
@@ -27,7 +27,7 @@ const useTagView = () => {
         guestService.getAllGuests(),
       ]);
       setTags(tagsResponse);
-      
+
       const normalizedGuests = guestsResponse.map(guest => ({
         ...guest,
         first_name: capitalizeFirstLetter(guest.first_name),
@@ -75,8 +75,8 @@ const useTagView = () => {
         }));
       } catch (err) {
         console.error("Error deleting tag:", err);
-        setUiState(prev => ({ 
-          ...prev, 
+        setUiState(prev => ({
+          ...prev,
           error: translateError(err),
           deleteDialogOpen: false,
           tagToDelete: null,
