@@ -1,8 +1,15 @@
+// React y hooks
 import React, { useRef, useEffect } from "react";
-import "../../styles/PublicView/Footer.css";
+
+// Contexto y Configuración
 import { useUserConfig } from "../../context";
-import { defaultConfig } from "../../config/utils/Config.js";
+import { defaultConfig } from "../../config";
+
+// Componentes propios
 import { FrontPage, Countdown, EventDetails, Collaboration } from "./PublicViewComponents";
+
+// Estilos
+import "../../styles/PublicView/Footer.css";
 
 const PublicView = () => {
   const containerRef = useRef(null);
