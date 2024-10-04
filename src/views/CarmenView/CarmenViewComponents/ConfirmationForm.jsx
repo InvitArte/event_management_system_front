@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Grid,
   FormControl,
@@ -9,15 +14,21 @@ import {
   MenuItem,
   Autocomplete,
 } from "@mui/material";
+
+// Componentes y estilos propios
 import {
   CustomFormControl,
   CustomTextField,
   CustomRadio,
   CustomCheck,
 } from "./ConfirmationModalStyles";
-import "../../../styles/fonts.css";
+
+// Servicios y configuración
 import services from "../../../services/Api";
-import { defaultConfig } from "../../../config/utils/Config";
+import { defaultConfig } from "../../../config";
+
+// Estilos globales
+import "../../../styles/fonts.css";
 
 const initialFormData = {
   guest: {

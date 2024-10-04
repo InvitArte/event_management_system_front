@@ -1,13 +1,18 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Componentes estilizados
 import { InvertedEventButton } from "./ConfirmationModalStyles";
 
 /**
  * Componente ConfirmButton
- * 
+ *
  * Este componente renderiza un botón de confirmación de asistencia.
  * Utiliza el estilo InvertedEventButton y puede ajustarse a ancho completo.
- * 
+ *
  * @param {Object} props - Propiedades del componente
  * @param {Function} props.onClick - Función a ejecutar al hacer clic en el botón
  * @param {string} [props.className] - Clase CSS adicional para el botón

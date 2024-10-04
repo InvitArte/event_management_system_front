@@ -1,11 +1,16 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Typography, Box, Link } from "@mui/material";
 import { EventButton, EventInfo } from "./ConfirmationModalStyles";
 
 /**
  * Componente EventLocations
- * 
+ *
  * Este componente muestra una lista de ubicaciones de eventos.
  * Si no hay ubicaciones, no renderiza nada.
  *

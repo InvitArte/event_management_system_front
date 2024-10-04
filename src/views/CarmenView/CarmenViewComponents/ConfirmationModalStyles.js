@@ -1,5 +1,4 @@
-// ConfirmationModalStyles.js
-
+// Material-UI
 import { styled } from "@mui/material/styles";
 import {
   Dialog,
