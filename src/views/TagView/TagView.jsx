@@ -1,4 +1,7 @@
+// React
 import React from "react";
+
+// Material-UI
 import {
   Container,
   Typography,
@@ -9,8 +12,14 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
+
+// Hooks propios
 import {useTagView} from "../../hooks";
+
+// Componentes genericos
 import {SkeletonTable, DeleteConfirmationDialog} from "../../components";
+
+// Componentes propios
 import {TagTable, TagModal} from "./TagViewComponents";
 
 
@@ -47,9 +56,9 @@ const TagView = () => {
           >
             Etiquetas
           </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
+          <Button
+            variant="contained"
+            color="primary"
             onClick={handleCreateTag}
             sx={{
               fontSize: isSmallScreen ? "0.75rem" : "1rem",
