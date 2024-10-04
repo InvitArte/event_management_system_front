@@ -1,0 +1,9 @@
+export {default as CarmenView} from "./CarmenView/CarmenView";
+export {default as GuestView} from "./GuestView/GuestView";
+export {default as TagView} from "./TagView/TagView";
+export {default as ContactView} from "./CoctactView/ContactView";
+export {default as LoginView} from "./LoginView/LoginView";
+export {default as NotFoundView} from "./NotFoundView/NotFoundView";
+export {default as ProfileView} from "./ProfileView/ProfileView";
+export {default as SettingsView} from "./SettingsView/SettingsView";
+export {default as PublicView} from "./PublicView/PublicView";

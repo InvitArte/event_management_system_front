@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import { publicService } from "../../../services/Api";
 import ConfirmationModal from "./ConfirmationModal";
-import "../../styles/PublicView/EventDetails.css";
-import logo from "../../assets/imgs/maniqui.svg";
+import "../../../styles/PublicView/EventDetails.css";
+import logo from "../../../assets/imgs/maniqui.svg";
 import { useBackgroundImage } from "../../../context/BackgroundImageContext";
 
 const EventDetails = ({ userId }) => {
@@ -66,7 +66,7 @@ const EventDetails = ({ userId }) => {
   useEffect(() => {
     const loadBackgroundImage = async () => {
       try {
-        const imageModule = await import("../../assets/imgs/eventdetails.jpg");
+        const imageModule = await import("../../../assets/imgs/eventdetails.jpg");
         setBackgroundImage("eventDetails", imageModule.default);
       } catch (error) {
         console.error(
