@@ -1,4 +1,7 @@
+// React
 import React from "react";
+
+// Material-UI
 import { Skeleton, Box, Paper, Typography } from "@mui/material";
 
 const ConfigSectionSkeleton = () => {

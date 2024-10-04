@@ -1,6 +1,7 @@
+// React y hooks
 import React, { useState, useEffect } from "react";
-import { useUserConfig } from "../../context";
-import defaultConfig from "../../config/utils/Config";
+
+// Material-UI
 import {
   Container,
   Paper,
@@ -10,6 +11,12 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+
+// Contexto y Configuración
+import { useUserConfig } from "../../context";
+import {defaultConfig} from "../../config";
+
+// Componentes propios
 import { ConfigSection, ConfigSectionSkeleton, Translations } from "./SettingsViewComponents";
 
 const SettingsView = () => {
