@@ -1,8 +1,15 @@
+
+// React
 import React from "react";
+
+// Biblioteca de terceros
 import { Outlet } from "react-router-dom";
+
+// Material-UI
 import { Box, Container } from "@mui/material";
-import Navbar from "../../Ui/Navbar/Navbar";
-import Footer from "../../Ui/Footer/Footer";
+
+// Componentes propios
+import { Navbar, Footer } from "../../index";
 
 const ProtectedLayout = () => {
   return (
