@@ -1,6 +1,6 @@
 // src/locales/dataGridLocaleText.js
 
-export const dataGridLocaleText = {
+const dataGridLocaleText = {
   // Columnas
   columnMenuLabel: "Menú",
   columnMenuShowColumns: "Mostrar columnas",
@@ -60,3 +60,5 @@ export const dataGridLocaleText = {
   columnsPanelShowAllButton: "Mostrar todo",
   columnsPanelHideAllButton: "Ocultar todo",
 };
+
+export default dataGridLocaleText;

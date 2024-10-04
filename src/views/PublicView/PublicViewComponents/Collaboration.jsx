@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/imgs/logo_eslogan.png";
-import sello from "../../assets/imgs/sello.png";
-import "../../styles/PublicView/Collaboration.css";
-import { useBackgroundImage } from "../../../context/BackgroundImageContext";
+import logo from "../../../assets/imgs/logo_eslogan.png";
+import sello from "../../../assets/imgs/sello.png";
+import "../../../styles/PublicView/Collaboration.css";
+import { useBackgroundImage } from "../../../context";
 
 const Collaboration = () => {
   const { backgroundImages, setBackgroundImage } = useBackgroundImage();
@@ -11,7 +11,7 @@ const Collaboration = () => {
   useEffect(() => {
     const loadBackgroundImage = async () => {
       try {
-        const imageModule = await import("../../assets/imgs/collaboration.jpg");
+        const imageModule = await import("../../../assets/imgs/collaboration.jpg");
         setBackgroundImage("collaboration", imageModule.default);
       } catch (error) {
         console.error(

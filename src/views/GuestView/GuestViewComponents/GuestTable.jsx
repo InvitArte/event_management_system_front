@@ -8,8 +8,8 @@ import {
   stringToColor,
   adjustColor,
   getContrastColor,
-} from "../../../components/Utils/TagColors";
-import { dataGridLocaleText } from "../../../config/DataGridLocaleText";
+} from "../../../components";
+import { DataGridLocaleText } from "../../../config";
 import "../../../styles/GuestView/Datatable.css";
 
 const GuestTable = ({
@@ -235,7 +235,7 @@ const GuestTable = ({
           columnVisibilityModel={visibleColumns}
           sortModel={sortModel}
           onSortModelChange={onSortModelChange}
-          localeText={dataGridLocaleText}
+          localeText={DataGridLocaleText}
         />
       </div>
     </Box>

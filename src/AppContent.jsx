@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import CarmenView from "./views/CarmenView/CarmenView";
-import LoginView from "./views/LoginView/LoginView";
-import GuestView from "./views/GuestView/GuestView";
-import ContactView from "./views/CoctactView/ContactView";
-import TagView from "./views/TagView/TagView";
-import ProfileView from "./views/ProfileView/ProfileView";
-import SettingsView from "./views/SettingsView/SettingsView";
-import NotFoundView from "./views/NotFoundView/NotFoundView";
-import ProtectedRoute from "./components/Utils/ProtectedRoute";
-import ProtectedLayout from "./components/Utils/ProtectedLayout";
-import { useUserConfig } from "./context/UserConfigContext";
-import LoadingComponent from "./components/Ui/LoadingComponent";
+import { ProtectedRoute, ProtectedLayout, LoadingComponent } from "./components";
+import { useUserConfig } from "./context";
+import { CarmenView, LoginView, GuestView, TagView, ContactView, ProfileView, SettingsView, NotFoundView, PublicView } from "./views";
 
 const AppContent = () => {
   const { userConfig, isLoading: isConfigLoading } = useUserConfig();
@@ -24,17 +15,15 @@ const AppContent = () => {
     }
   }, [isConfigLoading, userConfig]);
 
-
-  // Show loading only during initial load
   if (isInitialLoad) {
     return <LoadingComponent isLoading={true} type="bar" />;
   }
 
   return (
     <>
-      {/* Remove LoadingComponent from here */}
       <Routes>
         <Route path="/" element={<CarmenView userId={userConfig?.userId} />} />
+        {/* <Route path="/public" element={<PublicView />} /> ahora mismo es la del desfile en master*/}
         <Route path="/login" element={<LoginView />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<ProtectedLayout />}>

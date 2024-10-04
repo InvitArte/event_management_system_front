@@ -9,25 +9,23 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
-import TagTable from "./TagViewComponents/TagTable";
-import TagModal from "./TagViewComponents/TagModal";
-import SkeletonTable from "../../components/Ui/SkeletonTable";
-import useTagView from "../../hooks/useTagView";
+import {useTagView} from "../../hooks";
+import {SkeletonTable, DeleteConfirmationDialog} from "../../components";
+import {TagTable, TagModal} from "./TagViewComponents";
+
 
 const TagView = () => {
   const {
     tags,
     guests,
-    loading,
-    error,
-    modalOpen,
-    selectedTag,
+    uiState,
     handleCreateTag,
     handleEditTag,
     handleDeleteTag,
+    handleConfirmDelete,
     handleTagUpdate,
     handleCloseModal,
-    setError,
+    setUiState,
   } = useTagView();
 
   const theme = useTheme();
@@ -35,9 +33,9 @@ const TagView = () => {
 
   return (
     <Container maxWidth={isSmallScreen ? "sm" : "xl"}>
-      {error && (
+      {uiState.error && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          {error}
+          {uiState.error}
         </Alert>
       )}
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
@@ -64,7 +62,7 @@ const TagView = () => {
         </Box>
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-        {loading ? (
+        {uiState.loading ? (
           <SkeletonTable
             rowsNum={5}
             columnsNum={1}
@@ -81,12 +79,21 @@ const TagView = () => {
         )}
       </Paper>
       <TagModal
-        open={modalOpen}
+        open={uiState.modalOpen}
         onClose={handleCloseModal}
         onTagUpdate={handleTagUpdate}
-        tag={selectedTag}
+        tag={uiState.selectedTag}
         guests={guests}
-        setError={setError}
+        setError={(error) => setUiState(prev => ({ ...prev, error }))}
+      />
+      <DeleteConfirmationDialog
+        open={uiState.deleteDialogOpen}
+        onClose={() => setUiState(prev => ({ ...prev, deleteDialogOpen: false }))}
+        onConfirm={handleConfirmDelete}
+        title="Confirmar eliminación de etiqueta"
+        content={`¿Estás seguro de que quieres eliminar la etiqueta "${uiState.tagToDelete?.name}"? Esta acción no se puede deshacer.`}
+        cancelButtonText="Cancelar"
+        confirmButtonText="Eliminar etiqueta"
       />
     </Container>
   );

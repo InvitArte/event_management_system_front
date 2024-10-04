@@ -53,4 +53,6 @@ DeleteConfirmationDialog.propTypes = {
   confirmButtonText: PropTypes.string,
 };
 
-export default React.memo(DeleteConfirmationDialog);
+const MemoizedDeleteConfirmationDialog = React.memo(DeleteConfirmationDialog);
+
+export default MemoizedDeleteConfirmationDialog;

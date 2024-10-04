@@ -1,27 +1,27 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import PropTypes from "prop-types";
 import { useMediaQuery, useTheme, Box, Typography } from "@mui/material";
-import CalendarButton from "./CalendarButton";
-import ConfirmationModal from "./ConfirmationModal";
-import GiftMessage from "./GiftMessage";
-import CustomCard from "../../../components/Ui/CustomCard";
-import EventTimeline from "./EventTimeline";
+import {
+  CalendarButton,
+  ConfirmationModal,
+  GiftMessage,
+  EventTimeline,
+  ConfirmButton,
+  CustomCardContent,
+  EventTitleStyle,
+  EventSubtitle,
+  EventInfo
+} from './index';
+import {CustomCard} from "../../../components";
 import FloralSeparator from "../../../assets/imgs/FloralSeparator.svg";
 import IglesiaCarmen from "../../../assets/imgs/IglesiaCarmen.png";
-import ConfirmButton from "./ConfirmButton";
-import {
-  CustomCardContent,
-  EventTitle,
-  EventSubtitle,
-  EventInfo,
-} from "./ConfirmationModalStyles";
 
 /**
  * Componente CarmenEventCard
- * 
+ *
  * Este componente muestra la información detallada de un evento de boda,
  * incluyendo fecha, ubicaciones, timeline y botones de confirmación.
- * 
+ *
  * @param {Object} props - Propiedades del componente
  * @param {string|number} props.userId - ID del usuario
  * @param {boolean} props.showTitle - Indica si se debe mostrar el título
@@ -170,7 +170,7 @@ const renderTitle = (showTitle) => {
   return (
     <>
       <EventSubtitle variant="h2">¡Nos casamos!</EventSubtitle>
-      <EventTitle variant="h1">César y Carmen</EventTitle>
+      <EventTitleStyle variant="h1">César y Carmen</EventTitleStyle>
     </>
   );
 };

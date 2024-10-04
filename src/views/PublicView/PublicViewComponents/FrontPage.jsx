@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useBackgroundImage } from "../../../context/BackgroundImageContext";
-import "../../styles/PublicView/FrontPage.css";
-import logo from "../../assets/imgs/logo.png";
+import { useBackgroundImage } from "../../../context";
+import "../../../styles/PublicView/FrontPage.css";
+import logo from "../../../assets/imgs/logo.png";
 
 const FrontPage = () => {
   const { backgroundImages, setBackgroundImage } = useBackgroundImage();
@@ -10,7 +10,7 @@ const FrontPage = () => {
     const loadBackgroundImage = async () => {
       try {
         const imageModule = await import(
-          "../../assets/imgs/front-page-background.jpg"
+          "../../../assets/imgs/front-page-background.jpg"
         );
         setBackgroundImage("frontPage", imageModule.default);
       } catch (error) {
