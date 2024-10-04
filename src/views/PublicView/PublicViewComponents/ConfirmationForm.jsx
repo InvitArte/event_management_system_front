@@ -11,8 +11,8 @@ import {
   CustomFormControl,
   CustomTextField,
   CustomRadio,
-} from "../CarmenView/ConfirmationModalStyles";
-import "../../styles/fonts.css";
+} from "../../CarmenView/CarmenViewComponents/ConfirmationModalStyles";
+import "../../../styles/fonts.css";
 
 const initialFormData = {
   guest: {
@@ -214,4 +214,5 @@ ConfirmationForm.propTypes = {
   }),
 };
 
-export default React.memo(ConfirmationForm);
+const MemoizedConfirmationForm = React.memo(ConfirmationForm);
+export default MemoizedConfirmationForm;

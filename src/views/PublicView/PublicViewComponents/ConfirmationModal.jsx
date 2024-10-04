@@ -4,8 +4,8 @@ import { DialogActions } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ConfirmationForm from "./ConfirmationForm";
 import { publicService } from "../../../services/Api";
-import "../../styles/fonts.css";
-import aguja from "../../assets/imgs/aguja.svg";
+import "../../../styles/fonts.css";
+import aguja from "../../../assets/imgs/aguja.svg";
 import {
   CustomDialog,
   CustomDialogTitle,
@@ -16,7 +16,7 @@ import {
   StyledImage,
   SuccessMessage,
   ErrorMessage,
-} from "../CarmenView/ConfirmationModalStyles";
+} from "../../CarmenView/CarmenViewComponents/ConfirmationModalStyles";
 
 const ConfirmationModal = ({ isOpen, onClose, userId }) => {
   const [formData, setFormData] = useState(null);
@@ -172,4 +172,5 @@ ConfirmationModal.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
-export default React.memo(ConfirmationModal);
+const MemoizedConfirmationModal = React.memo(ConfirmationModal);
+export default MemoizedConfirmationModal;

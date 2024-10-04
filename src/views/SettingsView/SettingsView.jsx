@@ -10,9 +10,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-import ConfigSection from "./SettingsViewComponents/ConfigSection";
-import ConfigSectionSkeleton from "./SettingsViewComponents/ConfigSectionSkeleton";
-import translations from "./SettingsViewComponents/Translations";
+import { ConfigSection, ConfigSectionSkeleton, Translations } from "./SettingsViewComponents";
 
 const SettingsView = () => {
   const theme = useTheme();
@@ -57,7 +55,7 @@ const SettingsView = () => {
           component="h1"
           gutterBottom
         >
-          {translations.settingsView.title}
+          {Translations.settingsView.title}
         </Typography>
       </Paper>
 
@@ -66,28 +64,28 @@ const SettingsView = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <ConfigSection
-            title={translations.guestViewColumns.title}
+            title={Translations.guestViewColumns.title}
             config={defaultConfig.guestViewColumns}
             localConfig={localConfig}
             handleConfigChange={handleConfigChange}
             section="guestViewColumns"
           />
           <ConfigSection
-            title={translations.guestViewFilters.title}
+            title={Translations.guestViewFilters.title}
             config={defaultConfig.guestViewFilters}
             localConfig={localConfig}
             handleConfigChange={handleConfigChange}
             section="guestViewFilters"
           />
           <ConfigSection
-            title={translations.guestFormFields.title}
+            title={Translations.guestFormFields.title}
             config={defaultConfig.guestFormFields}
             localConfig={localConfig}
             handleConfigChange={handleConfigChange}
             section="guestFormFields"
           />
           <ConfigSection
-            title={translations.profileViewFields.title}
+            title={Translations.profileViewFields.title}
             config={defaultConfig.profileViewFields}
             localConfig={localConfig}
             handleConfigChange={handleConfigChange}
@@ -95,7 +93,7 @@ const SettingsView = () => {
           />
           <Box display="flex" justifyContent="flex-end" mt={2}>
             <Button type="submit" variant="contained" color="primary">
-              {translations.settingsView.saveButton}
+              {Translations.settingsView.saveButton}
             </Button>
           </Box>
         </form>
