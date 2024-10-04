@@ -1,5 +1,10 @@
+//React y hooks
 import React, { useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Container,
   Typography,
@@ -9,8 +14,14 @@ import {
   Button,
   Paper,
 } from "@mui/material";
+
+// Hooks propios
 import {useGuestView} from "../../hooks";
+
+// Componentes genericos
 import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
+
+// Componentes propios
 import { ExcelDownloader, GuestFilters, GuestModal, GuestTable, MobileGuestList } from "./GuestViewComponents";
 
 const GuestView = ({
@@ -66,7 +77,7 @@ const GuestView = ({
         return 0;
       });
     }
-  
+
     const processedData = sortedGuests.map((guest) => {
       const rowData = {
         ID: guest.id,
@@ -75,7 +86,7 @@ const GuestView = ({
         Teléfono: guest.phone,
         Validado: guest.validated ? "Sí" : "No",
         Menú: guest.menu,
-        Alergias: guest.allergies && Array.isArray(guest.allergies) 
+        Alergias: guest.allergies && Array.isArray(guest.allergies)
           ? guest.allergies.map(allergy => allergy.name).join(", ")
           : "",
         "Necesita Hotel": guest.needs_hotel ? "Sí" : "No",
@@ -89,7 +100,7 @@ const GuestView = ({
           ? guest.tags.map((tag) => tag.name).join(", ")
           : "",
       };
-  
+
       return Object.keys(rowData).reduce((acc, key) => {
         const columnField = columns.find(
           (col) => col.headerName === key || (key === "Alergias" && col.field === "allergy")
@@ -100,7 +111,7 @@ const GuestView = ({
         return acc;
       }, {});
     });
-  
+
     return processedData;
   }, [filteredGuests, uiState.visibleColumns, uiState.sortModel, columns]);
 
@@ -180,7 +191,7 @@ const GuestView = ({
             onBulkActionComplete={handleBulkActionComplete}
             selectedGuests={selectedGuests}
             setSelectedGuests={setSelectedGuests}
-            visibleColumns={uiState.visibleColumns} 
+            visibleColumns={uiState.visibleColumns}
           />
         ) : (
           <GuestTable

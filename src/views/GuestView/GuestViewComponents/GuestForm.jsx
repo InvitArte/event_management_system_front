@@ -1,5 +1,10 @@
+//React y hooks
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   TextField,
   Checkbox,
@@ -8,8 +13,13 @@ import {
   Grid,
   Autocomplete,
 } from "@mui/material";
-import PlusOneForm from "./PlusOneForm";
+
+// Componentes genericos
 import { TagChip } from "../../../components";
+
+// Componentes propios
+import PlusOneForm from "./PlusOneForm";
+
 
 const GuestForm = ({
   guest,
@@ -136,7 +146,7 @@ const GuestForm = ({
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-  
+
       const submitData = {
         first_name: formData.first_name,
         last_name: formData.last_name,
@@ -161,11 +171,11 @@ const GuestForm = ({
           observations: plusOne.observations,
         })),
       };
-  
+
       if (guest && guest.id) {
         submitData.id = guest.id;
       }
-  
+
       onSubmit(submitData);
     },
     [formData, guest, onSubmit]

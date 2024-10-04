@@ -1,6 +1,13 @@
+//Rect y hooks
 import React, { useCallback } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Button, Box } from "@mui/material";
+
+// Servicios
 import { guestService } from "../../../services/Api";
 
 const BulkActions = ({

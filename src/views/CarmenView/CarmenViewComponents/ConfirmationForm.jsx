@@ -15,6 +15,10 @@ import {
   Autocomplete,
 } from "@mui/material";
 
+// Servicios y configuración
+import services from "../../../services/Api";
+import { defaultConfig } from "../../../config";
+
 // Componentes y estilos propios
 import {
   CustomFormControl,
@@ -22,10 +26,6 @@ import {
   CustomRadio,
   CustomCheck,
 } from "./ConfirmationModalStyles";
-
-// Servicios y configuración
-import services from "../../../services/Api";
-import { defaultConfig } from "../../../config";
 
 // Estilos globales
 import "../../../styles/fonts.css";
