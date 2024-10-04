@@ -1,8 +1,27 @@
+// React y hooks
 import React, { useState, useEffect } from "react";
+
+// React Router
 import { Route, Routes, useLocation } from "react-router-dom";
+
+// Componentes propios
 import { ProtectedRoute, ProtectedLayout, LoadingComponent } from "./components";
+
+// Vistas
+import {
+  CarmenView,
+  LoginView,
+  GuestView,
+  TagView,
+  ContactView,
+  ProfileView,
+  SettingsView,
+  NotFoundView,
+  PublicView
+} from "./views";
+
+// Hooks personalizados y contexto
 import { useUserConfig } from "./context";
-import { CarmenView, LoginView, GuestView, TagView, ContactView, ProfileView, SettingsView, NotFoundView, PublicView } from "./views";
 
 const AppContent = () => {
   const { userConfig, isLoading: isConfigLoading } = useUserConfig();
