@@ -1,4 +1,7 @@
+// React
 import React from 'react';
+
+// Biblioteca de terceros
 import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = () => {
