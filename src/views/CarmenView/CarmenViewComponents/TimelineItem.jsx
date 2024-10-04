@@ -10,9 +10,8 @@ import {
   useTheme,
   Collapse,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CloseIcon from "@mui/icons-material/Close";
 import EventLocations from "./EventLocations";
+import { ExpandMore as ExpandMoreIcon, Close as CloseIcon } from "@mui/icons-material";
 
 const mainBlue = "#153e87";
 

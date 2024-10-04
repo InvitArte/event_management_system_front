@@ -245,7 +245,7 @@ export const EventSubtitle = styled(Typography)(({ theme }) => ({
   fontFamily: "'Parisienne', regular",
 }));
 
-export const EventTitle = styled(Typography)(({ theme }) => ({
+export const EventTitleStyle = styled(Typography)(({ theme }) => ({
   fontSize: "3.8rem",
   fontWeight: 700,
   lineHeight: 1.2,
