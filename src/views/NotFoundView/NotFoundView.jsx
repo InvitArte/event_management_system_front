@@ -1,10 +1,15 @@
+// React y hooks
 import React from 'react';
+
+// Bibliotecas de terceros
 import { Link as RouterLink } from 'react-router-dom';
-import { 
-  Box, 
-  Typography, 
-  Button, 
-  Container, 
+
+// Material-UI
+import {
+  Box,
+  Typography,
+  Button,
+  Container,
   Paper
 } from '@mui/material';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
