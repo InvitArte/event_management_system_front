@@ -1,5 +1,5 @@
-// React y hooks
-import React, { useState, useCallback, useMemo } from 'react';
+// React
+import React from 'react';
 
 // Bibliotecas de terceros
 import PropTypes from 'prop-types';
@@ -34,10 +34,12 @@ import {
   LastPage as LastPageIcon
 } from '@mui/icons-material';
 
+// Hooks propios
+import { useMobileGuestList } from '../../../hooks';
+
 // Componentes genericos
 import { stringToColor, adjustColor, getContrastColor } from '../../../components';
 
-const GUESTS_PER_PAGE = 10;
 const MAX_NAME_LENGTH = 20;
 
 const MobileGuestList = ({
@@ -45,61 +47,24 @@ const MobileGuestList = ({
   onEditGuest,
   onDeleteGuest,
   onBulkActionComplete,
-  selectedGuests,
-  setSelectedGuests,
   visibleColumns,
 }) => {
-  const [page, setPage] = useState(1);
-  const [expandedGuest, setExpandedGuest] = useState(null);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedGuestForMenu, setSelectedGuestForMenu] = useState(null);
-
-  const groupedGuests = useMemo(() => {
-    return guests.map(guest => ({
-      ...guest,
-      companions: guest.companions || []
-    }));
-  }, [guests]);
-
-  const paginatedGuests = useMemo(() => {
-    const startIndex = (page - 1) * GUESTS_PER_PAGE;
-    const endIndex = Math.min(startIndex + GUESTS_PER_PAGE, groupedGuests.length);
-    return groupedGuests.slice(startIndex, endIndex);
-  }, [groupedGuests, page]);
-
-  const handleAccordionChange = (guestId) => (event, isExpanded) => {
-    setExpandedGuest(isExpanded ? guestId : null);
-  };
-
-  const handleSelectGuest = useCallback((guest) => {
-    setSelectedGuests((prev) => {
-      const isSelected = prev.some((g) => g.id === guest.id);
-      if (isSelected) {
-        return prev.filter((g) => g.id !== guest.id && g.mainGuestId !== guest.id);
-      } else {
-        const newSelection = [...prev, guest];
-        if (!guest.isCompanion && guest.companions) {
-          newSelection.push(...guest.companions);
-        }
-        return newSelection;
-      }
-    });
-  }, [setSelectedGuests]);
-
-  const handleBulkValidate = useCallback(() => {
-    onBulkActionComplete('validate', selectedGuests.map(guest => guest.id));
-    setSelectedGuests([]);
-  }, [selectedGuests, onBulkActionComplete, setSelectedGuests]);
-
-  const handleMenuOpen = (event, guest) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedGuestForMenu(guest);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedGuestForMenu(null);
-  };
+  const {
+    page,
+    expandedGuest,
+    anchorEl,
+    selectedGuestForMenu,
+    selectedGuests,
+    paginatedGuests,
+    totalPages,
+    handleAccordionChange,
+    handleSelectGuest,
+    handleBulkValidate,
+    handleMenuOpen,
+    handleMenuClose,
+    handlePageChange,
+    setSelectedGuests
+  } = useMobileGuestList(guests, onBulkActionComplete);
 
   const handleEditClick = () => {
     onEditGuest(selectedGuestForMenu);
@@ -109,11 +74,6 @@ const MobileGuestList = ({
   const handleDeleteClick = () => {
     onDeleteGuest(selectedGuestForMenu);
     handleMenuClose();
-  };
-
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-    setExpandedGuest(null);
   };
 
   const renderChips = (items, colorFunc) => (
@@ -273,8 +233,6 @@ const MobileGuestList = ({
     </List>
   );
 
-  const totalPages = Math.ceil(groupedGuests.length / GUESTS_PER_PAGE);
-
   return (
     <Box>
       <Button
@@ -402,8 +360,6 @@ MobileGuestList.propTypes = {
   onEditGuest: PropTypes.func.isRequired,
   onDeleteGuest: PropTypes.func.isRequired,
   onBulkActionComplete: PropTypes.func.isRequired,
-  selectedGuests: PropTypes.array.isRequired,
-  setSelectedGuests: PropTypes.func.isRequired,
   visibleColumns: PropTypes.objectOf(PropTypes.bool).isRequired,
 };
 
