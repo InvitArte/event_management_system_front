@@ -2,6 +2,7 @@
 export { default as useContactView } from './contact/useContactView';
 //guest
 export { default as useGuestView } from './guest/useGuestView';
+export { default as useMobileGuestList } from './guest/useMobileGuestList';
 //layout
 export { default as useNavbar } from './layout/useNavbar';
 //profile
