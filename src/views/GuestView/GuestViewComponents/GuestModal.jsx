@@ -1,5 +1,5 @@
 // React y hooks
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 
 // Bibliotecas de terceros
 import PropTypes from "prop-types";
@@ -30,12 +30,25 @@ const GuestModal = ({
   guest,
   onSubmit,
   menus,
-  allergies,
-  tags,
+  allAllergies,
+  allTags,
   visibleFormFields,
+  onOpenTagModal,
 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [localGuest, setLocalGuest] = useState(null);
+
+  useEffect(() => {
+    if (open && guest) {
+      setLocalGuest({
+        ...guest,
+        plus_ones: guest.plus_ones || [],
+      });
+    } else if (open) {
+      setLocalGuest(null);
+    }
+  }, [open, guest]);
 
   const handleSubmit = useCallback(
     async (formData) => {
@@ -49,19 +62,20 @@ const GuestModal = ({
             phone: formData.phone,
             email: formData.email,
             needs_transport: formData.needs_transport,
+            needs_transport_back: formData.needs_transport_back,
             needs_hotel: formData.needs_hotel,
             disability: formData.disability,
             menu_id: formData.menu_id,
             observations: formData.observations,
             accommodation_plan: formData.accommodation_plan,
           },
-          allergies: formData.allergies, // Añadimos las alergias aquí
+          allergies: formData.allergies,
           plus_ones: formData.plus_ones.map((plusOne) => ({
             first_name: plusOne.first_name,
             last_name: plusOne.last_name,
             menu_id: plusOne.menu_id,
             disability: plusOne.disability,
-            allergies: plusOne.allergies, // Añadimos las alergias para cada acompañante
+            allergies: plusOne.allergies,
           })),
           tags: formData.tags,
         };
@@ -70,7 +84,7 @@ const GuestModal = ({
           ? await guestService.updateGuest(guest.id, guestData)
           : await guestService.createGuest(guestData);
 
-        onSubmit();
+        onSubmit(response);
         onClose();
       } catch (err) {
         console.error("Error submitting guest:", err);
@@ -114,7 +128,7 @@ const GuestModal = ({
       fullWidth
       PaperProps={{
         sx: {
-          overflow: 'visible', // Permite que el botón se muestre fuera del modal
+          overflow: 'visible',
         },
       }}
     >
@@ -123,17 +137,17 @@ const GuestModal = ({
         <CloseButton onClose={onClose} />
       </DialogTitle>
       <DialogContent>
-        <GuestForm
-            guest={{
-              ...guest,
-              plus_ones: guest?.plus_ones || []
-            }}
-          onSubmit={handleSubmit}
-          menus={menus}
-          allergies={allergies}
-          tags={tags}
-          visibleFormFields={visibleFormFields}
-        />
+        {localGuest !== null && (
+          <GuestForm
+            guest={localGuest}
+            onSubmit={handleSubmit}
+            menus={menus}
+            allergies={allAllergies}
+            tags={allTags}
+            visibleFormFields={visibleFormFields}
+            onOpenTagModal={onOpenTagModal}
+          />
+        )}
         {error && (
           <Typography
             color="error"
@@ -145,7 +159,7 @@ const GuestModal = ({
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} color="secondary" disabled={loading}>
           Cancelar
         </Button>
         <Button
@@ -159,7 +173,6 @@ const GuestModal = ({
     </Dialog>
   );
 };
-
 GuestModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -200,7 +213,19 @@ GuestModal.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
+  allAllergies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  allTags: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,

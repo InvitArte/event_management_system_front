@@ -1,5 +1,5 @@
 //React y hooks
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 
 // Bibliotecas de terceros
 import PropTypes from "prop-types";
@@ -20,7 +20,7 @@ import {useGuestView} from "../../hooks";
 
 // Componentes genericos
 import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
-
+import {TagModal} from "../TagView/TagViewComponents";
 // Componentes propios
 import { ExcelDownloader, GuestFilters, GuestModal, GuestTable, MobileGuestList } from "./GuestViewComponents";
 
@@ -31,6 +31,7 @@ const GuestView = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [tagModalOpen, setTagModalOpen] = useState(false);
 
   const {
     guestData,
@@ -48,7 +49,21 @@ const GuestView = ({
     handleGuestSubmitted,
     handleVisibleColumnsChange,
     setUiState,
+    updateTags,
   } = useGuestView(initialVisibleColumns);
+
+  const handleOpenTagModal = useCallback(() => {
+    setTagModalOpen(true);
+  }, []);
+
+  const handleCloseTagModal = useCallback(() => {
+    setTagModalOpen(false);
+  }, []);
+
+  const handleTagUpdate = useCallback((updatedTag) => {
+    updateTags(updatedTag);
+    handleCloseTagModal();
+  }, [updateTags, handleCloseTagModal]);
 
   const columns = [
     { field: "validated", headerName: "Validado" },
@@ -132,7 +147,7 @@ const GuestView = ({
           <Typography
             variant={isMobile ? "h5" : "h4"}
             component="h1"
-            style={{ color: "black"}}
+            style={{ color: "black" }}
           >
             Invitados
           </Typography>
@@ -142,7 +157,7 @@ const GuestView = ({
             onClick={handleCreateGuest}
             sx={{
               fontSize: isMobile ? "0.75rem" : "1rem",
-              padding: isMobile ?  "6px 12px" : "8px 16px",
+              padding: isMobile ? "6px 12px" : "8px 16px",
               margin: isMobile ? "0 8px" : "0 16px",
             }}
           >
@@ -217,8 +232,11 @@ const GuestView = ({
           onSubmit={handleGuestSubmitted}
           menus={guestData.menus}
           allergies={guestData.allergies}
+          allAllergies={guestData.allAllergies}
           tags={guestData.allTags}
+          allTags={guestData.allTags}
           visibleFormFields={visibleFormFields}
+          onOpenTagModal={handleOpenTagModal}
         />
         <DeleteConfirmationDialog
           open={uiState.deleteDialogOpen}
@@ -230,6 +248,14 @@ const GuestView = ({
           content={`¿Estás seguro de que quieres eliminar a ${uiState.guestToDelete?.fullName}? Esta acción no se puede deshacer.`}
           cancelButtonText="Cancelar"
           confirmButtonText="Eliminar invitado"
+        />
+        <TagModal
+          open={tagModalOpen}
+          onClose={handleCloseTagModal}
+          onTagUpdate={handleTagUpdate}
+          tag={null}
+          guests={guestData.guests}
+          setError={(error) => setUiState((prev) => ({ ...prev, error }))}
         />
       </Paper>
     </Container>

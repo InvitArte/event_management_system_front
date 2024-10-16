@@ -9,10 +9,13 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
+  InputAdornment,
+  IconButton,
   Button,
   Grid,
   Autocomplete,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 // Componentes genericos
 import { TagChip } from "../../../components";
@@ -28,6 +31,7 @@ const GuestForm = ({
   allergies,
   tags,
   visibleFormFields,
+  onOpenTagModal,
 }) => {
   const [formData, setFormData] = useState({
     first_name: "",
@@ -433,6 +437,21 @@ const GuestForm = ({
                   variant="outlined"
                   margin="normal"
                   InputLabelProps={{ shrink: true }}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          edge="end"
+                          onClick={onOpenTagModal}
+                          size="small"
+                        >
+                          <AddIcon />
+                        </IconButton>
+                        {params.InputProps.endAdornment}
+                      </InputAdornment>
+                    ),
+                  }}
                 />
               )}
               renderOption={(props, option) => (
