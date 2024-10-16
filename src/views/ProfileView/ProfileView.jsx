@@ -1,3 +1,4 @@
+// LA DISPOSICIÓN DE LOS ELEMENTOS EN ESTE COMPONENTE NO ES DEFINITIVA Y DEBE SER REVISADA
 // React y hooks
 import { useState } from "react";
 
@@ -46,13 +47,18 @@ const ProfileView = ({ visibleFields }) => {
           >
             Perfil de Usuario
           </Typography>
-          <Box>
+          <Box
+            display="flex"
+            flexDirection={isSmallScreen ? "column" : "row"}
+            width={isSmallScreen ? "100%" : "auto"}
+          >
             <Button
               variant="contained"
               color="primary"
               onClick={toggleModal(setLocationModalOpen)}
+              fullWidth={isSmallScreen}
               sx={{
-                marginRight: 2,
+                marginRight: isSmallScreen ? 0 : 2,
                 marginBottom: isSmallScreen ? theme.spacing(2) : 0,
               }}
             >
@@ -62,8 +68,9 @@ const ProfileView = ({ visibleFields }) => {
               variant="contained"
               color="primary"
               onClick={toggleModal(setMenuModalOpen)}
+              fullWidth={isSmallScreen}
               sx={{
-                marginRight: 2,
+                marginRight: isSmallScreen ? 0 : 2,
                 marginBottom: isSmallScreen ? theme.spacing(2) : 0,
               }}
             >
@@ -73,8 +80,9 @@ const ProfileView = ({ visibleFields }) => {
               variant="contained"
               color="primary"
               onClick={toggleModal(setPasswordModalOpen)}
+              fullWidth={isSmallScreen}
               sx={{
-                marginRight: 2,
+                marginRight: isSmallScreen ? 0 : 2,
                 marginBottom: isSmallScreen ? theme.spacing(2) : 0,
               }}
             >

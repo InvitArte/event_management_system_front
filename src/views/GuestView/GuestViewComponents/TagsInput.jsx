@@ -1,10 +1,15 @@
+// React
 import React from 'react';
 
+// Material-UI
 import { TextField, InputAdornment, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { Autocomplete } from '@mui/material';
 
-const TagsInput = ({ tags, formData, handleTagChange, onOpenTagModal }) => {
+// Componentes genéricos
+import { TagChip } from "../../../components";
+
+const TagsInput = ({ tags, formData, handleTagChange, onOpenTagModal, renderTags }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -15,6 +20,7 @@ const TagsInput = ({ tags, formData, handleTagChange, onOpenTagModal }) => {
       getOptionLabel={(option) => option?.name ?? ""}
       value={formData.tags}
       onChange={handleTagChange}
+      renderTags={renderTags}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -47,7 +53,7 @@ const TagsInput = ({ tags, formData, handleTagChange, onOpenTagModal }) => {
       )}
       renderOption={(props, option) => (
         <li {...props} key={option.id}>
-          {option.name}
+          <TagChip tag={option} />
         </li>
       )}
       isOptionEqualToValue={(option, value) => option?.id === value?.id}
