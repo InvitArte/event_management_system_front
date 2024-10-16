@@ -8,6 +8,7 @@ const useGuestView = (initialVisibleColumns) => {
     originalGuests: [],
     menus: [],
     allergies: [],
+    allAllergies: [],
     tags: [],
     allTags: [],
   });
@@ -35,11 +36,11 @@ const useGuestView = (initialVisibleColumns) => {
         menuService.getUserMenus(),
         allergyService.getAllAllergies(),
       ]);
-      return { 
-        guests: guestsResponse, 
-        tags: tagsResponse, 
-        menus: menusResponse, 
-        allergies: allergiesResponse 
+      return {
+        guests: guestsResponse,
+        tags: tagsResponse,
+        menus: menusResponse,
+        allergies: allergiesResponse
       };
     } catch (error) {
       console.error("Error al recibir la información:", error);
@@ -52,27 +53,27 @@ const useGuestView = (initialVisibleColumns) => {
       console.error("guestData no es un array:", guestsData);
       return { guests: [], menus: userMenus, allergies: allergies, tags: [] };
     }
-  
+
     const uniqueTags = new Set();
     const uniqueAllergies = new Map();
-  
+
     const capitalizeFirstLetter = (string) => {
-      return string.split(' ').map(word => 
+      return string.split(' ').map(word =>
         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       ).join(' ');
     };
-  
+
     const processedGuests = guestsData.flatMap((guest) => {
       guest.tags?.forEach((tag) => {
         uniqueTags.add(JSON.stringify(tag));
       });
-  
+
       const guestMenu = userMenus.find(m => m.id === guest.menu_id);
       const guestAllergies = guest.allergies || [];
       guestAllergies.forEach(allergy => {
         uniqueAllergies.set(allergy.id, allergy);
       });
-  
+
       const mainGuest = {
         id: guest.id,
         first_name: capitalizeFirstLetter(guest.first_name),
@@ -93,14 +94,14 @@ const useGuestView = (initialVisibleColumns) => {
         isMainGuest: true,
         tags: guest.tags || [],
       };
-  
+
       const plusOnes = guest.plus_ones?.map((plusOne) => {
         const plusOneMenu = userMenus.find(m => m.id === plusOne.menu_id);
         const plusOneAllergies = plusOne.allergies || [];
         plusOneAllergies.forEach(allergy => {
           uniqueAllergies.set(allergy.id, allergy);
         });
-  
+
         return {
           id: plusOne.id,
           first_name: capitalizeFirstLetter(plusOne.first_name),
@@ -123,10 +124,10 @@ const useGuestView = (initialVisibleColumns) => {
           tags: [],
         };
       }) || [];
-  
+
       return [mainGuest, ...plusOnes];
     });
-  
+
     return {
       guests: processedGuests,
       menus: userMenus,
@@ -142,6 +143,7 @@ const useGuestView = (initialVisibleColumns) => {
         ...processedGuests,
         originalGuests: data.guests,
         allTags: data.tags,
+        allAllergies: data.allergies,
       };
     },
     [processGuests]
@@ -170,7 +172,7 @@ const useGuestView = (initialVisibleColumns) => {
     if (Object.keys(uiState.filters).length === 0) {
       return guestData.guests;
     }
-    
+
     return guestData.guests.filter((guest) => {
       return Object.entries(uiState.filters).every(([key, value]) => {
         if (value === null || value === undefined || value === "") return true;
@@ -184,7 +186,7 @@ const useGuestView = (initialVisibleColumns) => {
           case "allergies":
             if (Array.isArray(value) && value.length > 0) {
               return value.every(filterAllergy =>
-                guest.allergies.some(guestAllergy => 
+                guest.allergies.some(guestAllergy =>
                   guestAllergy.id === filterAllergy.id
                 )
               );
@@ -286,10 +288,23 @@ const useGuestView = (initialVisibleColumns) => {
     [fetchGuests, uiState.selectedTagId]
   );
 
-  const handleGuestSubmitted = useCallback(async () => {
+  const handleGuestSubmitted = useCallback(async (updatedGuest) => {
     try {
-      await fetchGuests();
+      // Actualización optimista
+      setGuestData((prevData) => ({
+        ...prevData,
+        guests: prevData.guests.map((g) =>
+          g.id === updatedGuest.id ? { ...g, ...updatedGuest } : g
+        ),
+        originalGuests: prevData.originalGuests.map((g) =>
+          g.id === updatedGuest.id ? { ...g, ...updatedGuest } : g
+        ),
+      }));
+
       setUiState((prev) => ({ ...prev, modalOpen: false }));
+
+      // Actualizar los datos en segundo plano
+      await fetchGuests();
     } catch (error) {
       console.error("Error updating guest list:", error);
       setUiState((prev) => ({
@@ -301,6 +316,22 @@ const useGuestView = (initialVisibleColumns) => {
 
   const handleVisibleColumnsChange = useCallback((newVisibleColumns) => {
     setUiState((prev) => ({ ...prev, visibleColumns: newVisibleColumns }));
+  }, []);
+
+  const updateTags = useCallback((updatedTag) => {
+    setGuestData((prevData) => {
+      const updatedAllTags = prevData.allTags.map(tag =>
+        tag.id === updatedTag.id ? updatedTag : tag
+      );
+      if (!updatedAllTags.find(tag => tag.id === updatedTag.id)) {
+        updatedAllTags.push(updatedTag);
+      }
+      return {
+        ...prevData,
+        allTags: updatedAllTags,
+        tags: updatedAllTags, // Assuming tags and allTags are the same in this context
+      };
+    });
   }, []);
 
   return {
@@ -319,6 +350,7 @@ const useGuestView = (initialVisibleColumns) => {
     handleGuestSubmitted,
     handleVisibleColumnsChange,
     setUiState,
+    updateTags,
   };
 };
 
