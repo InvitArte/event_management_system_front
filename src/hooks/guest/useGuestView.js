@@ -173,7 +173,7 @@ const useGuestView = (initialVisibleColumns) => {
       return guestData.guests;
     }
 
-    return guestData.guests.filter((guest) => {
+    const filterGuest = (guest) => {
       return Object.entries(uiState.filters).every(([key, value]) => {
         if (value === null || value === undefined || value === "") return true;
 
@@ -206,6 +206,18 @@ const useGuestView = (initialVisibleColumns) => {
             return guest[key]?.toString().toLowerCase().includes(value.toLowerCase());
         }
       });
+    };
+
+    const filteredMainGuests = guestData.guests.filter((guest) => guest.isMainGuest && filterGuest(guest));
+
+    return guestData.guests.filter((guest) => {
+      if (guest.isMainGuest) {
+        return filteredMainGuests.includes(guest);
+      } else {
+        // Include plus ones if their main guest is in the filtered list
+        const mainGuest = filteredMainGuests.find(g => g.id === guest.parentId);
+        return mainGuest !== undefined;
+      }
     });
   }, [guestData.guests, uiState.filters]);
 
