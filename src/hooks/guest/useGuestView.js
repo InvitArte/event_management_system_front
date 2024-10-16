@@ -178,20 +178,22 @@ const useGuestView = (initialVisibleColumns) => {
         if (value === null || value === undefined || value === "") return true;
 
         switch (key) {
-          case "needs_hotel":
-          case "needs_transport":
-          case "needs_transport_back":
-          case "validated":
-            return guest[key] === (value === "Sí");
+          case "menu":
+            return guest.menu?.toLowerCase() === value.toLowerCase();
           case "allergies":
             if (Array.isArray(value) && value.length > 0) {
-              return value.every(filterAllergy =>
+              return value.some(filterAllergy =>
                 guest.allergies.some(guestAllergy =>
                   guestAllergy.id === filterAllergy.id
                 )
               );
             }
             return true;
+          case "needs_hotel":
+          case "needs_transport":
+          case "needs_transport_back":
+          case "validated":
+            return guest[key] === (value === "Sí");
           case "tags":
             return value.every((filterTag) =>
               guest.tags?.some(
@@ -208,17 +210,29 @@ const useGuestView = (initialVisibleColumns) => {
       });
     };
 
-    const filteredMainGuests = guestData.guests.filter((guest) => guest.isMainGuest && filterGuest(guest));
+    const isMenuOrAllergyFilter = Object.keys(uiState.filters).some(key =>
+      key === "menu" || key === "allergies"
+    );
 
-    return guestData.guests.filter((guest) => {
-      if (guest.isMainGuest) {
-        return filteredMainGuests.includes(guest);
-      } else {
-        // Include plus ones if their main guest is in the filtered list
-        const mainGuest = filteredMainGuests.find(g => g.id === guest.parentId);
-        return mainGuest !== undefined;
-      }
-    });
+    if (isMenuOrAllergyFilter) {
+      // Si hay filtros de menú o alergias, aplicamos el filtro directamente
+      return guestData.guests.filter(filterGuest);
+    } else {
+      // Para otros filtros, mantenemos la lógica de incluir invitados principales y plus ones relacionados
+      const filteredMainGuests = guestData.guests.filter((guest) => guest.isMainGuest && filterGuest(guest));
+      const filteredPlusOnes = guestData.guests.filter((guest) => !guest.isMainGuest && filterGuest(guest));
+
+      const mainGuestIds = new Set(filteredMainGuests.map(guest => guest.id));
+      const plusOneParentIds = new Set(filteredPlusOnes.map(guest => guest.parentId));
+
+      return guestData.guests.filter((guest) => {
+        if (guest.isMainGuest) {
+          return mainGuestIds.has(guest.id) || plusOneParentIds.has(guest.id);
+        } else {
+          return filteredPlusOnes.includes(guest) || mainGuestIds.has(guest.parentId);
+        }
+      });
+    }
   }, [guestData.guests, uiState.filters]);
 
   const mobileGuestList = useMemo(() => {
