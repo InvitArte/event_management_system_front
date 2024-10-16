@@ -11,7 +11,6 @@ const FilterAutocomplete = ({
   label,
   options,
   onChange,
-  width = 300,
   multiple = false,
   renderTags,
   renderOption,
@@ -27,7 +26,7 @@ const FilterAutocomplete = ({
     renderOption={renderOption}
     getOptionLabel={getOptionLabel}
     isOptionEqualToValue={isOptionEqualToValue}
-    sx={{ width }}
+    sx={{ width:  '100%' }}
   />
 );
 

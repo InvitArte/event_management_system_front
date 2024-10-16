@@ -171,12 +171,12 @@ const MobileGuestList = ({
           <ListItemText primary="Nombre Completo" secondary={guest.fullName} />
         </ListItem>
       )}
-      {visibleColumns.email && (
+      {visibleColumns.email && !isCompanion && (
         <ListItem>
           <ListItemText primary="Email" secondary={guest.email} />
         </ListItem>
       )}
-      {visibleColumns.phone && (
+      {visibleColumns.phone && !isCompanion && (
         <ListItem>
           <ListItemText primary="Teléfono" secondary={guest.phone} />
         </ListItem>

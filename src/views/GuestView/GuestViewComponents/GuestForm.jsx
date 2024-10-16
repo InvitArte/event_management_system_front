@@ -9,20 +9,17 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
-  InputAdornment,
-  IconButton,
   Button,
   Grid,
   Autocomplete,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+
 
 // Componentes genericos
 import { TagChip } from "../../../components";
 
 // Componentes propios
-import PlusOneForm from "./PlusOneForm";
-import TagsInput from "./TagsInput";
+import {TagsInput, PlusOneForm} from './index';
 
 
 const GuestForm = ({
