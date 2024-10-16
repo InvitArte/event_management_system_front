@@ -22,6 +22,7 @@ import { TagChip } from "../../../components";
 
 // Componentes propios
 import PlusOneForm from "./PlusOneForm";
+import TagsInput from "./TagsInput";
 
 
 const GuestForm = ({
@@ -423,43 +424,12 @@ const GuestForm = ({
         {renderFormField(
           "tags",
           <Grid item xs={12}>
-            <Autocomplete
-              multiple
-              options={tags}
-              getOptionLabel={(option) => option?.name ?? ""}
-              value={formData.tags}
-              onChange={handleTagChange}
+            <TagsInput
+              tags={tags}
+              formData={formData}
+              handleTagChange={handleTagChange}
+              onOpenTagModal={onOpenTagModal}
               renderTags={renderTags}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Etiquetas"
-                  variant="outlined"
-                  margin="normal"
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          onClick={onOpenTagModal}
-                          size="small"
-                        >
-                          <AddIcon />
-                        </IconButton>
-                        {params.InputProps.endAdornment}
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
-              renderOption={(props, option) => (
-                <li {...props} key={option.id}>
-                  {option.name}
-                </li>
-              )}
-              isOptionEqualToValue={(option, value) => option?.id === value?.id}
             />
           </Grid>
         )}
@@ -574,6 +544,7 @@ GuestForm.propTypes = {
     tags: PropTypes.bool,
     plus_ones: PropTypes.bool,
   }).isRequired,
+  onOpenTagModal: PropTypes.func.isRequired,
 };
 
 export default GuestForm;

@@ -1,10 +1,5 @@
-// React
 import React from 'react';
-
-// Bibliotecas de terceros
 import PropTypes from 'prop-types';
-
-// Material-UI
 import {
   List,
   ListItem,
@@ -34,10 +29,7 @@ import {
   LastPage as LastPageIcon
 } from '@mui/icons-material';
 
-// Hooks propios
 import { useMobileGuestList } from '../../../hooks';
-
-// Componentes genericos
 import { stringToColor, adjustColor, getContrastColor } from '../../../components';
 
 const MAX_NAME_LENGTH = 20;
@@ -172,7 +164,7 @@ const MobileGuestList = ({
     );
   };
 
-  const renderGuestDetails = (guest) => (
+  const renderGuestDetails = (guest, isCompanion = false, mainGuestTags = []) => (
     <List dense>
       {visibleColumns.fullName && guest.isTruncated && (
         <ListItem>
@@ -194,7 +186,7 @@ const MobileGuestList = ({
           <ListItemText primary="Menú" secondary={guest.menu} />
         </ListItem>
       )}
-      {visibleColumns.allergy && (
+      {visibleColumns.allergy && guest.allergies && guest.allergies.length > 0 && (
         <ListItem>
           <Box>
             <Typography variant="body2">Alergias</Typography>
@@ -223,10 +215,14 @@ const MobileGuestList = ({
         </ListItem>
       )}
       {visibleColumns.tags && (
+        (guest.tags && guest.tags.length > 0) || (isCompanion && mainGuestTags.length > 0)
+      ) && (
         <ListItem>
           <Box>
-            <Typography variant="body2">Etiquetas</Typography>
-            {renderChips(guest.tags, stringToColor)}
+            <Typography variant="body2">
+              {isCompanion && !guest.tags?.length ? "Etiquetas del invitado principal" : "Etiquetas"}
+            </Typography>
+            {renderChips(guest.tags?.length ? guest.tags : mainGuestTags, stringToColor)}
           </Box>
         </ListItem>
       )}
@@ -286,7 +282,7 @@ const MobileGuestList = ({
               >
                 {renderAccordionSummary(companion, true)}
                 <AccordionDetails>
-                  {renderGuestDetails(companion)}
+                  {renderGuestDetails(companion, true, guest.tags)}
                 </AccordionDetails>
               </Accordion>
             ))}
