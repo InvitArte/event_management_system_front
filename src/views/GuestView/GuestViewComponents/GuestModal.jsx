@@ -40,12 +40,32 @@ const GuestModal = ({
   const [localGuest, setLocalGuest] = useState(null);
 
   useEffect(() => {
-    if (open && guest) {
-      setLocalGuest({
-        ...guest,
-        plus_ones: guest.plus_ones || [],
-      });
-    } else if (open) {
+    if (open) {
+      if (guest) {
+        setLocalGuest({
+          ...guest,
+          plus_ones: guest.plus_ones || [],
+        });
+      } else {
+        // Initialize an empty guest object for new guest creation
+        setLocalGuest({
+          first_name: "",
+          last_name: "",
+          phone: "",
+          email: "",
+          needs_transport: false,
+          needs_transport_back: false,
+          needs_hotel: false,
+          disability: false,
+          menu_id: null,
+          observations: "",
+          accommodation_plan: "",
+          plus_ones: [],
+          tags: [],
+          allergies: [],
+        });
+      }
+    } else {
       setLocalGuest(null);
     }
   }, [open, guest]);
@@ -137,7 +157,7 @@ const GuestModal = ({
         <CloseButton onClose={onClose} />
       </DialogTitle>
       <DialogContent>
-        {localGuest !== null && (
+        {localGuest && (
           <GuestForm
             guest={localGuest}
             onSubmit={handleSubmit}
@@ -173,6 +193,7 @@ const GuestModal = ({
     </Dialog>
   );
 };
+
 GuestModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -207,19 +228,7 @@ GuestModal.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ).isRequired,
-  allergies: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
   allAllergies: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  tags: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
@@ -246,6 +255,7 @@ GuestModal.propTypes = {
     tags: PropTypes.bool,
     plus_ones: PropTypes.bool,
   }).isRequired,
+  onOpenTagModal: PropTypes.func.isRequired,
 };
 
 export default GuestModal;
