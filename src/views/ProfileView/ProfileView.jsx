@@ -16,6 +16,8 @@ import {
   Button,
 } from "@mui/material";
 
+// Servicios
+import { IS_DEMO} from "../../config/api/BaseUrl";
 // Componentes propios
 import { ProfileForm, LocationModal, ChangePasswordModal, MenuModal } from "./ProfileViewComponents";
 
@@ -76,18 +78,20 @@ const ProfileView = ({ visibleFields }) => {
             >
               Gestionar Menús
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={toggleModal(setPasswordModalOpen)}
-              fullWidth={isSmallScreen}
-              sx={{
-                marginRight: isSmallScreen ? 0 : 2,
-                marginBottom: isSmallScreen ? theme.spacing(2) : 0,
-              }}
-            >
-              Cambiar Contraseña
-            </Button>
+            {!IS_DEMO && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={toggleModal(setPasswordModalOpen)}
+                fullWidth={isSmallScreen}
+                sx={{
+                  marginRight: isSmallScreen ? 0 : 2,
+                  marginBottom: isSmallScreen ? theme.spacing(2) : 0,
+                }}
+              >
+                Cambiar Contraseña
+              </Button>
+            )}
           </Box>
         </Box>
       </Paper>
