@@ -1,16 +1,11 @@
 // React y hooks
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 // Bibliotecas de terceros
 import PropTypes from "prop-types";
 
 // Material-UI
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
   Box,
   Typography,
   TextField,
@@ -19,8 +14,8 @@ import {
 // Servicios
 import { tagService } from "../../../services/Api";
 
-// Componentes genericos
-import {CloseButton} from "../../../components";
+// Componentes genéricos
+import { ReusableModal } from "../../../components";
 
 // Componentes propios
 import GuestTransferList from "./GuestTransferList";
@@ -45,7 +40,7 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
     setErrors({});
   }, [tag, guests, open]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     setIsSubmitting(true);
     setErrors({});
     try {
@@ -83,7 +78,7 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
           throw new Error("Error al crear la etiqueta");
         }
       }
-      handleClose();
+      onClose();
     } catch (error) {
       console.error("Error submitting tag:", error);
       if (error.response && error.response.data) {
@@ -93,13 +88,13 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
           setErrors({ general: error.response.data.message });
         }
       } else {
-        setErrors({ general: "Failed to submit tag. Please try again." });
+        setErrors({ general: "Fallo al crear la etiqueta, intentelo de nuevo." });
       }
       setError(error.message || "Error al enviar la etiqueta. Por favor, inténtalo de nuevo.");
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [tag, tagName, selectedGuests, onTagUpdate, onClose, setError]);
 
   const areGuestAssignmentsSame = (tagId, newAssignments) => {
     const currentAssignments = guests
@@ -112,66 +107,52 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
     );
   };
 
-  const handleClose = () => {
-    setTagName("");
-    setSelectedGuests([]);
-    setErrors({});
-    onClose();
-  };
+  const modalContent = (
+    <>
+      <Box mb={2}>
+        <TextField
+          autoFocus
+          margin="dense"
+          label="Nombre de la etiqueta"
+          type="text"
+          fullWidth
+          value={tagName}
+          onChange={(e) => setTagName(e.target.value)}
+          error={!!errors.name}
+          helperText={errors.name ? errors.name[0] : ""}
+          required
+        />
+      </Box>
+      {tag && (
+        <>
+          <Typography variant="h6" gutterBottom>
+            Asignar a invitados
+          </Typography>
+          <GuestTransferList
+            guests={guests}
+            selectedGuests={selectedGuests}
+            onSelectionChange={setSelectedGuests}
+            tagId={tag.id}
+          />
+        </>
+      )}
+    </>
+  );
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth PaperProps={{ sx: { overflow: 'visible' } }}>
-      <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
-        {tag ? "Editar Etiqueta" : "Crear Etiqueta"}
-        <CloseButton onClose={handleClose} />
-      </DialogTitle>
-      <DialogContent>
-        <Box mb={2}>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Nombre de la etiqueta"
-            type="text"
-            fullWidth
-            value={tagName}
-            onChange={(e) => setTagName(e.target.value)}
-            error={!!errors.name}
-            helperText={errors.name ? errors.name[0] : ""}
-            required
-          />
-        </Box>
-        {tag && (
-          <>
-            <Typography variant="h6" gutterBottom>
-              Asignar a invitados
-            </Typography>
-            <GuestTransferList
-              guests={guests}
-              selectedGuests={selectedGuests}
-              onSelectionChange={setSelectedGuests}
-              tagId={tag.id}
-            />
-          </>
-        )}
-        {errors.general && (
-          <Typography color="error" align="center">
-            {errors.general}
-          </Typography>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} disabled={isSubmitting}>
-          Cancelar
-        </Button>
-        <Button
-          onClick={handleSubmit}
-          color="primary"
-          disabled={isSubmitting || !tagName.trim()}
-        >
-          {tag ? "Actualizar" : "Crear"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <ReusableModal
+      open={open}
+      onClose={onClose}
+      title={tag ? "Editar Etiqueta" : "Crear Etiqueta"}
+      onSubmit={handleSubmit}
+      loading={isSubmitting}
+      error={errors.general}
+      submitButtonText={tag ? "Actualizar" : "Crear"}
+      submitButtonDisabled={isSubmitting || !tagName.trim()}
+      maxWidth="md"
+    >
+      {modalContent}
+    </ReusableModal>
   );
 };
 

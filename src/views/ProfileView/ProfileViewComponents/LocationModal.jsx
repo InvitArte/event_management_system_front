@@ -5,29 +5,16 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // Material-UI
-import { Modal, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 // Hooks propios
-import {useLocations} from "../../../hooks";
+import { useLocations } from "../../../hooks";
 
-// Componenetes genéricos
-import { DeleteConfirmationDialog } from "../../../components";
+// Componentes genéricos
+import { ReusableModal, DeleteConfirmationDialog } from "../../../components";
 
 // Componentes propios
-import {LocationList, LocationForm} from "./index";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  maxHeight: "90vh",
-  overflow: "auto",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 3,
-};
+import { LocationList, LocationForm } from "./index";
 
 const LocationModal = ({ open, handleClose }) => {
   const {
@@ -55,12 +42,9 @@ const LocationModal = ({ open, handleClose }) => {
     handleClose();
   };
 
-  return (
-    <Modal open={open} onClose={handleCloseAndReset}>
-      <Box sx={style}>
-        <Typography variant="h5" component="h2" gutterBottom align="center">
-          Gestionar Ubicaciones del Evento
-        </Typography>
+  const modalContent = (
+    <>
+      <Box sx={{ width: '100%' }}>
         <LocationList
           locations={locations}
           expandedLocation={expandedLocation}
@@ -78,17 +62,32 @@ const LocationModal = ({ open, handleClose }) => {
           setNewLocation={setNewLocation}
           handleAddLocation={handleAddLocation}
         />
-         <DeleteConfirmationDialog
-          open={deleteDialogOpen}
-          onClose={() => setDeleteDialogOpen(false)}
-          onConfirm={handleConfirmDelete}
-          title="Confirmar eliminación de ubicación"
-          content={`¿Estás seguro de que quieres eliminar la ubicación "${locationToDelete?.name}"? Esta acción no se puede deshacer.`}
-          cancelButtonText="Cancelar"
-          confirmButtonText="Eliminar ubicación"
-        />
       </Box>
-    </Modal>
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirmar eliminación de ubicación"
+        content={`¿Estás seguro de que quieres eliminar la ubicación "${locationToDelete?.name}"? Esta acción no se puede deshacer.`}
+        cancelButtonText="Cancelar"
+        confirmButtonText="Eliminar ubicación"
+      />
+    </>
+  );
+
+  return (
+    <ReusableModal
+      open={open}
+      onClose={handleCloseAndReset}
+      title="Gestionar Ubicaciones"
+      maxWidth="md"
+      fullWidth
+      submitButtonText="Cerrar"
+      onSubmit={handleCloseAndReset}
+      hideSubmitButton={true}
+    >
+      {modalContent}
+    </ReusableModal>
   );
 };
 

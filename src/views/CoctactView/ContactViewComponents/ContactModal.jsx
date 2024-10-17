@@ -4,22 +4,11 @@ import React, { useState, useCallback, useMemo } from "react";
 // Bibliotecas de terceros
 import PropTypes from "prop-types";
 
-// Material-UI componentes
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
-
 // Servicios
 import { contactService } from "../../../services/Api";
 
-// Componentes propios genericos
-import { CloseButton } from "../../../components";
+// Componentes genéricos
+import { ReusableModal } from "../../../components";
 
 // Componentes propios
 import ContactForm from "./ContactForm";
@@ -45,7 +34,7 @@ const ContactModal = ({ open, onClose, contact, onSubmit }) => {
           ? await contactService.updateContact(contact.id, contactData)
           : await contactService.createContact(contactData);
 
-        onSubmit();
+        onSubmit(response);
         onClose();
       } catch (err) {
         console.error("Error submitting contact:", err);
@@ -82,36 +71,17 @@ const ContactModal = ({ open, onClose, contact, onSubmit }) => {
   );
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth PaperProps={{ sx: { overflow: 'visible' } }}>
-      <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
-        {modalTitle}
-        <CloseButton onClose={onClose} />
-      </DialogTitle>
-      <DialogContent>
-        <ContactForm contact={contact} onSubmit={handleSubmit} />
-        {error && (
-          <Typography
-            color="error"
-            align="center"
-            style={{ marginTop: "1rem" }}
-          >
-            {error}
-          </Typography>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
-          Cancelar
-        </Button>
-        <Button
-          onClick={() => document.getElementById("contact-form-submit").click()}
-          color="primary"
-          disabled={loading}
-        >
-          {loading ? <CircularProgress size={24} /> : "Guardar"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+    <ReusableModal
+      open={open}
+      onClose={onClose}
+      title={modalTitle}
+      onSubmit={() => document.getElementById("contact-form-submit").click()}
+      loading={loading}
+      error={error}
+      maxWidth="md"
+    >
+      <ContactForm contact={contact} onSubmit={handleSubmit} />
+    </ReusableModal>
   );
 };
 
