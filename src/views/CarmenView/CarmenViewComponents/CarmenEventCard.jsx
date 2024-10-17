@@ -141,7 +141,7 @@ const CarmenEventCard = ({
           <FloralSeparatorComponent />
           {renderEventTimeline(timelineRef, timelineProgress, eventLocations)}
           <FloralSeparatorComponent />
-          <GiftMessage accountNumber="ES16 2100  7761 2502 0006 3745" />
+          <GiftMessage accountNumber="DE01 2345  6789 0123 4567 8901" />
           <FloralSeparatorComponent />
           <ConfirmButton onClick={handleOpenModal} fullWidth={isMobile} />
         </CustomCardContent>

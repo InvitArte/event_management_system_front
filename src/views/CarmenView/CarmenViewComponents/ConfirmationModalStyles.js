@@ -259,9 +259,9 @@ export const EventInfo = styled("div")(({ theme }) => ({
   width: "100%",
   marginBottom: theme.spacing(3),
   padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
+  // borderRadius: theme.shape.borderRadius,
   backgroundColor: "rgba(255, 255, 255, 0.7)",
-  boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+  // boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
 }));
 
 export const EventButton = styled(Button)(({ theme }) => ({
@@ -388,9 +388,9 @@ export const TimeLabel = styled(Typography)(({ theme }) => ({
 export const StyledGiftMessage = styled("div")(({ theme }) => ({
   textAlign: "center",
   padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
+  // borderRadius: theme.shape.borderRadius,
   backgroundColor: "rgba(255, 255, 255, 0.7)",
-  boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+  // boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
 }));
 
 export const GiftMessageText = styled(Typography)(({ theme }) => ({
