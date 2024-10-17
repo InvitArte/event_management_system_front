@@ -7,6 +7,12 @@ import PropTypes from "prop-types";
 // Material-UI
 import { Box, useMediaQuery, useTheme } from "@mui/material";
 
+// Servicios
+import { IS_DEMO } from "../../../config/api/BaseUrl";
+
+// Componentes genéricos
+import { formatDateForCalendar, formatDateToString } from "../../../components";
+
 // Componentes y estilos propios
 import {
   EventButton,
@@ -15,6 +21,8 @@ import {
   TimeLabel,
   EventDateTypography,
 } from "./ConfirmationModalStyles";
+
+
 
 /**
  * Componente CalendarButton
@@ -31,8 +39,23 @@ import {
  */
 const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
   const [timeLeft, setTimeLeft] = useState(null);
+  const [displayDate, setDisplayDate] = useState(eventDate);
+  const [displayDateString, setDisplayDateString] = useState(eventDateString);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    const now = new Date();
+    if (IS_DEMO && eventDate < now) {
+      // Calcula la nueva fecha (1 mes y 4 días después de hoy)
+      const newDate = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() + 4);
+      setDisplayDate(newDate);
+      setDisplayDateString(formatDateToString(newDate));
+    } else {
+      setDisplayDate(eventDate);
+      setDisplayDateString(eventDateString);
+    }
+  }, [eventDate, eventDateString]);
 
   useEffect(() => {
     /**
@@ -40,9 +63,9 @@ const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
      * @returns {Object|null} Objeto con el tiempo restante o null si no hay fecha de evento
      */
     const calculateTimeLeft = () => {
-      if (!eventDate) return null;
+      if (!displayDate) return null;
       const now = new Date();
-      const difference = eventDate.getTime() - now.getTime();
+      const difference = displayDate.getTime() - now.getTime();
 
       if (difference <= 0) return {};
 
@@ -56,35 +79,35 @@ const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
       return { meses: months, días: days, horas: hours, minutos: minutes, segundos: seconds };
     };
 
-    if (eventDate) {
+    if (displayDate) {
       const timer = setInterval(() => {
         setTimeLeft(calculateTimeLeft());
       }, 1000);
       return () => clearInterval(timer);
     }
-  }, [eventDate]);
+  }, [displayDate]);
 
   /**
    * Añade el evento al calendario de Google
    */
   const addToGoogleCalendar = useCallback(() => {
-    if (!eventDate) return;
-    const startDate = formatDateForCalendar(eventDate);
-    const endDate = formatDateForCalendar(new Date(eventDate.getTime() + 2 * 60 * 60 * 1000));
+    if (!displayDate) return;
+    const startDate = formatDateForCalendar(displayDate);
+    const endDate = formatDateForCalendar(new Date(displayDate.getTime() + 2 * 60 * 60 * 1000));
     const locationString = eventLocations.map((location) => location.direccion).join(", ");
     const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
-      "Boda de César y Carmen"
+      "Tu celebración"
     )}&dates=${startDate}/${endDate}&details=${encodeURIComponent(
       "Detalles del evento"
     )}&location=${encodeURIComponent(locationString || "Ubicación del evento")}`;
     window.open(url, "_blank", "noopener,noreferrer");
-  }, [eventDate, eventLocations]);
+  }, [displayDate, eventLocations]);
 
-  if (!eventDate) return null;
+  if (!displayDate) return null;
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
-      <EventDateTypography>{eventDateString}</EventDateTypography>
+      <EventDateTypography>{displayDateString}</EventDateTypography>
       {renderCountdown(timeLeft, isMobile)}
       <Box mt={2}>
         <EventButton onClick={addToGoogleCalendar}>
@@ -94,14 +117,6 @@ const CalendarButton = ({ eventDate, eventDateString, eventLocations }) => {
     </Box>
   );
 };
-
-/**
- * Formatea una fecha para su uso en la URL del calendario de Google
- * @param {Date} date - Fecha a formatear
- * @returns {string} Fecha formateada
- */
-const formatDateForCalendar = (date) =>
-  date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
 /**
  * Renderiza la cuenta regresiva o un mensaje si el evento ya ha pasado
