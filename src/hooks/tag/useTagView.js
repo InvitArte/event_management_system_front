@@ -89,7 +89,7 @@ const useTagView = (initialVisibleColumns) => {
     }
   }, [uiState.tagToDelete]);
 
-  const handleTagUpdate = useCallback((updatedTag) => {
+  const handleTagUpdate = useCallback((updatedTag, updatedGuests) => {
     setTags((prevTags) => {
       const index = prevTags.findIndex((tag) => tag.id === updatedTag.id);
       if (index !== -1) {
@@ -101,6 +101,20 @@ const useTagView = (initialVisibleColumns) => {
       }
       return [...prevTags, updatedTag];
     });
+
+    setGuests((prevGuests) => {
+      return prevGuests.map((guest) => {
+        const updatedGuest = updatedGuests.find((g) => g.id === guest.id);
+        if (updatedGuest) {
+          return {
+            ...guest,
+            tags: updatedGuest.tags,
+          };
+        }
+        return guest;
+      });
+    });
+
     setUiState(prev => ({ ...prev, modalOpen: false, selectedTag: null, error: "" }));
   }, []);
 
