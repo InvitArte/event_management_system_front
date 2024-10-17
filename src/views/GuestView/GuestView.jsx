@@ -192,7 +192,7 @@ const GuestView = ({
         </Box>
         {uiState.loading ? (
           <SkeletonTable
-            rowsNum={10}
+            rowsNum={8}
             columnsNum={isMobile ? 3 : 14}
             height={600}
             showCheckbox={!isMobile}

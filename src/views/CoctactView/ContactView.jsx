@@ -85,7 +85,7 @@ const ContactView = () => {
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
         {uiState.loading ? (
           <SkeletonTable
-            rowsNum={6}
+            rowsNum={4}
             columnsNum={4}
             height={405}
             showCheckbox={false}

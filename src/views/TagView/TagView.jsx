@@ -73,7 +73,7 @@ const TagView = () => {
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
         {uiState.loading ? (
           <SkeletonTable
-            rowsNum={5}
+            rowsNum={4}
             columnsNum={1}
             height={400}
             showCheckbox={false}

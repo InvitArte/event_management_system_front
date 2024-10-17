@@ -55,7 +55,7 @@ const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
   );
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ height: 600, width: "100%" }}>
       <DataGrid
         rows={tags}
         columns={columns}
