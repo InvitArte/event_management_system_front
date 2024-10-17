@@ -11,7 +11,7 @@ import { Box } from "@mui/material";
 import { guestService } from "../../../services/Api";
 
 // Componentes genéricos
-import {ReusableModal} from "../../../components";
+import { ReusableModal , SkeletonModalForm} from "../../../components";
 
 // Componentes propios
 import GuestForm from "./GuestForm";
@@ -144,7 +144,7 @@ const GuestModal = ({
           onOpenTagModal={onOpenTagModal}
         />
       ) : (
-        <Box sx={{ textAlign: 'center', py: 2 }}>Cargando...</Box>
+        <SkeletonModalForm fields={6} longFields={2} />
       )}
     </>
   );

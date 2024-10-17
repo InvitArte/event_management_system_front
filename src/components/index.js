@@ -9,6 +9,7 @@ export { default as Navbar } from "./Ui/Navbar/Navbar";
 export { default as SkeletonTable } from "./Ui/SkeletonTable/SkeletonTable";
 export { default as TagChip } from "./Ui/TagChip/TagChip";
 export { default as ReusableModal } from "./Ui/ReusableModal/ReusableModal";
+export { default as SkeletonModalForm } from "./Ui/SkeletonModalForm/SkeletonModalForm";
 
 //Utils
 
