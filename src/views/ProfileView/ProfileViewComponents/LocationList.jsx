@@ -27,6 +27,7 @@ const LocationList = ({
           handleExpandLocation={handleExpandLocation}
           setEditingLocation={setEditingLocation}
           handleDeleteLocation={handleDeleteLocation}
+          locationsCount={locations.length}
         />
       ))
     ) : (
