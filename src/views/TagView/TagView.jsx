@@ -20,7 +20,7 @@ import {useTagView} from "../../hooks";
 import {SkeletonTable, DeleteConfirmationDialog} from "../../components";
 
 // Componentes propios
-import {TagTable, TagModal} from "./TagViewComponents";
+import {TagTable, TagModal, MobileTagList} from "./TagViewComponents";
 
 
 const TagView = () => {
@@ -79,9 +79,17 @@ const TagView = () => {
             showCheckbox={false}
             showActions={true}
           />
+        ) : isSmallScreen ? (
+          <MobileTagList
+            tags={tags}
+            guests={guests}
+            onEditTag={handleEditTag}
+            onDeleteTag={handleDeleteTag}
+          />
         ) : (
           <TagTable
             tags={tags}
+            guests={guests}
             onEditTag={handleEditTag}
             onDeleteTag={handleDeleteTag}
           />

@@ -23,12 +23,10 @@ import {
   useTheme,
 } from "@mui/material";
 
-// Función que devuelve los elementos de a que no están en b
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
 }
 
-// Función que devuelve los elementos que están en a y en b
 function intersection(a, b) {
   return a.filter((value) => b.indexOf(value) !== -1);
 }
@@ -92,12 +90,24 @@ const GuestTransferList = ({
     setChecked(not(checked, rightChecked));
   };
 
-  const customList = (title, items, searchValue, setSearchValue) => (
+  const getTotalGuestsCount = (guests) => {
+    return guests.reduce((total, guest) => {
+      return total + 1 + (guest.plus_ones ? guest.plus_ones.length : 0);
+    }, 0);
+  };
+
+  const customList = (title, items, searchValue, setSearchValue, showTotalCount = false) => (
     <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <CardHeader
         sx={{ px: 2, py: 1 }}
         title={<Typography variant="h6">{title}</Typography>}
-        subheader={<Typography variant="body2">{`${items.length} invitado(s)`}</Typography>}
+        subheader={
+          <Typography variant="body2">
+            {showTotalCount
+              ? `${getTotalGuestsCount(items)} invitado(s) en total`
+              : `${items.length} invitado(s)`}
+          </Typography>
+        }
       />
       <Autocomplete
         options={items}
@@ -124,9 +134,9 @@ const GuestTransferList = ({
         sx={{
           flexGrow: 1,
           overflow: "auto",
-          height: 250, // Altura fija
+          height: 250,
           '& .MuiListItem-root': {
-            py: 0.5, // Reducir el padding vertical de los items
+            py: 0.5,
           }
         }}
       >
@@ -158,7 +168,11 @@ const GuestTransferList = ({
                 <ListItemText
                   id={labelId}
                   primary={`${guest.first_name} ${guest.last_name}`}
+                  secondary={guest.plus_ones && guest.plus_ones.length > 0
+                    ? `+${guest.plus_ones.length} acompañante${guest.plus_ones.length > 1 ? 's' : ''}`
+                    : null}
                   primaryTypographyProps={{ variant: 'body2' }}
+                  secondaryTypographyProps={{ variant: 'caption' }}
                 />
               </ListItem>
             );
@@ -202,7 +216,7 @@ const GuestTransferList = ({
           </Grid>
         </Grid>
         <Grid item xs={12} sm={5} sx={{ height: isMobile ? 'auto' : '100%' }}>
-          {customList("Asignados", right, rightSearchValue, setRightSearchValue)}
+          {customList("Asignados", right, rightSearchValue, setRightSearchValue, true)}
         </Grid>
       </Grid>
     </Box>
@@ -215,6 +229,7 @@ GuestTransferList.propTypes = {
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       first_name: PropTypes.string.isRequired,
       last_name: PropTypes.string.isRequired,
+      plus_ones: PropTypes.arrayOf(PropTypes.object),
       tags: PropTypes.arrayOf(
         PropTypes.shape({
           id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
