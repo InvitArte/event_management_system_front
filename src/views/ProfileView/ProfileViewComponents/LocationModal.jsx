@@ -10,6 +10,9 @@ import { Modal, Box, Typography } from "@mui/material";
 // Hooks propios
 import {useLocations} from "../../../hooks";
 
+// Componenetes genéricos
+import { DeleteConfirmationDialog } from "../../../components";
+
 // Componentes propios
 import {LocationList, LocationForm} from "./index";
 
@@ -35,12 +38,16 @@ const LocationModal = ({ open, handleClose }) => {
     newLocation,
     handleExpandLocation,
     setEditingLocation,
-    handleDeleteLocation,
     handleUpdateLocation,
     setIsCreating,
     setNewLocation,
     handleAddLocation,
     resetState,
+    deleteDialogOpen,
+    locationToDelete,
+    handleDeleteLocation,
+    handleConfirmDelete,
+    setDeleteDialogOpen,
   } = useLocations(open);
 
   const handleCloseAndReset = () => {
@@ -70,6 +77,15 @@ const LocationModal = ({ open, handleClose }) => {
           setIsCreating={setIsCreating}
           setNewLocation={setNewLocation}
           handleAddLocation={handleAddLocation}
+        />
+         <DeleteConfirmationDialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          onConfirm={handleConfirmDelete}
+          title="Confirmar eliminación de ubicación"
+          content={`¿Estás seguro de que quieres eliminar la ubicación "${locationToDelete?.name}"? Esta acción no se puede deshacer.`}
+          cancelButtonText="Cancelar"
+          confirmButtonText="Eliminar ubicación"
         />
       </Box>
     </Modal>

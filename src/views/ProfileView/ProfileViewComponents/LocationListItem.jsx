@@ -55,7 +55,7 @@ const LocationListItem = ({
         <IconButton
           edge="end"
           aria-label="delete"
-          onClick={() => handleDeleteLocation(location.id)}
+          onClick={() => handleDeleteLocation(location)}
           size="small"
         >
           <DeleteIcon fontSize="small" />
