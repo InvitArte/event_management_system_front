@@ -26,6 +26,21 @@ const SkeletonTable = ({
 }) => {
   return (
     <Paper style={{ height: height, width: "100%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          p: 2,
+          borderBottom: "1px solid rgba(224, 224, 224, 1)",
+        }}
+      >
+        <Skeleton animation="wave" height={36} width={120} /> {/* Skeleton para el botón de verificar */}
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Skeleton animation="wave" height={36} width={100} sx={{ mr: 1 }} />
+          <Skeleton animation="wave" height={36} width={100} />
+        </Box>
+      </Box>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
@@ -71,19 +86,16 @@ const SkeletonTable = ({
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           alignItems: "center",
           p: 2,
           borderTop: "1px solid rgba(224, 224, 224, 1)",
         }}
       >
-        <Skeleton animation="wave" height={20} width={100} />
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Skeleton animation="wave" height={20} width={30} sx={{ mr: 1 }} />
-          <Skeleton animation="wave" height={20} width={30} sx={{ mr: 1 }} />
-          <Skeleton animation="wave" height={20} width={30} sx={{ mr: 1 }} />
-          <Skeleton animation="wave" height={20} width={30} />
-        </Box>
+        <Skeleton animation="wave" height={32} width={32} sx={{ mr: 1 }} />
+        <Skeleton animation="wave" height={32} width={32} sx={{ mr: 1 }} />
+        <Skeleton animation="wave" height={32} width={32} sx={{ mr: 1 }} />
+        <Skeleton animation="wave" height={32} width={32} />
       </Box>
     </Paper>
   );

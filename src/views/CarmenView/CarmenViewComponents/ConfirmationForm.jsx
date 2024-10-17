@@ -42,6 +42,7 @@ const initialFormData = {
     menu_id: "",
     allergies: [],
     accommodation_plan: "",
+    observations: "",
     honeypot: false,
   },
   plus_one: {
@@ -321,6 +322,14 @@ const ConfirmationForm = ({
         type: "select",
         required: true,
       },
+      {
+        name: "observations",
+        label: "Observaciones",
+        type: "text",
+        multiline: true,
+        rows: 4,
+        required: false,
+      },
     ],
     []
   );
@@ -329,6 +338,7 @@ const ConfirmationForm = ({
     () => [
       { name: "needs_transport", label: "¿Necesitas autobús de ida?" },
       { name: "needs_transport_back", label: "¿Necesitas autobús de vuelta?" },
+      { name: "needs_hotel", label: "¿Necesitas alojamiento?" },
     ],
     []
   );
