@@ -20,7 +20,7 @@ import {
 import { tagService } from "../../../services/Api";
 
 // Componentes genericos
-import {CloseButton} from "../../../components";
+import { CloseButton } from "../../../components";
 
 // Componentes propios
 import GuestTransferList from "./GuestTransferList";
@@ -53,6 +53,7 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
       const updatedSelectedGuests = selectedGuests.map((guest) => guest.id);
 
       let updatedTag;
+      let updatedGuests = [...guests];
       if (tag) {
         // Modo de edición
         const nameChanged = tagName !== tag.name;
@@ -66,19 +67,36 @@ const TagModal = ({ open, onClose, onTagUpdate, tag, guests, setError }) => {
         }
         if (assignmentsChanged) {
           await tagService.bulkAssign(tag.id, updatedSelectedGuests);
+          updatedGuests = guests.map(guest => ({
+            ...guest,
+            tags: guest.tags.filter(t => t.id !== tag.id)
+          }));
+          updatedSelectedGuests.forEach(guestId => {
+            const guestIndex = updatedGuests.findIndex(g => g.id === guestId);
+            if (guestIndex !== -1) {
+              updatedGuests[guestIndex] = {
+                ...updatedGuests[guestIndex],
+                tags: [...updatedGuests[guestIndex].tags, { id: tag.id, name: tagName }]
+              };
+            }
+          });
         }
         if (nameChanged || assignmentsChanged) {
-          onTagUpdate({
-            ...tag,
-            ...(updatedTag || {}),
-            guests: updatedSelectedGuests,
-          });
+          onTagUpdate(
+            {
+              ...tag,
+              ...(updatedTag || {}),
+              name: tagName,
+              guests: updatedSelectedGuests,
+            },
+            updatedGuests
+          );
         }
       } else {
         // Modo de creación
         updatedTag = await tagService.createTag(tagData);
         if (updatedTag) {
-          onTagUpdate({ ...updatedTag, guests: [] });
+          onTagUpdate({ ...updatedTag, guests: [] }, guests);
         } else {
           throw new Error("Error al crear la etiqueta");
         }

@@ -16,3 +16,4 @@ export { default as ProtectedRoute } from "./Utils/ProtectedRoute/ProtectedRoute
 export { stringToColor, adjustColor, getContrastColor } from "./Utils/TagColors/TagColors";
 export {normalizeText} from "./Utils/TextUtils/TextUtils";
 export {generateVCardData} from "./Utils/vCardUtils/vCardUtils";
+export {default as ExcelDownloader} from "./Utils/ExcelDownloader/ExcelDownloader";

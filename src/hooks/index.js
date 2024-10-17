@@ -10,3 +10,4 @@ export { default as useLocations } from './profile/useLocations';
 export { default as useMenus } from './profile/useMenus';
 //tag
 export { default as useTagView } from './tag/useTagView';
+export { default as useMobileTagList } from './tag/useMobileTaglist';

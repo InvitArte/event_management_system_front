@@ -215,10 +215,8 @@ const useGuestView = (initialVisibleColumns) => {
     );
 
     if (isMenuOrAllergyFilter) {
-      // Si hay filtros de menú o alergias, aplicamos el filtro directamente
       return guestData.guests.filter(filterGuest);
     } else {
-      // Para otros filtros, mantenemos la lógica de incluir invitados principales y plus ones relacionados
       const filteredMainGuests = guestData.guests.filter((guest) => guest.isMainGuest && filterGuest(guest));
       const filteredPlusOnes = guestData.guests.filter((guest) => !guest.isMainGuest && filterGuest(guest));
 
@@ -316,7 +314,6 @@ const useGuestView = (initialVisibleColumns) => {
 
   const handleGuestSubmitted = useCallback(async (updatedGuest) => {
     try {
-      // Actualización optimista
       setGuestData((prevData) => ({
         ...prevData,
         guests: prevData.guests.map((g) =>
@@ -329,7 +326,6 @@ const useGuestView = (initialVisibleColumns) => {
 
       setUiState((prev) => ({ ...prev, modalOpen: false }));
 
-      // Actualizar los datos en segundo plano
       await fetchGuests();
     } catch (error) {
       console.error("Error updating guest list:", error);
@@ -355,10 +351,107 @@ const useGuestView = (initialVisibleColumns) => {
       return {
         ...prevData,
         allTags: updatedAllTags,
-        tags: updatedAllTags, // Assuming tags and allTags are the same in this context
+        tags: updatedAllTags,
       };
     });
   }, []);
+
+  const columns = [
+    { field: "validated", headerName: "Validado" },
+    { field: "fullName", headerName: "Nombre Completo" },
+    { field: "email", headerName: "Email" },
+    { field: "phone", headerName: "Teléfono" },
+    { field: "menu", headerName: "Menú" },
+    { field: "allergy", headerName: "Alergias" },
+    { field: "needs_hotel", headerName: "Necesita Hotel" },
+    { field: "needs_transport", headerName: "Necesita Transporte" },
+    { field: "needs_transport_back", headerName: "Necesita Transporte de Vuelta" },
+    { field: "disability", headerName: "Discapacidad" },
+    { field: "observations", headerName: "Observaciones" },
+    { field: "accommodation_plan", headerName: "Plan de Alojamiento" },
+    { field: "isMainGuest", headerName: "Tipo" },
+    { field: "tags", headerName: "Etiquetas" },
+  ];
+
+  const excelData = useMemo(() => {
+    let sortedGuests = [...filteredGuests];
+    if (uiState.sortModel.length > 0) {
+      const { field, sort } = uiState.sortModel[0];
+      sortedGuests.sort((a, b) => {
+        if (a[field] < b[field]) return sort === "asc" ? -1 : 1;
+        if (a[field] > b[field]) return sort === "asc" ? 1 : -1;
+        return 0;
+      });
+    }
+    const processedData = sortedGuests.map((guest) => {
+      const rowData = {
+        "Nombre Completo": guest.fullName,
+        Email: guest.email,
+        Teléfono: guest.phone,
+        Validado: guest.validated ? "Sí" : "No",
+        Menú: guest.menu,
+        Alergias: guest.allergies && Array.isArray(guest.allergies)
+          ? guest.allergies.map(allergy => allergy.name).join(", ")
+          : "",
+        "Necesita Hotel": guest.needs_hotel ? "Sí" : "No",
+        "Necesita Transporte": guest.needs_transport ? "Sí" : "No",
+        "Necesita Transporte de Vuelta": guest.needs_transport_back ? "Sí" : "No",
+        Discapacidad: guest.disability ? "Sí" : "No",
+        Observaciones: guest.observations,
+        "Plan de Alojamiento": guest.accommodation_plan,
+        Tipo: guest.isMainGuest ? "Invitado Principal" : "Acompañante",
+        Etiquetas: guest.tags && Array.isArray(guest.tags)
+          ? guest.tags.map((tag) => tag.name).join(", ")
+          : "",
+      };
+      return Object.keys(rowData).reduce((acc, key) => {
+        const columnField = columns.find(
+          (col) => col.headerName === key || (key === "Alergias" && col.field === "allergy")
+        )?.field;
+        if (columnField && uiState.visibleColumns[columnField]) {
+          acc[key] = rowData[key];
+        }
+        return acc;
+      }, {});
+    });
+    return processedData;
+  }, [filteredGuests, uiState.visibleColumns, uiState.sortModel, columns]);
+
+  const excelColumnWidths = useMemo(() => {
+    const baseWidth = 20;
+    const maxWidth = 60;
+    const charWidth = 6;
+    const padding = 5;
+
+    const calculateWidth = (key) => {
+      const maxLength = Math.max(...excelData.map(row => String(row[key] || '').length));
+      const logWidth = Math.round(baseWidth + (Math.log(maxLength) / Math.log(2)) * 10);
+      return Math.min(Math.max(logWidth, baseWidth), maxWidth);
+    };
+
+    const dynamicWidths = {
+      "Nombre Completo": calculateWidth("Nombre Completo"),
+      Email: calculateWidth("Email"),
+      Alergias: calculateWidth("Alergias"),
+      Observaciones: calculateWidth("Observaciones"),
+      Etiquetas: calculateWidth("Etiquetas"),
+      Teléfono: calculateWidth("Teléfono"),
+      Menú: calculateWidth("Menú"),
+      "Plan de Alojamiento": calculateWidth("Plan de Alojamiento"),
+    };
+
+    // Para otras columnas, usamos un ancho fijo
+    const fixedWidths = {
+      Validado: 15,
+      "Necesita Hotel": 20,
+      "Necesita Transporte": 25,
+      "Necesita Transporte de Vuelta": 30,
+      Discapacidad: 20,
+      Tipo: 25,
+    };
+
+    return { ...fixedWidths, ...dynamicWidths };
+  }, [excelData]);
 
   return {
     guestData,
@@ -377,6 +470,9 @@ const useGuestView = (initialVisibleColumns) => {
     handleVisibleColumnsChange,
     setUiState,
     updateTags,
+    excelData,
+    excelColumnWidths,
+    columns,
   };
 };
 
