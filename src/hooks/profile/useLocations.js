@@ -98,12 +98,13 @@ const useLocations = (open) => {
     setExpandedLocation(expandedLocation === id ? null : id);
   };
 
-  const resetState = () => {
+  const resetState = useCallback(() => {
     setNewLocation({ name: "", direccion: "", url: "", capacity: "" });
     setEditingLocation(null);
     setExpandedLocation(null);
+    setDeleteDialogOpen(false);
     setIsCreating(false);
-  };
+  }, []);
 
   return {
     locations,

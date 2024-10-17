@@ -10,6 +10,9 @@ import { Modal, Box, Typography } from "@mui/material";
 // Hooks propios
 import {useMenus} from "../../../hooks";
 
+// Componentes genéricos
+import { DeleteConfirmationDialog } from "../../../components";
+
 // Componentes propios
 import {MenuList, MenuForm} from "./index";
 
@@ -41,6 +44,10 @@ const MenuModal = ({ open, handleClose }) => {
     setNewMenu,
     handleAddMenu,
     resetState,
+    deleteDialogOpen,
+    menuToDelete,
+    handleConfirmDelete,
+    setDeleteDialogOpen,
   } = useMenus(open);
 
   const handleCloseAndReset = () => {
@@ -52,7 +59,7 @@ const MenuModal = ({ open, handleClose }) => {
     <Modal open={open} onClose={handleCloseAndReset}>
       <Box sx={style}>
         <Typography variant="h5" component="h2" gutterBottom align="center">
-          Gestionar Menús de la Boda
+          Gestionar Menús del Evento
         </Typography>
         <MenuList
           menus={menus}
@@ -70,6 +77,15 @@ const MenuModal = ({ open, handleClose }) => {
           setIsCreating={setIsCreating}
           setNewMenu={setNewMenu}
           handleAddMenu={handleAddMenu}
+        />
+        <DeleteConfirmationDialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          onConfirm={handleConfirmDelete}
+          title="Confirmar eliminación de menú"
+          content={`¿Estás seguro de que quieres eliminar el menú "${menuToDelete?.name}"? Esta acción no se puede deshacer.`}
+          cancelButtonText="Cancelar"
+          confirmButtonText="Eliminar menú"
         />
       </Box>
     </Modal>

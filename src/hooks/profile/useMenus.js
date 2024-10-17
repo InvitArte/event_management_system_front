@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { menuService } from '../../services/Api';
 
 const useMenus = (open) => {
@@ -7,6 +7,8 @@ const useMenus = (open) => {
   const [editingMenu, setEditingMenu] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [newMenu, setNewMenu] = useState({ name: '' });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [menuToDelete, setMenuToDelete] = useState(null);
 
   useEffect(() => {
     if (open) {
@@ -27,14 +29,24 @@ const useMenus = (open) => {
     setExpandedMenu(expandedMenu === id ? null : id);
   };
 
-  const handleDeleteMenu = async (id) => {
-    try {
-      await menuService.deleteMenu(id);
-      await loadMenus();
-    } catch (error) {
-      console.error('Error deleting menu:', error);
+  const handleDeleteMenu = useCallback((menu) => {
+    setMenuToDelete(menu);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (menuToDelete) {
+      try {
+        await menuService.deleteMenu(menuToDelete.id);
+        await loadMenus();
+      } catch (error) {
+        console.error('Error deleting menu:', error);
+      } finally {
+        setDeleteDialogOpen(false);
+        setMenuToDelete(null);
+      }
     }
-  };
+  }, [menuToDelete, loadMenus]);
 
   const handleUpdateMenu = async () => {
     try {
@@ -57,12 +69,14 @@ const useMenus = (open) => {
     }
   };
 
-  const resetState = () => {
+  const resetState = useCallback(() => {
     setEditingMenu(null);
     setIsCreating(false);
     setNewMenu({ name: '' });
     setExpandedMenu(null);
-  };
+    setDeleteDialogOpen(false);
+    setMenuToDelete(null);
+  }, []);
 
   return {
     menus,
@@ -72,12 +86,16 @@ const useMenus = (open) => {
     newMenu,
     handleExpandMenu,
     setEditingMenu,
-    handleDeleteMenu,
     handleUpdateMenu,
     setIsCreating,
     setNewMenu,
     handleAddMenu,
     resetState,
+    deleteDialogOpen,
+    menuToDelete,
+    handleDeleteMenu,
+    handleConfirmDelete,
+    setDeleteDialogOpen,
   };
 };
 

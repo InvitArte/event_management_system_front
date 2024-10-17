@@ -35,7 +35,7 @@ const MenuListItem = ({
       <IconButton
         edge="end"
         aria-label="delete"
-        onClick={() => handleDeleteMenu(menu.id)}
+        onClick={() => handleDeleteMenu(menu)}
         size="small"
       >
         <DeleteIcon fontSize="small" />
