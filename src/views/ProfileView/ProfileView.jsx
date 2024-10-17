@@ -64,7 +64,7 @@ const ProfileView = ({ visibleFields }) => {
                 marginBottom: isSmallScreen ? theme.spacing(2) : 0,
               }}
             >
-              Localizaciones
+              Gestonar Ubicaciones
             </Button>
             <Button
               variant="contained"

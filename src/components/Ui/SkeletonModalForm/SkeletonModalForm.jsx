@@ -1,5 +1,10 @@
+// React y hooks
 import React from 'react';
+
+// Bibliotecas de terceros
 import PropTypes from 'prop-types';
+
+// Material-UI
 import { Skeleton, Grid } from '@mui/material';
 
 const SkeletonModalForm = ({ fields = 4, longFields = 1 }) => {
