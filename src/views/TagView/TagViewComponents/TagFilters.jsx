@@ -16,8 +16,10 @@ const TagFilters = ({ tags, guests, onFilterChange, visibleFilters }) => {
   const uniqueValues = useMemo(() => {
     const guestNames = new Set();
     guests.forEach(guest => {
-      // Asumimos que todos los invitados en esta lista son invitados principales
-      guestNames.add(guest.fullName);
+      // Solo añadimos el invitado si tiene al menos una etiqueta asignada
+      if (guest.tags && guest.tags.length > 0) {
+        guestNames.add(guest.fullName);
+      }
     });
     return {
       guestNames: Array.from(guestNames),
