@@ -1,10 +1,20 @@
+// React y hooks
 import React, { useCallback, useEffect, useState } from "react";
+
+// Biblioteca de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Box, useMediaQuery, useTheme } from "@mui/material";
+
+// Servicios y configuración
 import { IS_DEMO } from "../../../config/api/BaseUrl";
+
+// Componentes genéricos
 import { formatDateForCalendar, formatDateToString } from "../../../components";
+
+// Assets y estilos
 import {
-  EventButton,
   TimeUnit,
   TimeValue,
   TimeLabel,

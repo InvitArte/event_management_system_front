@@ -5,7 +5,6 @@ import React from "react";
 import { Box, LinearProgress, keyframes } from "@mui/material";
 
 // Assets
-import CSvg from "../../../assets/imgs/CC.svg";
 import DemoLogo from "../../../assets/imgs/demo_logo.png";
 
 const fadeInAndGrow = keyframes`

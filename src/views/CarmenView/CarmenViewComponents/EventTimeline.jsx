@@ -1,7 +1,13 @@
+// React
 import React from "react";
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Box, Container, Typography, useTheme } from "@mui/material";
 import { DirectionsBus as DirectionsBusIcon, Church as ChurchIcon, Restaurant as RestaurantIcon } from "@mui/icons-material";
+
+// Componentes propios
 import TimelineItem from "./TimelineItem";
 
 const EventTimeline = ({ scrollProgress, eventLocations }) => {

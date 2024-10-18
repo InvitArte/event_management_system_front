@@ -1,6 +1,13 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Typography, useMediaQuery, useTheme, Box } from "@mui/material";
+
+// Estilos
 import { mainBlue } from "./ConfirmationModalStyles";
 
 const GiftMessage = ({ accountNumber }) => {

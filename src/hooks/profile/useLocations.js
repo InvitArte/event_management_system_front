@@ -1,4 +1,7 @@
+// React y hooks
 import { useState, useEffect, useCallback } from "react";
+
+// Servicios
 import { locationService } from "../../services/Api";
 
 const useLocations = (open) => {

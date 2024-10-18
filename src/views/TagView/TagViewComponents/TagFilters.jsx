@@ -1,5 +1,10 @@
+// React y hooks
 import React, { useState, useEffect, useMemo, useCallback } from "react";
+
+// Biblioteca de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import {
   Box,
   TextField,
@@ -7,6 +12,8 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+
+// Componentes genéricos
 import { FilterAutocomplete } from "../../../components";
 
 const TagFilters = ({ tags, guests, onFilterChange, visibleFilters }) => {

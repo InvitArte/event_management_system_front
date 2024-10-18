@@ -1,6 +1,10 @@
+// React y hooks
 import { useState, useEffect, useCallback, useMemo } from "react";
+
+// Servicios y configuraciones
 import { tagService, guestService } from "../../services/Api";
-import { translateError } from "../../config/utils/ErrorMessages";
+import { translateError } from "../../config";
+// Componentes genéricos
 import { normalizeText } from "../../components";
 
 const useTagView = (initialVisibleColumns) => {

@@ -1,4 +1,7 @@
+// React y hooks
 import React, { useMemo, useState, useCallback } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
 import {
   Container,
@@ -9,8 +12,14 @@ import {
   Button,
   Paper,
 } from "@mui/material";
+
+// Hooks propios
 import { useGuestView } from "../../hooks";
+
+// Componentes genericos
 import { SkeletonTable, DeleteConfirmationDialog, ExcelDownloader  } from "../../components";
+
+// Componentes propios
 import {
   GuestFilters,
   GuestModal,

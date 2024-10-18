@@ -1,5 +1,10 @@
+// hooks de react
 import { useState, useEffect, useCallback } from "react";
+
+// Biblioteca de terceros
 import { useNavigate } from "react-router-dom";
+
+// Servicios
 import { authService } from "../../services/Api";
 
 const useNavbar = (threshold) => {

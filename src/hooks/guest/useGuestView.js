@@ -1,5 +1,10 @@
+// React y hooks
 import { useState, useEffect, useMemo, useCallback } from "react";
+
+// Servicios
 import { guestService, tagService, menuService, allergyService } from "../../services/Api";
+
+// Componentes genéricos
 import { normalizeText } from "../../components";
 
 const useGuestView = (initialVisibleColumns) => {

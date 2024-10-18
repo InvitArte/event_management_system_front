@@ -1,3 +1,6 @@
+// VISTA ABANDONADA, NO SE UTILIZA EN LA APLICACIÓN
+
+
 // React y hooks
 import React, { useRef, useEffect } from "react";
 

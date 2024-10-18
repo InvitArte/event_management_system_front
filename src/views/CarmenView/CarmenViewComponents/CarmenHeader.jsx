@@ -1,7 +1,16 @@
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
+
+// Componentes propios
 import { ConfirmButton } from "./index";
+
+// Assets y estilos
 import { mainBlue } from "./index";
 
 const CarmenHeader = ({ onOpenModal }) => {

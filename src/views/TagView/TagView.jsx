@@ -1,4 +1,7 @@
+// React
 import React from "react";
+
+// Material-UI
 import {
   Container,
   Typography,
@@ -9,10 +12,15 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
+
+// Hooks propios
 import { useTagView } from "../../hooks";
-import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
+
+// Componentes genéricos
+import { SkeletonTable, DeleteConfirmationDialog,ExcelDownloader } from "../../components";
+
+// Componentes propios
 import { TagTable, TagModal, MobileTagList, TagFilters } from "./TagViewComponents";
-import { ExcelDownloader } from "../../components";
 
 const TagView = () => {
   const theme = useTheme();

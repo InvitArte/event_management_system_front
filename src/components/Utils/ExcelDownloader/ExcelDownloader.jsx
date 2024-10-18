@@ -1,6 +1,11 @@
+// React y hooks
 import React, { useCallback, useMemo } from "react";
+
+// Bibliotecas de terceros
 import PropTypes from "prop-types";
 import ExcelJS from "exceljs";
+
+// Material-UI
 import { Button } from "@mui/material";
 
 const ExcelDownloader = ({ data, fileName, columnWidths = {} }) => {

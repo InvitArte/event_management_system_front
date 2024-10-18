@@ -1,7 +1,16 @@
+// React y hooks
 import React, { useState, useEffect, useCallback, useRef } from "react";
+
+// Biblioteca de terceros
 import PropTypes from "prop-types";
+
+// Material-UI
 import { useMediaQuery, useTheme, Box, Typography } from "@mui/material";
+
+// Componentes genéricos
 import { CustomCard } from "../../../components";
+
+// Componentes propios
 import {
   CalendarButton,
   ConfirmationModal,
@@ -13,13 +22,14 @@ import {
   EventInfo
 } from './index';
 
+
+// Assets y estilos
 import FloralSeparator from "../../../assets/imgs/FloralSeparator.svg";
 import IglesiaCarmen from "../../../assets/imgs/IglesiaCarmen.png";
 
 const CarmenEventCard = ({
   userId,
   showTitle,
-  svgSrc,
   eventDate,
   eventDateString,
   eventLocations,
@@ -157,8 +167,6 @@ const CarmenEventCard = ({
           {renderTitle()}
           <FloralSeparatorComponent />
           {renderEventInfo()}
-          {/* <FloralSeparatorComponent />
-          {renderChurchImage()} */}
           <FloralSeparatorComponent />
           {renderEventTimeline()}
           <FloralSeparatorComponent />
