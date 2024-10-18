@@ -1,5 +1,7 @@
-// React y bibliotecas de terceros
+// React
 import React from "react";
+
+// Bibliotecas de terceros
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 

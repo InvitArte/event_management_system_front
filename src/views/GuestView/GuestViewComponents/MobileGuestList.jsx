@@ -1,5 +1,10 @@
+// React
 import React from 'react';
+
+// Bibliotecas de terceros
 import PropTypes from 'prop-types';
+
+// Material-UI
 import {
   List,
   ListItem,
@@ -29,7 +34,10 @@ import {
   LastPage as LastPageIcon
 } from '@mui/icons-material';
 
+// Hooks propios
 import { useMobileGuestList } from '../../../hooks';
+
+// Componentes genéricos
 import { stringToColor, adjustColor, getContrastColor } from '../../../components';
 
 const MAX_NAME_LENGTH = 20;

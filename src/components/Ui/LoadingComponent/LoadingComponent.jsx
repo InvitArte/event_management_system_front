@@ -5,7 +5,7 @@ import React from "react";
 import { Box, LinearProgress, keyframes } from "@mui/material";
 
 // Assets
-import CSvg from "../../../assets/imgs/CC.svg";
+import DemoLogo from "../../../assets/imgs/demo_logo.png";
 
 const fadeInAndGrow = keyframes`
   from {
@@ -57,7 +57,7 @@ const LoadingComponent = ({ isLoading, type = "bar" }) => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#153e87",
+          backgroundColor: "#8D5444",
           zIndex: 1000,
           opacity: isLoading ? 1 : 0,
           pointerEvents: isLoading ? "auto" : "none",
@@ -65,52 +65,22 @@ const LoadingComponent = ({ isLoading, type = "bar" }) => {
         }}
       >
         <Box
+          component="img"
+          src={DemoLogo}
           sx={{
             position: "absolute",
             top: "50%",
             left: "50%",
             width: "200px",
             height: "200px",
+            objectFit: "contain",
             transform: "translate(-50%, -50%)",
             zIndex: 1001,
             animation: isLoading
               ? `${fadeInAndGrow} 0.5s ease-in-out, ${shine} 3s linear infinite`
               : `${moveToCorner} 0.5s ease-in-out forwards`,
             opacity: 1,
-            background: `
-              linear-gradient(
-                45deg,
-                #969696 0%,
-                #d8d8d8 20%,
-                #ffffff 40%,
-                #d8d8d8 60%,
-                #969696 80%,
-                #787878 100%
-              )
-            `,
-            backgroundSize: "400% 400%",
-            maskImage: `url(${CSvg})`,
-            maskSize: "contain",
-            maskRepeat: "no-repeat",
-            maskPosition: "center",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: `
-                linear-gradient(
-                  135deg,
-                  rgba(255,255,255,0.7) 0%,
-                  rgba(255,255,255,0) 50%,
-                  rgba(0,0,0,0.2) 100%
-                )
-              `,
-              zIndex: 1,
-            },
-            boxShadow: "0 0 25px rgba(255, 255, 255, 0.4)",
+            filter: "drop-shadow(0 0 25px rgba(255, 255, 255, 0.4))",
           }}
         />
       </Box>

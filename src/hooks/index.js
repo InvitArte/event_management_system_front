@@ -11,3 +11,6 @@ export { default as useMenus } from './profile/useMenus';
 //tag
 export { default as useTagView } from './tag/useTagView';
 export { default as useMobileTagList } from './tag/useMobileTaglist';
+
+// public view
+export { default as useCarmenView } from './public/useCarmenView';

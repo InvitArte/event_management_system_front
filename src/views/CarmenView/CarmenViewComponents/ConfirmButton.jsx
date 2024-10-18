@@ -5,7 +5,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // Componentes estilizados
-import { InvertedEventButton } from "./ConfirmationModalStyles";
+import { ElegantButton } from "./ConfirmationModalStyles";
 
 /**
  * Componente ConfirmButton
@@ -20,13 +20,13 @@ import { InvertedEventButton } from "./ConfirmationModalStyles";
  */
 const ConfirmButton = ({ onClick, className, fullWidth }) => {
   return (
-    <InvertedEventButton
+    <ElegantButton
       onClick={onClick}
       fullWidth={fullWidth}
       className={className}
     >
       Confirmar asistencia
-    </InvertedEventButton>
+    </ElegantButton>
   );
 };
 

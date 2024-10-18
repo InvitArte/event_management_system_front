@@ -1,8 +1,11 @@
 const LOCAL_HOST = "localhost:5173";
+const DEMO_HOST = "demo.invitartedesign.com";
 const API_BASE_URL =
   window.location.host === LOCAL_HOST
     ? "http://127.0.0.1:8000"
     : "https://api.invitartedesign.com";
+
+export const IS_DEMO = window.location.host === DEMO_HOST;
 
 //http://127.0.0.1:8000
 

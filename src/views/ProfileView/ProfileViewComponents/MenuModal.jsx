@@ -5,26 +5,16 @@ import React from "react";
 import PropTypes from "prop-types";
 
 // Material-UI
-import { Modal, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 // Hooks propios
-import {useMenus} from "../../../hooks";
+import { useMenus } from "../../../hooks";
+
+// Componentes genéricos
+import { ReusableModal, DeleteConfirmationDialog } from "../../../components";
 
 // Componentes propios
-import {MenuList, MenuForm} from "./index";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  maxHeight: "90vh",
-  overflow: "auto",
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 3,
-};
+import { MenuList, MenuForm } from "./index";
 
 const MenuModal = ({ open, handleClose }) => {
   const {
@@ -41,6 +31,10 @@ const MenuModal = ({ open, handleClose }) => {
     setNewMenu,
     handleAddMenu,
     resetState,
+    deleteDialogOpen,
+    menuToDelete,
+    handleConfirmDelete,
+    setDeleteDialogOpen,
   } = useMenus(open);
 
   const handleCloseAndReset = () => {
@@ -48,12 +42,9 @@ const MenuModal = ({ open, handleClose }) => {
     handleClose();
   };
 
-  return (
-    <Modal open={open} onClose={handleCloseAndReset}>
-      <Box sx={style}>
-        <Typography variant="h5" component="h2" gutterBottom align="center">
-          Gestionar Menús de la Boda
-        </Typography>
+  const modalContent = (
+    <>
+      <Box sx={{ width: '100%' }}>
         <MenuList
           menus={menus}
           expandedMenu={expandedMenu}
@@ -72,7 +63,31 @@ const MenuModal = ({ open, handleClose }) => {
           handleAddMenu={handleAddMenu}
         />
       </Box>
-    </Modal>
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirmar eliminación de menú"
+        content={`¿Estás seguro de que quieres eliminar el menú "${menuToDelete?.name}"? Esta acción no se puede deshacer.`}
+        cancelButtonText="Cancelar"
+        confirmButtonText="Eliminar menú"
+      />
+    </>
+  );
+
+  return (
+    <ReusableModal
+      open={open}
+      onClose={handleCloseAndReset}
+      title="Gestionar Menús del Evento"
+      maxWidth="md"
+      fullWidth
+      submitButtonText="Cerrar"
+      onSubmit={handleCloseAndReset}
+      hideSubmitButton={true}
+    >
+      {modalContent}
+    </ReusableModal>
   );
 };
 

@@ -20,12 +20,16 @@ import {
   ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
 
+//Servicios
+import {IS_DEMO} from "../../../config/api/BaseUrl";
+
 const LocationListItem = ({
   location,
   expanded,
   handleExpandLocation,
   setEditingLocation,
   handleDeleteLocation,
+  locationsCount,
 }) => (
   <React.Fragment>
     <ListItem disableGutters>
@@ -47,14 +51,16 @@ const LocationListItem = ({
         >
           <EditIcon fontSize="small" />
         </IconButton>
+        {(!IS_DEMO || (IS_DEMO && locationsCount <= 1)) && (
         <IconButton
           edge="end"
           aria-label="delete"
-          onClick={() => handleDeleteLocation(location.id)}
+          onClick={() => handleDeleteLocation(location)}
           size="small"
         >
           <DeleteIcon fontSize="small" />
         </IconButton>
+      )}
       </ListItemSecondaryAction>
     </ListItem>
     <Collapse in={expanded}>
@@ -77,12 +83,13 @@ LocationListItem.propTypes = {
     name: PropTypes.string.isRequired,
     direccion: PropTypes.string.isRequired,
     url: PropTypes.string,
-    capacity: PropTypes.string, // Changed from number to string
+    capacity: PropTypes.string,
   }).isRequired,
   expanded: PropTypes.bool.isRequired,
   handleExpandLocation: PropTypes.func.isRequired,
   setEditingLocation: PropTypes.func.isRequired,
   handleDeleteLocation: PropTypes.func.isRequired,
+  locationsCount: PropTypes.number.isRequired,
 };
 
 export default LocationListItem;

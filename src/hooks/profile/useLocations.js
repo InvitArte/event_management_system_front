@@ -1,4 +1,7 @@
+// React y hooks
 import { useState, useEffect, useCallback } from "react";
+
+// Servicios
 import { locationService } from "../../services/Api";
 
 const useLocations = (open) => {
@@ -12,6 +15,8 @@ const useLocations = (open) => {
   const [editingLocation, setEditingLocation] = useState(null);
   const [expandedLocation, setExpandedLocation] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [locationToDelete, setLocationToDelete] = useState(null);
 
   const fetchLocations = useCallback(async () => {
     try {
@@ -73,25 +78,36 @@ const useLocations = (open) => {
     }
   };
 
-  const handleDeleteLocation = async (id) => {
-    try {
-      await locationService.deleteLocation(id);
-      fetchLocations();
-    } catch (error) {
-      console.error("Error deleting location:", error);
-    }
+
+  const handleDeleteLocation = (location) => {
+    setLocationToDelete(location);
+    setDeleteDialogOpen(true);
   };
 
+  const handleConfirmDelete = async () => {
+    if (locationToDelete) {
+      try {
+        await locationService.deleteLocation(locationToDelete.id);
+        fetchLocations();
+      } catch (error) {
+        console.error("Error deleting location:", error);
+      } finally {
+        setDeleteDialogOpen(false);
+        setLocationToDelete(null);
+      }
+    }
+  };
   const handleExpandLocation = (id) => {
     setExpandedLocation(expandedLocation === id ? null : id);
   };
 
-  const resetState = () => {
+  const resetState = useCallback(() => {
     setNewLocation({ name: "", direccion: "", url: "", capacity: "" });
     setEditingLocation(null);
     setExpandedLocation(null);
+    setDeleteDialogOpen(false);
     setIsCreating(false);
-  };
+  }, []);
 
   return {
     locations,
@@ -104,9 +120,13 @@ const useLocations = (open) => {
     setIsCreating,
     handleAddLocation,
     handleUpdateLocation,
-    handleDeleteLocation,
     handleExpandLocation,
     resetState,
+    deleteDialogOpen,
+    locationToDelete,
+    handleDeleteLocation,
+    handleConfirmDelete,
+    setDeleteDialogOpen,
   };
 };
 

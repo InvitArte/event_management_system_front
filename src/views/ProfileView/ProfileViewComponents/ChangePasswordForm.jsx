@@ -1,24 +1,24 @@
-//React y hooks
+// React y hooks
 import React, { useState } from "react";
 
 // Bibliotecas de terceros
 import PropTypes from "prop-types";
 
 // Material-UI
-import { TextField, Button, Box } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 
-const ChangePasswordForm = ({ handleUpdatePassword, handleClose }) => {
+const ChangePasswordForm = ({ onSubmit }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleUpdatePassword(currentPassword, newPassword, confirmNewPassword);
+    onSubmit(currentPassword, newPassword, confirmNewPassword);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id="change-password-form">
       <TextField
         fullWidth
         margin="normal"
@@ -46,21 +46,12 @@ const ChangePasswordForm = ({ handleUpdatePassword, handleClose }) => {
         onChange={(e) => setConfirmNewPassword(e.target.value)}
         required
       />
-      <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-        <Button onClick={handleClose} sx={{ mr: 1 }}>
-          Cancelar
-        </Button>
-        <Button type="submit" variant="contained" color="primary">
-          Cambiar Contraseña
-        </Button>
-      </Box>
     </form>
   );
 };
 
 ChangePasswordForm.propTypes = {
-  handleUpdatePassword: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default ChangePasswordForm;

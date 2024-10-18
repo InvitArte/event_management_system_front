@@ -1,7 +1,10 @@
-import { styled } from "@mui/material/styles";
+// Bibliotecas de terceros
 import { keyframes } from "@emotion/react";
-import { AppBar } from "@mui/material";
 import { NavLink } from "react-router-dom";
+
+// Material-UI
+import { styled } from "@mui/material/styles";
+import { AppBar } from "@mui/material";
 
 const BOUNCE_IN_ANIMATION = keyframes`
   0% { transform: translateY(-100%); }

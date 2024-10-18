@@ -5,21 +5,13 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import PropTypes from "prop-types";
 
 // Material-UI
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
+import { Box } from "@mui/material";
 
 // Servicios
 import { guestService } from "../../../services/Api";
 
-// Componentes genericos
-import {CloseButton} from "../../../components";
+// Componentes genéricos
+import { ReusableModal , SkeletonModalForm} from "../../../components";
 
 // Componentes propios
 import GuestForm from "./GuestForm";
@@ -47,7 +39,6 @@ const GuestModal = ({
           plus_ones: guest.plus_ones || [],
         });
       } else {
-        // Initialize an empty guest object for new guest creation
         setLocalGuest({
           first_name: "",
           last_name: "",
@@ -140,57 +131,37 @@ const GuestModal = ({
     [guest]
   );
 
+  const modalContent = (
+    <>
+      {localGuest ? (
+        <GuestForm
+          guest={localGuest}
+          onSubmit={handleSubmit}
+          menus={menus}
+          allergies={allAllergies}
+          tags={allTags}
+          visibleFormFields={visibleFormFields}
+          onOpenTagModal={onOpenTagModal}
+        />
+      ) : (
+        <SkeletonModalForm fields={6} longFields={2} />
+      )}
+    </>
+  );
+
   return (
-    <Dialog
+    <ReusableModal
       open={open}
       onClose={onClose}
+      title={modalTitle}
+      onSubmit={() => document.getElementById("guest-form-submit").click()}
+      loading={loading}
+      error={error}
       maxWidth="md"
       fullWidth
-      PaperProps={{
-        sx: {
-          overflow: 'visible',
-        },
-      }}
     >
-      <DialogTitle sx={{ position: 'relative', paddingRight: '40px' }}>
-        {modalTitle}
-        <CloseButton onClose={onClose} />
-      </DialogTitle>
-      <DialogContent>
-        {localGuest && (
-          <GuestForm
-            guest={localGuest}
-            onSubmit={handleSubmit}
-            menus={menus}
-            allergies={allAllergies}
-            tags={allTags}
-            visibleFormFields={visibleFormFields}
-            onOpenTagModal={onOpenTagModal}
-          />
-        )}
-        {error && (
-          <Typography
-            color="error"
-            align="center"
-            style={{ marginTop: "1rem" }}
-          >
-            {error}
-          </Typography>
-        )}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="secondary" disabled={loading}>
-          Cancelar
-        </Button>
-        <Button
-          onClick={() => document.getElementById("guest-form-submit").click()}
-          color="primary"
-          disabled={loading}
-        >
-          {loading ? <CircularProgress size={24} /> : "Guardar"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+      {modalContent}
+    </ReusableModal>
   );
 };
 

@@ -1,5 +1,10 @@
+// React
 import React from 'react';
+
+// Bibliotecas de terceros
 import PropTypes from 'prop-types';
+
+// Material-UI
 import {
   List,
   ListItem,
@@ -19,7 +24,10 @@ import {
   MoreVert as MoreVertIcon,
 } from '@mui/icons-material';
 
+// Hooks propios
 import { useMobileTagList } from '../../../hooks';
+
+// Componentes genericos
 import { stringToColor, adjustColor, getContrastColor } from '../../../components';
 
 const MAX_NAME_LENGTH = 20;

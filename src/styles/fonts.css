@@ -6,8 +6,10 @@
   }
 
   @font-face {
-    font-family: "Parisienne";
-    src: url("../assets/fonts/Parisienne-Regular.ttf") format("truetype");
+    font-family: "CormorantUpright";
+    src: url("../assets/fonts/CormorantUpright-Regular.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
+
+
 }

@@ -1,5 +1,10 @@
+// React y hooks
 import { useState, useEffect, useMemo, useCallback } from "react";
+
+// Servicios
 import { contactService } from "../../services/Api";
+
+// Componentes genéricos
 import { normalizeText, generateVCardData } from "../../components";
 
 

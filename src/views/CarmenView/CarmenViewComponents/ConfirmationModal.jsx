@@ -20,6 +20,7 @@ import {
   SuccessMessage,
   ErrorMessage,
   EventButton,
+  ElegantButton,
 } from "./ConfirmationModalStyles";
 
 // Servicios
@@ -186,18 +187,18 @@ const ConfirmationModal = ({ isOpen, onClose, userId }) => {
         }}
       >
         {isSubmitted ? (
-          <EventButton onClick={handleClose} fullWidth={isMobile}>
+          <ElegantButton onClick={handleClose} fullWidth={isMobile}>
             Cerrar
-          </EventButton>
+          </ElegantButton>
         ) : (
-          <EventButton
+          <ElegantButton
             onClick={handleSubmit}
             disabled={!isFormValid || isSubmitting}
             aria-label="confirmar asistencia"
             fullWidth={isMobile}
           >
             {isSubmitting ? "Enviando..." : "Confirmar"}
-          </EventButton>
+          </ElegantButton>
         )}
       </DialogActions>
     </CustomDialog>
