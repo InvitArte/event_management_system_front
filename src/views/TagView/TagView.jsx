@@ -1,7 +1,4 @@
-// React
 import React from "react";
-
-// Material-UI
 import {
   Container,
   Typography,
@@ -12,21 +9,19 @@ import {
   Paper,
   Alert,
 } from "@mui/material";
-
-// Hooks propios
-import {useTagView} from "../../hooks";
-
-// Componentes genericos
-import {SkeletonTable, DeleteConfirmationDialog} from "../../components";
-
-// Componentes propios
-import {TagTable, TagModal} from "./TagViewComponents";
-
+import { useTagView } from "../../hooks";
+import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
+import { TagTable, TagModal, MobileTagList, TagFilters } from "./TagViewComponents";
+import { ExcelDownloader } from "../../components";
 
 const TagView = () => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   const {
     tags,
     guests,
+    filteredTags,
     uiState,
     handleCreateTag,
     handleEditTag,
@@ -34,11 +29,11 @@ const TagView = () => {
     handleConfirmDelete,
     handleTagUpdate,
     handleCloseModal,
+    handleFilterChange,
     setUiState,
+    excelData,
+    excelColumnWidths,
   } = useTagView();
-
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Container maxWidth={isSmallScreen ? "sm" : "xl"}>
@@ -71,19 +66,57 @@ const TagView = () => {
         </Box>
       </Paper>
       <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+        <TagFilters
+          tags={tags}
+          guests={guests}
+          onFilterChange={handleFilterChange}
+          visibleFilters={{ tag_name: true, guest_name: true }}
+        />
+      </Paper>
+      <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+          flexDirection={isSmallScreen ? 'column' : 'row'}
+        >
+          <ExcelDownloader
+            data={excelData}
+            fileName="Etiquetas"
+            columnWidths={excelColumnWidths}
+          />
+          {isSmallScreen && (
+            <Typography variant="body2" style={{ marginTop: '0.5rem' }}>
+              {filteredTags.length} etiquetas encontradas
+            </Typography>
+          )}
+        </Box>
         {uiState.loading ? (
           <SkeletonTable
-            rowsNum={4}
-            columnsNum={1}
+            rowsNum={5}
+            columnsNum={isSmallScreen ? 2 : 4}
             height={400}
             showCheckbox={false}
             showActions={true}
           />
-        ) : (
-          <TagTable
-            tags={tags}
+        ) : isSmallScreen ? (
+          <MobileTagList
+            tags={filteredTags}
+            guests={guests}
             onEditTag={handleEditTag}
             onDeleteTag={handleDeleteTag}
+          />
+        ) : (
+          <TagTable
+            tags={filteredTags}
+            guests={guests}
+            onEditTag={handleEditTag}
+            onDeleteTag={handleDeleteTag}
+            sortModel={uiState.sortModel}
+            onSortModelChange={(newSortModel) =>
+              setUiState((prev) => ({ ...prev, sortModel: newSortModel }))
+            }
           />
         )}
       </Paper>

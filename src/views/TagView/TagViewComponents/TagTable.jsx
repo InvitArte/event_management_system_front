@@ -5,14 +5,14 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 
 // Material-UI
-import { IconButton, Box } from "@mui/material";
+import { IconButton, Box, Tooltip } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 // Configuración
 import { DataGridLocaleText } from "../../../config";
 
-const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
+const TagTable = ({ tags = [], guests = [], onEditTag, onDeleteTag }) => {
   const columns = useMemo(
     () => [
       {
@@ -34,6 +34,38 @@ const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
         ),
       },
       {
+        field: "totalGuests",
+        headerName: "Total Invitados",
+        width: 150,
+        renderCell: (params) => {
+          const tagGuests = guests.filter(guest =>
+            guest.tags.some(tag => tag.id === params.row.id)
+          );
+          const totalGuests = tagGuests.reduce((total, guest) => {
+            return total + 1 + (guest.plus_ones ? guest.plus_ones.length : 0);
+          }, 0);
+          return totalGuests;
+        },
+      },
+      {
+        field: "guests",
+        headerName: "Invitados Principales",
+        flex: 1,
+        renderCell: (params) => {
+          const tagGuests = guests.filter(guest =>
+            guest.tags.some(tag => tag.id === params.row.id)
+          );
+          const guestNames = tagGuests.map(guest => `${guest.first_name} ${guest.last_name}`).join(", ");
+          return (
+            <Tooltip title={guestNames} arrow>
+              <Box sx={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {guestNames || "Sin invitados"}
+              </Box>
+            </Tooltip>
+          );
+        },
+      },
+      {
         field: "actions",
         headerName: "Acciones",
         width: 120,
@@ -51,7 +83,7 @@ const TagTable = ({ tags = [], onEditTag, onDeleteTag }) => {
         ),
       },
     ],
-    [onDeleteTag]
+    [onDeleteTag, guests]
   );
 
   return (
@@ -76,6 +108,20 @@ TagTable.propTypes = {
       name: PropTypes.string.isRequired,
     })
   ),
+  guests: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+      first_name: PropTypes.string.isRequired,
+      last_name: PropTypes.string.isRequired,
+      plus_ones: PropTypes.arrayOf(PropTypes.object),
+      tags: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+          name: PropTypes.string.isRequired,
+        })
+      ).isRequired,
+    })
+  ).isRequired,
   onEditTag: PropTypes.func.isRequired,
   onDeleteTag: PropTypes.func.isRequired,
 };

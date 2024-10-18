@@ -1,10 +1,5 @@
-//React y hooks
 import React, { useMemo, useState, useCallback } from "react";
-
-// Bibliotecas de terceros
 import PropTypes from "prop-types";
-
-// Material-UI
 import {
   Container,
   Typography,
@@ -14,15 +9,16 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-
-// Hooks propios
-import {useGuestView} from "../../hooks";
-
-// Componentes genericos
+import { useGuestView } from "../../hooks";
 import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
-import {TagModal} from "../TagView/TagViewComponents";
-// Componentes propios
-import { ExcelDownloader, GuestFilters, GuestModal, GuestTable, MobileGuestList } from "./GuestViewComponents";
+import { ExcelDownloader } from "../../components";
+import {
+  GuestFilters,
+  GuestModal,
+  GuestTable,
+  MobileGuestList
+} from "./GuestViewComponents";
+import { TagModal } from "../TagView/TagViewComponents";
 
 const GuestView = ({
   visibleColumns: initialVisibleColumns,
@@ -50,6 +46,9 @@ const GuestView = ({
     handleVisibleColumnsChange,
     setUiState,
     updateTags,
+    excelData,
+    excelColumnWidths,
+    columns,
   } = useGuestView(initialVisibleColumns);
 
   const handleOpenTagModal = useCallback(() => {
@@ -65,70 +64,16 @@ const GuestView = ({
     handleCloseTagModal();
   }, [updateTags, handleCloseTagModal]);
 
-  const columns = [
-    { field: "validated", headerName: "Validado" },
-    { field: "fullName", headerName: "Nombre Completo" },
-    { field: "email", headerName: "Email" },
-    { field: "phone", headerName: "Teléfono" },
-    { field: "menu", headerName: "Menú" },
-    { field: "allergy", headerName: "Alergias" },
-    { field: "needs_hotel", headerName: "Necesita Hotel" },
-    { field: "needs_transport", headerName: "Necesita Transporte" },
-    { field: "needs_transport_back", headerName: "Necesita Transporte de Vuelta" },
-    { field: "disability", headerName: "Discapacidad" },
-    { field: "observations", headerName: "Observaciones" },
-    { field: "accommodation_plan", headerName: "Plan de Alojamiento" },
-    { field: "isMainGuest", headerName: "Tipo" },
-    { field: "tags", headerName: "Etiquetas" },
-  ];
-
-  const excelData = useMemo(() => {
-    let sortedGuests = [...filteredGuests];
-    if (uiState.sortModel.length > 0) {
-      const { field, sort } = uiState.sortModel[0];
-      sortedGuests.sort((a, b) => {
-        if (a[field] < b[field]) return sort === "asc" ? -1 : 1;
-        if (a[field] > b[field]) return sort === "asc" ? 1 : -1;
-        return 0;
-      });
-    }
-
-    const processedData = sortedGuests.map((guest) => {
-      const rowData = {
-        ID: guest.id,
-        "Nombre Completo": guest.fullName,
-        Email: guest.email,
-        Teléfono: guest.phone,
-        Validado: guest.validated ? "Sí" : "No",
-        Menú: guest.menu,
-        Alergias: guest.allergies && Array.isArray(guest.allergies)
-          ? guest.allergies.map(allergy => allergy.name).join(", ")
-          : "",
-        "Necesita Hotel": guest.needs_hotel ? "Sí" : "No",
-        "Necesita Transporte": guest.needs_transport ? "Sí" : "No",
-        "Necesita Transporte de Vuelta": guest.needs_transport_back ? "Sí" : "No",
-        Discapacidad: guest.disability ? "Sí" : "No",
-        Observaciones: guest.observations,
-        "Plan de Alojamiento": guest.accommodation_plan,
-        Tipo: guest.isMainGuest ? "Invitado Principal" : "Acompañante",
-        Etiquetas: guest.tags && Array.isArray(guest.tags)
-          ? guest.tags.map((tag) => tag.name).join(", ")
-          : "",
-      };
-
-      return Object.keys(rowData).reduce((acc, key) => {
-        const columnField = columns.find(
-          (col) => col.headerName === key || (key === "Alergias" && col.field === "allergy")
-        )?.field;
-        if (columnField && uiState.visibleColumns[columnField]) {
-          acc[key] = rowData[key];
-        }
-        return acc;
-      }, {});
-    });
-
-    return processedData;
-  }, [filteredGuests, uiState.visibleColumns, uiState.sortModel, columns]);
+  const visibleExcelData = useMemo(() => {
+    return excelData.map(row =>
+      Object.fromEntries(
+        Object.entries(row).filter(([key]) => {
+          const column = columns.find(col => col.headerName === key);
+          return column && uiState.visibleColumns[column.field];
+        })
+      )
+    );
+  }, [excelData, columns, uiState.visibleColumns]);
 
   if (uiState.error) {
     return (
@@ -183,7 +128,11 @@ const GuestView = ({
           mb={2}
           flexDirection={isMobile ? 'column' : 'row'}
         >
-          <ExcelDownloader data={excelData} fileName="Invitados" />
+          <ExcelDownloader
+            data={visibleExcelData}
+            fileName="Invitados"
+            columnWidths={excelColumnWidths}
+          />
           {isMobile && (
             <Typography variant="body2" style={{ marginTop: '0.5rem' }}>
               {filteredGuests.length} invitados encontrados

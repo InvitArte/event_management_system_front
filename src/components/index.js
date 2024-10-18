@@ -19,3 +19,4 @@ export { stringToColor, adjustColor, getContrastColor } from "./Utils/TagColors/
 export {normalizeText} from "./Utils/TextUtils/TextUtils";
 export {generateVCardData} from "./Utils/vCardUtils/vCardUtils";
 export {formatDateToString, formatDateForCalendar} from "./Utils/DateUtils/DateUtils";
+export {default as ExcelDownloader} from "./Utils/ExcelDownloader/ExcelDownloader";
