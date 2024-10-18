@@ -94,7 +94,7 @@ const TagView = () => {
         </Box>
         {uiState.loading ? (
           <SkeletonTable
-            rowsNum={5}
+            rowsNum={4}
             columnsNum={isSmallScreen ? 2 : 4}
             height={400}
             showCheckbox={false}
