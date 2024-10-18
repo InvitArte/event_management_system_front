@@ -378,7 +378,7 @@ const ConfirmationForm = ({
           name: "accommodation_plan",
           label: "Desde donde sales",
           type: "select",
-          options: ["Sevilla", "El Viso", "Brenes"],
+          options: ["Sevilla", "Madrid", "Barcelona", "Valencia", "Bilbao"],
           required: false,
         },
         "guest"

@@ -367,10 +367,10 @@ const useGuestView = (initialVisibleColumns) => {
     { field: "needs_transport", headerName: "Necesita Transporte" },
     { field: "needs_transport_back", headerName: "Necesita Transporte de Vuelta" },
     { field: "disability", headerName: "Discapacidad" },
-    { field: "observations", headerName: "Observaciones" },
     { field: "accommodation_plan", headerName: "Plan de Alojamiento" },
     { field: "isMainGuest", headerName: "Tipo" },
     { field: "tags", headerName: "Etiquetas" },
+    { field: "observations", headerName: "Observaciones" },
   ];
 
   const excelData = useMemo(() => {

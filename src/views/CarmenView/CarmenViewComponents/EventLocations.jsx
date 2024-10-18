@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 // Material-UI
 import { Typography, Box, Link } from "@mui/material";
-import { EventButton, EventInfo } from "./ConfirmationModalStyles";
+import { EventInfo, ElegantButton } from "./ConfirmationModalStyles";
 
 /**
  * Componente EventLocations
@@ -48,7 +48,7 @@ const renderTitle = (eventLocations) => (
  * Estilos para el título
  */
 const titleStyles = {
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "1.5rem"
 };
 
@@ -94,9 +94,9 @@ const renderDirectionsButton = (location) => {
       rel="noopener noreferrer"
       sx={{ textDecoration: "none" }}
     >
-      <EventButton variant="outlined" size="small">
+      <ElegantButton  size="small">
         Cómo llegar
-      </EventButton>
+      </ElegantButton>
     </Link>
   );
 };

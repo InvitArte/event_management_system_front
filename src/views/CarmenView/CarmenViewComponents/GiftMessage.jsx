@@ -1,79 +1,65 @@
-// React
 import React from "react";
-
-// Bibliotecas de terceros
 import PropTypes from "prop-types";
+import { Typography, useMediaQuery, useTheme, Box } from "@mui/material";
+import { mainBlue } from "./ConfirmationModalStyles";
 
-// Material-UI
-import { Typography, useMediaQuery, useTheme } from "@mui/material";
-
-// Componentes y estilos personalizados
-import {
-  StyledGiftMessage,
-  GiftMessageText,
-  AccountNumber,
-  mainBlue,
-} from "./ConfirmationModalStyles";
-
-/**
- * Componente GiftMessage
- *
- * Este componente muestra un mensaje para los invitados que deseen hacer un regalo
- * en forma de contribución monetaria, incluyendo un número de cuenta bancaria.
- *
- * @param {Object} props - Propiedades del componente
- * @param {string} props.accountNumber - Número de cuenta bancaria
- */
 const GiftMessage = ({ accountNumber }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <StyledGiftMessage>
-      {renderGiftMessageText()}
-      {renderAccountNumber(accountNumber, isMobile)}
-    </StyledGiftMessage>
+    <Box
+      sx={{
+        background: 'transparent',
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.primary,
+      }}
+    >
+      {renderGiftMessageText(theme)}
+      {renderAccountNumber(accountNumber, isMobile, theme)}
+    </Box>
   );
 };
 
-/**
- * Renderiza el texto principal del mensaje de regalo
- * @returns {React.ReactNode}
- */
-const renderGiftMessageText = () => (
-  <GiftMessageText variant="body2" align="center">
+const renderGiftMessageText = (theme) => (
+  <Typography
+    variant="body1"
+    align="center"
+    sx={{
+      fontFamily: "'CormorantUpright', cursive",
+      fontSize: { xs: '1.2rem', sm: '1.5rem' },
+      marginBottom: theme.spacing(2),
+      color: 'inherit',
+    }}
+  >
     Para todos aquellos que deseen colaborar en nuestra nueva vida juntos,
     os facilitamos nuestro número de cuenta:
-  </GiftMessageText>
+  </Typography>
 );
 
-/**
- * Renderiza el número de cuenta con estilos responsivos
- * @param {string} accountNumber - Número de cuenta bancaria
- * @param {boolean} isMobile - Indica si el dispositivo es móvil
- * @returns {React.ReactNode}
- */
-const renderAccountNumber = (accountNumber, isMobile) => (
-  <AccountNumber
-    variant="body2"
-    mt={1}
-    sx={getAccountNumberStyles(isMobile)}
+const renderAccountNumber = (accountNumber, isMobile, theme) => (
+  <Typography
+    variant="body1"
+    align="center"
+    sx={{
+      ...getAccountNumberStyles(isMobile, theme),
+      color: mainBlue,
+      backgroundColor: 'transparent',
+      padding: theme.spacing(1, 2),
+      display: 'inline-block',
+    }}
   >
     {accountNumber}
-  </AccountNumber>
+  </Typography>
 );
 
-/**
- * Obtiene los estilos para el número de cuenta
- * @param {boolean} isMobile - Indica si el dispositivo es móvil
- * @returns {Object} Estilos para el número de cuenta
- */
-const getAccountNumberStyles = (isMobile) => ({
+const getAccountNumberStyles = (isMobile, theme) => ({
   fontFamily: "'Roboto', sans-serif",
   fontStyle: "italic",
-  letterSpacing: "normal",
+  letterSpacing: "0.5px",
   fontWeight: 500,
-  fontSize: isMobile ? "0.75rem" : "0.875rem",
+  fontSize: isMobile ? "0.9rem" : "1rem",
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",

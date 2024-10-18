@@ -1,47 +1,21 @@
-// React y hooks
 import React, { useState, useEffect, useCallback, useRef } from "react";
-
-// Bibliotecas de terceros
 import PropTypes from "prop-types";
-
-// Material-UI
 import { useMediaQuery, useTheme, Box, Typography } from "@mui/material";
-
-// Componentes propios genéricos
 import { CustomCard } from "../../../components";
-
-// Componentes propios
 import {
   CalendarButton,
   ConfirmationModal,
   GiftMessage,
   EventTimeline,
   ConfirmButton,
-  CustomCardContent,
   EventTitleStyle,
   EventSubtitle,
   EventInfo
 } from './index';
 
-
-// Imágenes y assets
 import FloralSeparator from "../../../assets/imgs/FloralSeparator.svg";
 import IglesiaCarmen from "../../../assets/imgs/IglesiaCarmen.png";
 
-/**
- * Componente CarmenEventCard
- *
- * Este componente muestra la información detallada de un evento de boda,
- * incluyendo fecha, ubicaciones, timeline y botones de confirmación.
- *
- * @param {Object} props - Propiedades del componente
- * @param {string|number} props.userId - ID del usuario
- * @param {boolean} props.showTitle - Indica si se debe mostrar el título
- * @param {string} props.svgSrc - Ruta de la imagen SVG
- * @param {Date} props.eventDate - Fecha del evento
- * @param {string} props.eventDateString - Fecha del evento en formato de cadena
- * @param {Array} props.eventLocations - Array de ubicaciones del evento
- */
 const CarmenEventCard = ({
   userId,
   showTitle,
@@ -49,6 +23,7 @@ const CarmenEventCard = ({
   eventDate,
   eventDateString,
   eventLocations,
+  useCardStyles = true,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [timelineProgress, setTimelineProgress] = useState(0);
@@ -57,15 +32,11 @@ const CarmenEventCard = ({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  /**
-   * Efecto para manejar el progreso del scroll en la línea de tiempo
-   */
   useEffect(() => {
     const handleScroll = () => {
       if (timelineRef.current) {
         const timelineRect = timelineRef.current.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-
         const timelineTop = timelineRect.top;
         const timelineHeight = timelineRect.height;
         const viewportBottom = windowHeight;
@@ -81,20 +52,14 @@ const CarmenEventCard = ({
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Establecer el estado inicial
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  /**
-   * Manejador para abrir el modal de confirmación
-   */
   const handleOpenModal = useCallback(() => {
     setIsModalOpen(true);
   }, []);
 
-  /**
-   * Manejador para cerrar el modal de confirmación
-   */
   const handleCloseModal = useCallback(() => {
     setIsModalOpen(false);
   }, []);
@@ -103,9 +68,6 @@ const CarmenEventCard = ({
     return null;
   }
 
-  /**
-   * Componente para renderizar el separador floral
-   */
   const FloralSeparatorComponent = () => (
     <Box
       component="img"
@@ -121,30 +83,91 @@ const CarmenEventCard = ({
     />
   );
 
-  return (
-    <CustomCard ref={cardRef}>
-      <Box sx={{ position: "relative", overflow: "hidden" }}>
-        <Box
-          component="img"
-          src={svgSrc}
-          alt="Icono C"
-          sx={getIconStyles(isMobile)}
+  const renderTitle = () => {
+    if (!showTitle) return null;
+    return (
+      <>
+        <EventSubtitle variant="h2">¡Nos casamos!</EventSubtitle>
+        <EventTitleStyle variant="h1">César y Carmen</EventTitleStyle>
+      </>
+    );
+  };
+
+  const renderEventInfo = () => (
+    <EventInfo>
+       <Typography
+        variant="h6"
+        gutterBottom
+        align="center"
+        sx={{
+          fontFamily: "'CormorantUpright', regular !important",
+          fontSize: isMobile ? "1.5rem !important" : "2.5rem !important",
+          color: "#8D5444",
+          whiteSpace: isMobile ? "nowrap" : "normal",
+          overflow: isMobile ? "hidden" : "visible",
+          textOverflow: isMobile ? "ellipsis" : "clip",
+        }}
+      >
+        Fecha y hora del evento
+      </Typography>
+      <Box display="flex" flexDirection="column" gap={2}>
+        <CalendarButton
+          eventDate={eventDate}
+          eventDateString={eventDateString}
+          eventLocations={eventLocations}
         />
-        <CustomCardContent>
-          {renderTitle(showTitle)}
+      </Box>
+    </EventInfo>
+  );
+
+  const renderChurchImage = () => (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        mb: 4,
+      }}
+    >
+      <img
+        src={IglesiaCarmen}
+        alt="Iglesia del Carmen"
+        style={{
+          maxWidth: "100%",
+          height: "auto",
+          objectFit: "contain",
+        }}
+      />
+    </Box>
+  );
+
+  const renderEventTimeline = () => (
+    <EventInfo ref={timelineRef} sx={{ my: 8, minHeight: "60vh" }}>
+      <EventTimeline
+        scrollProgress={timelineProgress}
+        eventLocations={eventLocations}
+      />
+    </EventInfo>
+  );
+
+  return (
+    <CustomCard ref={cardRef} useCardStyles={useCardStyles}>
+      <Box sx={{ position: "relative", overflow: "hidden" }}>
+        <Box sx={{ padding: useCardStyles ? 2 : 0 }}>
+          {renderTitle()}
           <FloralSeparatorComponent />
-          <ConfirmButton onClick={handleOpenModal} fullWidth={isMobile} />
+          {renderEventInfo()}
+          {/* <FloralSeparatorComponent />
+          {renderChurchImage()} */}
           <FloralSeparatorComponent />
-          {renderEventInfo(theme, eventDate, eventDateString, eventLocations)}
+          {renderEventTimeline()}
           <FloralSeparatorComponent />
-          {renderChurchImage()}
+          <GiftMessage accountNumber="DE01 2345 6789 0123 4567 8901" />
           <FloralSeparatorComponent />
-          {renderEventTimeline(timelineRef, timelineProgress, eventLocations)}
-          <FloralSeparatorComponent />
-          <GiftMessage accountNumber="DE01 2345  6789 0123 4567 8901" />
-          <FloralSeparatorComponent />
-          <ConfirmButton onClick={handleOpenModal} fullWidth={isMobile} />
-        </CustomCardContent>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <ConfirmButton onClick={handleOpenModal} fullWidth={isMobile} />
+          </Box>
+        </Box>
       </Box>
       <ConfirmationModal
         isOpen={isModalOpen}
@@ -155,111 +178,6 @@ const CarmenEventCard = ({
   );
 };
 
-/**
- * Obtiene los estilos para el icono C
- * @param {boolean} isMobile - Indica si es dispositivo móvil
- * @returns {Object} Objeto de estilos
- */
-const getIconStyles = (isMobile) => ({
-  position: "absolute",
-  top: isMobile ? "5px" : "10px",
-  left: isMobile ? "5px" : "10px",
-  width: isMobile ? "20vw" : "100px",
-  height: isMobile ? "20vw" : "100px",
-  maxWidth: isMobile ? "100px" : "none",
-  maxHeight: isMobile ? "100px" : "none",
-  zIndex: 1,
-  opacity: 0.9,
-});
-
-/**
- * Renderiza el título del evento si showTitle es true
- * @param {boolean} showTitle - Indica si se debe mostrar el título
- * @returns {React.ReactNode}
- */
-const renderTitle = (showTitle) => {
-  if (!showTitle) return null;
-  return (
-    <>
-      <EventSubtitle variant="h2">¡Nos casamos!</EventSubtitle>
-      <EventTitleStyle variant="h1">César y Carmen</EventTitleStyle>
-    </>
-  );
-};
-
-/**
- * Renderiza la información del evento
- * @param {Object} theme - Tema de MUI
- * @param {Date} eventDate - Fecha del evento
- * @param {string} eventDateString - Fecha del evento en formato de cadena
- * @param {Array} eventLocations - Ubicaciones del evento
- * @returns {React.ReactNode}
- */
-const renderEventInfo = (theme, eventDate, eventDateString, eventLocations) => (
-  <EventInfo>
-    <Typography
-      variant="h6"
-      gutterBottom
-      align="center"
-      sx={{
-        fontFamily: "'Parisienne', cursive !important",
-        fontSize: "1.5rem !important",
-        color: theme.palette.primary.main,
-      }}
-    >
-      Fecha y hora del evento
-    </Typography>
-    <Box display="flex" flexDirection="column" gap={2}>
-      <CalendarButton
-        eventDate={eventDate}
-        eventDateString={eventDateString}
-        eventLocations={eventLocations}
-      />
-    </Box>
-  </EventInfo>
-);
-
-/**
- * Renderiza la imagen de la iglesia
- * @returns {React.ReactNode}
- */
-const renderChurchImage = () => (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      mb: 4,
-    }}
-  >
-    <img
-      src={IglesiaCarmen}
-      alt="Iglesia del Carmen"
-      style={{
-        maxWidth: "100%",
-        height: "auto",
-        objectFit: "contain",
-      }}
-    />
-  </Box>
-);
-
-/**
- * Renderiza la línea de tiempo del evento
- * @param {React.RefObject} timelineRef - Referencia al componente de línea de tiempo
- * @param {number} timelineProgress - Progreso actual de la línea de tiempo
- * @param {Array} eventLocations - Ubicaciones del evento
- * @returns {React.ReactNode}
- */
-const renderEventTimeline = (timelineRef, timelineProgress, eventLocations) => (
-  <EventInfo ref={timelineRef} sx={{ my: 8, minHeight: "60vh" }}>
-    <EventTimeline
-      scrollProgress={timelineProgress}
-      eventLocations={eventLocations}
-    />
-  </EventInfo>
-);
-
 CarmenEventCard.propTypes = {
   userId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   showTitle: PropTypes.bool.isRequired,
@@ -267,6 +185,8 @@ CarmenEventCard.propTypes = {
   eventDate: PropTypes.instanceOf(Date),
   eventDateString: PropTypes.string,
   eventLocations: PropTypes.array,
+  useCardStyles: PropTypes.bool,
 };
+
 
 export default CarmenEventCard;

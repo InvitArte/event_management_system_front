@@ -13,11 +13,13 @@ import {
   Card,
   CardContent,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 // Definir el color azul principal
-const mainBlue = "#153e87";
-const darkBlue = "#153e87";
+const mainBlue = "#8D5444";
+const darkBlue = " #774436";
 const silver = "#C0C0C0";
 
 // Estilos del modal
@@ -43,7 +45,7 @@ export const CustomDialog = styled(Dialog)(({ theme }) => ({
 
 export const CustomDialogTitle = styled(DialogTitle)(({ theme }) => ({
   color: "#231f20",
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "32px",
   padding: "0 40px 8px",
   textAlign: "center",
@@ -69,16 +71,16 @@ export const CustomButton = styled(Button)(({ theme }) => ({
   fontSize: "18px",
   borderRadius: "5px",
   cursor: "pointer",
-  boxShadow: "2px 2px 4px rgba(0, 123, 255, 0.3)",
+  boxShadow: "rgba(119, 68, 54, 0.3)",
   margin: "1rem auto",
   transition: "all 0.3s ease",
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   minWidth: "200px",
   WebkitTapHighlightColor: "transparent",
   "&:hover": {
     backgroundColor: darkBlue,
     transform: "translateY(-2px)",
-    boxShadow: "0 4px 8px rgba(0, 123, 255, 0.4)",
+    boxShadow: " rgba(119, 68, 54, 0.4)",
   },
   "&:disabled": {
     backgroundColor: "#b3d7ff",
@@ -115,7 +117,7 @@ export const StyledImage = styled("img")({
 
 export const SuccessMessage = styled("p")({
   color: "#231f20",
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   textAlign: "center",
   marginBottom: "24px",
   fontSize: "24px",
@@ -241,7 +243,7 @@ export const EventSubtitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   color: mainBlue,
   textAlign: "center",
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
 }));
 
 export const EventTitleStyle = styled(Typography)(({ theme }) => ({
@@ -252,7 +254,7 @@ export const EventTitleStyle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(3),
   color: mainBlue,
   textAlign: "center",
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
 }));
 
 export const EventInfo = styled("div")(({ theme }) => ({
@@ -260,24 +262,24 @@ export const EventInfo = styled("div")(({ theme }) => ({
   marginBottom: theme.spacing(3),
   padding: theme.spacing(2),
   // borderRadius: theme.shape.borderRadius,
-  backgroundColor: "rgba(255, 255, 255, 0.7)",
+  backgroundColor: "transparent",
   // boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
 }));
 
 export const EventButton = styled(Button)(({ theme }) => ({
   alignItems: "center",
   appearance: "none",
-  backgroundColor: "#fff",
+  backgroundColor: "rgba(255, 255, 255, 0.7)",
   borderRadius: "24px",
   borderStyle: "none",
   boxShadow:
-    "rgba(0, 0, 0, .2) 0 3px 5px -1px, rgba(0, 0, 0, .14) 0 6px 10px 0, rgba(0, 0, 0, .12) 0 1px 18px 0",
+    "rgba(141, 84, 68, 0.2) 0 3px 5px -1px, rgba(141, 84, 68, 0.14) 0 6px 10px 0, rgba(141, 84, 68, 0.12) 0 1px 18px 0",
   boxSizing: "border-box",
   color: mainBlue,
   cursor: "pointer",
   display: "inline-flex",
   fill: "currentcolor",
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "20px",
   fontWeight: 500,
   height: "48px",
@@ -302,22 +304,22 @@ export const EventButton = styled(Button)(({ theme }) => ({
   "&:hover": {
     backgroundColor: "#F6F9FE",
     color: mainBlue,
-    boxShadow: `rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px`,
+    boxShadow: `rgba(141, 84, 68, 0.3) 0 2px 3px 0, rgba(141, 84, 68, 0.15) 0 6px 10px 4px`,
   },
 
   "&:focus": {
     outline: "none",
     border: `2px solid ${mainBlue}`,
-    boxShadow: `rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px`,
+    boxShadow: `rgba(141, 84, 68, 0.3) 0 1px 3px 0, rgba(141, 84, 68, 0.15) 0 4px 8px 3px`,
   },
 
   "&:active": {
-    boxShadow: `0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%)`,
+    boxShadow: `0 4px 4px 0 rgba(141, 84, 68, 0.3), 0 8px 12px 6px rgba(141, 84, 68, 0.15)`,
     outline: "none",
   },
 
   "&:disabled": {
-    boxShadow: `rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px`,
+    boxShadow: `rgba(141, 84, 68, 0.3) 0 1px 3px 0, rgba(141, 84, 68, 0.15) 0 4px 8px 3px`,
     color: "rgba(0, 0, 0, .38)",
   },
 
@@ -330,24 +332,24 @@ export const EventButton = styled(Button)(({ theme }) => ({
 
 export const InvertedEventButton = styled(Button)(({ theme }) => ({
   backgroundColor: `${mainBlue} !important`,
-  color: "#fff !important",
+  color: "#ffffff !important",
   border: "none !important",
   borderRadius: "24px !important",
   padding: "12px 24px !important",
   fontSize: "20px !important",
   textTransform: "none !important",
-  fontFamily: "'Parisienne', regular !important",
+  fontFamily: "'CormorantUpright', regular !important",
   cursor: "pointer !important",
-  boxShadow: "2px 2px 4px rgba(0, 123, 255, 0.3) !important",
+  boxShadow: "2px 2px 4px rgba(141, 84, 68, 0.3) !important",
   transition: "all 0.3s ease !important",
   minWidth: "200px !important",
   "&:hover": {
     backgroundColor: `${darkBlue} !important`,
     transform: "translateY(-2px) !important",
-    boxShadow: "0 4px 8px rgba(0, 123, 255, 0.4) !important",
+    boxShadow: "0 4px 8px rgba(141, 84, 68, 0.4) !important",
   },
   "&:disabled": {
-    backgroundColor: "rgba(21, 62, 135, 0.5) !important",
+    backgroundColor: "rgba(141, 84, 68, 0.5) !important",
     color: "rgba(255, 255, 255, 0.7) !important",
     cursor: "not-allowed !important",
   },
@@ -357,7 +359,6 @@ export const InvertedEventButton = styled(Button)(({ theme }) => ({
     minWidth: "160px !important",
   },
 }));
-
 // Estilos para CountdownTimer
 export const StyledCountdown = styled("div")(({ theme }) => ({
   display: "flex",
@@ -375,13 +376,13 @@ export const TimeValue = styled(Typography)(({ theme }) => ({
   fontSize: "3.2rem",
   fontWeight: 700,
   color: mainBlue,
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
 }));
 
 export const TimeLabel = styled(Typography)(({ theme }) => ({
   fontSize: "1.4rem",
   color: theme.palette.text.secondary,
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
 }));
 
 // Estilos para GiftMessage
@@ -396,27 +397,27 @@ export const StyledGiftMessage = styled("div")(({ theme }) => ({
 export const GiftMessageText = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(1),
   fontStyle: "italic",
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "1.7rem",
 }));
 
 export const AccountNumber = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
   color: mainBlue,
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "2rem",
 }));
 
 // Nuevos estilos para EventDate y CalendarButton
 export const EventDateTypography = styled(Typography)(({ theme }) => ({
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "1.7rem",
   color: mainBlue,
   textAlign: "center",
 }));
 
 export const CalendarButtonStyled = styled(Button)(({ theme }) => ({
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "1.4rem",
   backgroundColor: mainBlue,
   color: "white",
@@ -469,7 +470,7 @@ export const TimelineEventContent = styled("div")(({ theme }) => ({
 }));
 
 export const TimelineEventTitle = styled(Typography)(({ theme }) => ({
-  fontFamily: "'Parisienne', regular",
+  fontFamily: "'CormorantUpright', regular",
   fontSize: "2rem",
   color: mainBlue,
   marginBottom: theme.spacing(1),
@@ -478,6 +479,56 @@ export const TimelineEventTitle = styled(Typography)(({ theme }) => ({
 export const TimelineEventDescription = styled(Typography)(({ theme }) => ({
   fontFamily: "'Prata', serif",
   fontSize: "1.2rem",
+}));
+
+// Nuevo Botón
+export const ElegantButton = styled(Button)(({ theme, inverted = false }) => ({
+  outline: 0,
+  gridGap: '8px',
+  alignItems: 'center',
+  background: inverted ? mainBlue : 'transparent',
+  border: `1px solid ${inverted ? '#ffffff' : mainBlue}`,
+  borderRadius: '4px',
+  cursor: 'pointer',
+  display: 'inline-flex',
+  flexShrink: 0,
+  fontSize: '16px',
+  gap: '8px',
+  justifyContent: 'center',
+  lineHeight: 1.5,
+  overflow: 'hidden',
+  padding: '12px 16px',
+  textDecoration: 'none',
+  textOverflow: 'ellipsis',
+  transition: 'all .14s ease-out',
+  whiteSpace: 'nowrap',
+  color: inverted ? '#ffffff' : mainBlue,
+  fontFamily: "'CormorantUpright', regular",
+  '&:hover': {
+    boxShadow: `4px 4px 0 ${inverted ? darkBlue : '#ffffff'}`,
+    transform: 'translate(-4px,-4px)',
+    color: inverted ? darkBlue : '#ffffff',
+    background: inverted ? '#ffffff' : mainBlue,
+  },
+  '&:focus-visible': {
+    outlineOffset: '1px',
+  },
+  '&:disabled': {
+    backgroundColor: 'rgba(141, 84, 68, 0.5)',
+    border: 'none',
+    color: 'rgba(255, 255, 255, 0.7)',
+    cursor: 'not-allowed',
+    '&:hover': {
+      boxShadow: 'none',
+      transform: 'none',
+      color: 'rgba(255, 255, 255, 0.7)',
+      background: 'rgba(141, 84, 68, 0.5)',
+    },
+  },
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '14px',
+    padding: '10px 14px',
+  },
 }));
 
 // Exportar los colores para su uso en otros componentes

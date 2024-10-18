@@ -10,8 +10,7 @@ import {
   Paper,
 } from "@mui/material";
 import { useGuestView } from "../../hooks";
-import { SkeletonTable, DeleteConfirmationDialog } from "../../components";
-import { ExcelDownloader } from "../../components";
+import { SkeletonTable, DeleteConfirmationDialog, ExcelDownloader  } from "../../components";
 import {
   GuestFilters,
   GuestModal,

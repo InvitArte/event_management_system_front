@@ -1,23 +1,19 @@
-// React y hooks
-import React, { useState } from "react";
-
-// Material-UI
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
   Paper,
   IconButton,
-  Container,
   Modal,
   Collapse,
+  Button,
+  CircularProgress,
 } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { ExpandMore as ExpandMoreIcon, Close as CloseIcon } from "@mui/icons-material";
-
-// Componentes propios
 import EventLocations from "./EventLocations";
 
-const mainBlue = "#153e87";
+const mainBlue = "#8D5444";
 
 const TimelineItem = ({
   icon,
@@ -30,13 +26,19 @@ const TimelineItem = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+
+
+
 
   const handleClick = () => {
     if (isExpandable) {
       if (isMobile) {
         setIsModalOpen(true);
+        setIsLoading(false);
       } else {
         setIsExpanded(!isExpanded);
       }
@@ -46,6 +48,44 @@ const TimelineItem = ({
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+
+  const renderLocationContent = () => {
+    if (isLoading) {
+      return (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
+          <CircularProgress size={24} sx={{ color: mainBlue }} />
+        </Box>
+      );
+    } else if (locations && locations.length > 0) {
+      const address = locations[0].direccion || 'Dirección no disponible';;
+      return (
+        <Typography
+          sx={{
+            fontFamily: "'CormorantUpright', serif",
+            fontSize: "1.2rem",
+            mb: 2,
+            color: "text.primary",
+          }}
+        >
+          {address}
+        </Typography>
+      );
+    } else {
+      return (
+        <Typography
+          sx={{
+            fontFamily: "'CormorantUpright', serif",
+            fontSize: "1.2rem",
+            mb: 2,
+            color: "text.secondary",
+          }}
+        >
+          No se pudo cargar la ubicación.
+        </Typography>
+      );
+    }
+  };
+
 
   return (
     <Box
@@ -118,7 +158,7 @@ const TimelineItem = ({
             fontWeight="bold"
             color={mainBlue}
             sx={{
-              fontFamily: "'Parisienne', regular",
+              fontFamily: "'CormorantUpright', serif",
               fontSize: { xs: "1.5rem", sm: "2rem" },
             }}
           >
@@ -145,7 +185,7 @@ const TimelineItem = ({
           color="text.secondary"
           sx={{
             mt: 1,
-            fontFamily: "'Parisienne', regular",
+            fontFamily: "'CormorantUpright', serif",
             fontSize: { xs: "1.2rem", sm: "1.4rem" },
             display: "-webkit-box",
             WebkitLineClamp: 2,
@@ -201,10 +241,11 @@ const TimelineItem = ({
             transform: "translate(-50%, -50%)",
             width: "90%",
             maxWidth: 400,
-            bgcolor: "background.paper",
+            bgcolor: fillPercentage > 0 ? "#EEE8E4" : "background.paper",
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
+            border: `2px solid ${mainBlue}`,
           }}
         >
           <IconButton
@@ -214,19 +255,21 @@ const TimelineItem = ({
               position: "absolute",
               right: 8,
               top: 8,
-              color: (theme) => theme.palette.grey[500],
+              color: mainBlue,
             }}
           >
             <CloseIcon />
           </IconButton>
           <Typography
             id="modal-modal-title"
-            variant="h6"
+            variant="h4"
             component="h2"
             sx={{
-              fontFamily: "'Parisienne', regular",
-              fontSize: "2rem",
+              fontFamily: "'CormorantUpright', serif",
+              fontSize: "2.5rem",
               mb: 2,
+              fontWeight: "bold",
+              color: mainBlue,
             }}
           >
             {time}
@@ -234,14 +277,45 @@ const TimelineItem = ({
           <Typography
             id="modal-modal-description"
             sx={{
-              fontFamily: "'Parisienne', regular",
-              fontSize: "1.4rem",
-              mb: 2,
+              fontFamily: "'CormorantUpright', serif",
+              fontSize: "1.5rem",
+              mb: 3,
+              color: "text.primary",
             }}
           >
             {description}
           </Typography>
-          <EventLocations eventLocations={locations} />
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: "'CormorantUpright', serif",
+              fontSize: "1.3rem",
+              mb: 1,
+              fontWeight: "bold",
+              color: mainBlue,
+            }}
+          >
+            Ubicación:
+          </Typography>
+          {renderLocationContent()}
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <Button
+              variant="outlined"
+              sx={{
+                mt: 2,
+                fontFamily: "'CormorantUpright', serif",
+                fontSize: "1rem",
+                color: mainBlue,
+                borderColor: mainBlue,
+                "&:hover": {
+                  borderColor: mainBlue,
+                  backgroundColor: `${mainBlue}33`,
+                },
+              }}
+            >
+              CÓMO LLEGAR
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </Box>
